@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" /><title>Knop- en kaartje-varianten</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+    :root {
+      --mathyellow: #ecc862;
+      --mathorange: #db9a1f;
+      --info: #3e8ed0;
+      --info-dark: #1f6fb0;
+      --achtergrond: #f0f9ff;
+      --gray-950: #030712;
+      --gray-700: #374151;
+      --gray-500: #6b7280;
+      --gray-300: #d1d5db;
+      --gray-100: #f3f4f6;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Ubuntu", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--achtergrond);
+      color: var(--gray-950);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #dbeafe;
+    }
+    .header-inner {
+      max-width: 1120px; margin: 0 auto; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-inner img { height: 40px; width: auto; }
+    .header-cta {
+      background: var(--mathyellow); color: var(--gray-950);
+      font-weight: 700; font-size: 15px; padding: 9px 16px; border-radius: 8px;
+    }
+
+    main { max-width: 1120px; margin: 0 auto; padding: 40px 20px 24px; }
+    @media (min-width: 1024px) { main { padding-top: 64px; } }
+
+    .hero {
+      display: flex; flex-direction: column; align-items: center; gap: 40px;
+    }
+    @media (min-width: 1024px) {
+      .hero { flex-direction: row; gap: 56px; }
+    }
+    .hero-visual { width: 100%; max-width: 576px; flex-shrink: 0; }
+    @media (min-width: 1024px) { .hero-visual { width: 520px; } }
+    .hero-visual img, .hero-visual video { width: 100%; }
+    .hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    @media (min-width: 1024px) { .hero-copy { align-items: flex-start; text-align: left; } }
+    h1 {
+      margin: 0; font-size: 24px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em;
+    }
+    @media (min-width: 768px) { h1 { font-size: 30px; } }
+    h1 .line2 { display: block; margin-top: 8px; }
+    .wis { color: var(--mathorange); } .wiz { color: var(--mathyellow); }
+    .lead {
+      margin: 16px 0 0; max-width: 36rem; font-size: 16px; font-weight: 500;
+      color: var(--gray-700); line-height: 1.6;
+    }
+    @media (min-width: 768px) { .lead { font-size: 18px; } }
+
+    .cta-stack {
+      margin-top: 32px; width: 100%; max-width: 384px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; border-radius: 14px; font-weight: 700; text-align: center;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      cursor: pointer;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: var(--info); color: #fff; font-size: 16px; padding: 14px 16px;
+      border-bottom: 4px solid var(--info-dark);
+      box-shadow: 0 10px 22px rgba(62,142,208,.24);
+    }
+    .btn-primary:hover { box-shadow: 0 14px 28px rgba(62,142,208,.28); }
+    .btn-tour {
+      background: #fff; color: var(--gray-950); font-size: 14px; padding: 12px 16px;
+      border: 1px solid var(--mathyellow); border-bottom-width: 4px;
+      box-shadow: 0 10px 22px rgba(217,154,31,.16);
+    }
+    .btn-tour:hover { background: rgba(236,200,98,.10); }
+    .btn-call {
+      background: #fff; color: var(--gray-950); font-size: 14px; padding: 12px 16px;
+      border: 1px solid var(--gray-300); box-shadow: 0 2px 0 rgba(17,24,39,.12);
+    }
+    .btn-call:hover { border-color: #9ca3af; background: #f9fafb; }
+    .btn-call svg { width: 16px; height: 16px; fill: var(--info); }
+    .subline { margin: 6px 0 0; text-align: center; font-size: 12px; color: var(--gray-500); }
+    .cta-group { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+
+    section.block { margin-top: 80px; display: flex; flex-direction: column; align-items: center; }
+    h2 { margin: 0; text-align: center; font-size: 24px; font-weight: 800; }
+    @media (min-width: 768px) { h2 { font-size: 30px; } }
+    .kranten img {
+      margin-top: 24px; width: 100%; max-width: 576px; object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgba(15,23,42,.12));
+    }
+
+    .story {
+      margin-top: 28px; width: 100%; max-width: 384px;
+      background: #fff; border: 1px solid #fde68a; border-radius: 14px;
+      padding: 16px; text-align: left;
+    }
+    .story p { margin: 0; font-size: 14px; line-height: 1.6; color: #1f2937; }
+    .story .avatar {
+      display: inline-block; width: 28px; height: 28px; border-radius: 9999px;
+      object-fit: cover; vertical-align: middle; margin-right: 6px; transform: translateY(-2px);
+      box-shadow: 0 0 0 2px var(--mathorange);
+    }
+    .story .tu {
+      display: inline; height: 15px; width: 38px; vertical-align: middle;
+      margin: 0 3px; transform: translateY(-4px);
+    }
+    .story .btn { margin-top: 10px; }
+
+    .final { margin: 80px auto 0; max-width: 384px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .final .cta-stack { margin-top: 8px; }
+    .link-quiet { display: block; padding: 8px 0; text-align: center; font-size: 14px; font-weight: 500; color: var(--gray-500); }
+    .link-quiet:hover { color: var(--gray-700); }
+
+    footer {
+      margin-top: 40px; padding: 40px 20px 48px;
+      border-top: 1px solid #dbeafe;
+      color: var(--gray-500); font-size: 13px;
+    }
+    .footer-inner {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;
+    }
+    .footer-inner img { height: 28px; width: auto; opacity: .9; }
+    .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; }
+    .footer-links a { color: var(--gray-500); }
+    .footer-links a:hover { color: var(--gray-950); }
+    .footer-copy { color: #9ca3af; font-size: 12px; }
+  </style>
+
+<style>
+  .strip-note { max-width: 420px; margin: 24px auto 0; padding: 0 20px; text-align: center; color: var(--gray-500); font-size: 13px; }
+  .variant { max-width: 420px; margin: 36px auto 0; padding: 0 20px 28px; border-bottom: 1px dashed #cbd5e1; }
+  .variant-label { display: inline-block; margin-bottom: 14px; background: #0f172a; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .ctx { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .ctx h1 { font-size: 24px; }
+  .ctx .lead { font-size: 15px; margin-top: 10px; }
+  .ctx .cta-stack { margin-top: 22px; }
+
+  /* CTA 1: mathyellow */
+  .btn-cta1 { display:block; width:100%; background: var(--mathyellow); color: var(--gray-950); font-weight: 700; font-size: 16px; padding: 14px 16px; border-radius: 12px; box-shadow: 0 6px 16px rgba(217,154,31,.28); text-align:center; }
+  /* CTA 2: mathorange pil */
+  .btn-cta2 { display:block; width:100%; background: var(--mathorange); color: #fff; font-weight: 700; font-size: 16px; padding: 15px 16px; border-radius: 999px; box-shadow: 0 8px 20px rgba(219,154,31,.30); text-align:center; }
+  /* CTA 3: navy kalm, plat */
+  .btn-cta3 { display:block; width:100%; background: #16324f; color: #fff; font-weight: 600; font-size: 16px; letter-spacing: .01em; padding: 16px; border-radius: 10px; text-align:center; }
+  /* CTA 4: info plat, subregel in de knop */
+  .btn-cta4 { display:block; width:100%; background: var(--info); color: #fff; border-radius: 12px; padding: 12px 16px; text-align:center; }
+  .btn-cta4 .l1 { display:block; font-weight: 700; font-size: 16px; }
+  .btn-cta4 .l2 { display:block; margin-top: 2px; font-size: 12px; color: rgba(255,255,255,.85); font-weight: 400; }
+
+  /* kaartje varianten */
+  .k-card { width: 100%; text-align: left; }
+  .k1 { background:#fff; border:1px solid #e5e7eb; border-radius:14px; padding:16px; }
+  .k1 p, .k3 p, .k4 p { margin:0; font-size:14px; line-height:1.6; color:#1f2937; }
+  .k-avatar { display:inline-block; width:28px; height:28px; border-radius:9999px; object-fit:cover; vertical-align:middle; margin-right:6px; transform:translateY(-2px); box-shadow:0 0 0 2px var(--mathorange); }
+  .k-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; margin-top:10px; background:#fff; color:var(--gray-950); font-size:14px; font-weight:700; padding:12px 16px; border:1px solid var(--gray-300); border-radius:14px; box-shadow:0 2px 0 rgba(17,24,39,.12); }
+  .k-btn svg { width:16px; height:16px; fill: var(--info); }
+
+  .k2 { }
+  .k2 .bubblerow { display:flex; gap:10px; align-items:flex-start; }
+  .k2 .bubblerow img { width:40px; height:40px; border-radius:9999px; object-fit:cover; box-shadow:0 0 0 2px var(--mathorange); flex-shrink:0; }
+  .k2 .bubble { background:#fff; border-radius:4px 16px 16px 16px; padding:12px 14px; font-size:14px; line-height:1.6; color:#1f2937; box-shadow:0 2px 8px rgba(15,23,42,.08); }
+  .k2 .k-btn { background:transparent; box-shadow:none; border:1.5px solid var(--gray-300); }
+
+  .k3 { background:#fff; border:2px solid var(--mathyellow); border-radius:14px; overflow:hidden; }
+  .k3 .k3head { display:flex; align-items:center; gap:10px; background:rgba(236,200,98,.18); padding:10px 14px; }
+  .k3 .k3head img { width:34px; height:34px; border-radius:9999px; object-fit:cover; }
+  .k3 .k3head span { font-size:13px; font-weight:700; color:var(--gray-950); }
+  .k3 .k3body { padding:14px; }
+
+  .k4 { text-align:center; }
+  .k4 img.center { width:56px; height:56px; border-radius:9999px; object-fit:cover; margin:0 auto 10px; display:block; box-shadow:0 0 0 3px var(--mathorange); }
+  .k4 p { font-size:15px; }
+  .k4 .k-btn { max-width: 340px; margin-left:auto; margin-right:auto; }
+</style>
+
+</head><body>
+<p class="strip-note"><strong>Kies er één van elk.</strong> Zeg bijvoorbeeld: "CTA 2 en kaartje 3". Elke variant staat in de echte pagina-context.</p>
+<section class="variant"><span class="variant-label">CTA 1 — mathyellow, site-geel</span>
+<div class="ctx"><h1>Één uur wiskundebijles kost €30.<span class="line2">Één maand <span class="wis">Wis</span><span class="wiz">Wiz</span> €7.</span></h1>
+<p class="lead">Betaalbare wiskundebijles die altijd klaarstaat.</p><div class="cta-stack"><div class="cta-group"><a class="btn-cta1" href="#">Start een proefweek voor jouw kind</a><p class="subline">Eerst een gratis proefweek, daarna €84 per schooljaar.</p></div></div></div></section>
+<section class="variant"><span class="variant-label">CTA 2 — oranje pil</span>
+<div class="ctx"><h1>Één uur wiskundebijles kost €30.<span class="line2">Één maand <span class="wis">Wis</span><span class="wiz">Wiz</span> €7.</span></h1>
+<p class="lead">Betaalbare wiskundebijles die altijd klaarstaat.</p><div class="cta-stack"><div class="cta-group"><a class="btn-cta2" href="#">Start een proefweek voor jouw kind</a><p class="subline">Eerst een gratis proefweek, daarna €84 per schooljaar.</p></div></div></div></section>
+<section class="variant"><span class="variant-label">CTA 3 — navy, kalm en plat</span>
+<div class="ctx"><h1>Één uur wiskundebijles kost €30.<span class="line2">Één maand <span class="wis">Wis</span><span class="wiz">Wiz</span> €7.</span></h1>
+<p class="lead">Betaalbare wiskundebijles die altijd klaarstaat.</p><div class="cta-stack"><div class="cta-group"><a class="btn-cta3" href="#">Start een proefweek voor jouw kind</a></div></div></div></section>
+<section class="variant"><span class="variant-label">CTA 4 — blauw, prijs in de knop</span>
+<div class="ctx"><h1>Één uur wiskundebijles kost €30.<span class="line2">Één maand <span class="wis">Wis</span><span class="wiz">Wiz</span> €7.</span></h1>
+<p class="lead">Betaalbare wiskundebijles die altijd klaarstaat.</p><div class="cta-stack"><div class="cta-group"><a class="btn-cta4" href="#"><span class="l1">Start een proefweek voor jouw kind</span><span class="l2">Eerst gratis proefweek · daarna €84 per schooljaar</span></a></div></div></div></section>
+<section class="variant"><span class="variant-label">Kaartje 1 — strak wit</span>
+<div class="ctx"><div class="k-card k1"><p><img class="k-avatar" src="assets/philip.png" alt="Philip" /> Hoi! Ik ben Philip. In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd.</p><a class="k-btn " href="#">Voorproefje van de uitleg</a><a class="k-btn " href="#"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg><span>Bel Philip voor alle vragen die je nog hebt</span></a></div></div></section><section class="variant"><span class="variant-label">Kaartje 2 — spraakbubbel</span>
+<div class="ctx"><div class="k-card k2"><div class="bubblerow"><img src="assets/philip.png" alt="Philip" /><div class="bubble">Hoi! Ik ben Philip. In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd.</div></div><a class="k-btn " href="#">Voorproefje van de uitleg</a><a class="k-btn " href="#"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg><span>Bel Philip voor alle vragen die je nog hebt</span></a></div></div></section><section class="variant"><span class="variant-label">Kaartje 3 — geel accent met naamkop</span>
+<div class="ctx"><div class="k-card k3"><div class="k3head"><img src="assets/philip.png" alt="Philip" /><span>Philip · oprichter van WisWiz</span></div><div class="k3body"><p>In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd.</p><a class="k-btn " href="#">Voorproefje van de uitleg</a><a class="k-btn " href="#"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg><span>Bel Philip voor alle vragen die je nog hebt</span></a></div></div></div></section><section class="variant"><span class="variant-label">Kaartje 4 — vlak, zonder kaart</span>
+<div class="ctx"><div class="k-card k4"><img class="center" src="assets/philip.png" alt="Philip" /><p>"In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd."</p><p style="margin-top:4px;font-size:13px;color:var(--gray-500)">Philip, oprichter</p><a class="k-btn " href="#">Voorproefje van de uitleg</a><a class="k-btn " href="#"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg><span>Bel Philip voor alle vragen die je nog hebt</span></a></div></div></section>
+<p class="strip-note" style="padding-bottom:48px">Einde. Zeg je keuze in de terminal of spreek hem in.</p>
+</body></html>
