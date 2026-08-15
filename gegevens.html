@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" /><title>Start de proefweek</title>
+<link rel="icon" href="assets/wiswizlogo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root { --mathyellow:#ecc862; --mathorange:#db9a1f; --info:#3e8ed0; --info-dark:#1f6fb0;
+    --achtergrond:#f0f9ff; --gray-950:#030712; --gray-700:#374151; --gray-500:#6b7280;
+    --gray-300:#d1d5db; --gray-100:#f3f4f6; }
+  * { box-sizing:border-box; } html,body { margin:0; padding:0; }
+  body { font-family:"Ubuntu",system-ui,sans-serif; background:var(--achtergrond); color:var(--gray-950);
+    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; }
+  a { color:inherit; text-decoration:none; } img { max-width:100%; height:auto; }
+  main { max-width:480px; margin:0 auto; padding:28px 16px 64px; }
+  h1 { margin:0; text-align:center; font-size:24px; font-weight:800; line-height:1.25; }
+  .mock-banner { position:sticky; top:0; z-index:60; background:#111827; color:#fff; text-align:center;
+    font-size:11px; padding:5px 10px; letter-spacing:.02em; }
+  .mock-banner b { color:var(--mathyellow); }
+  .btn-primary { display:block; width:100%; background:var(--info); color:#fff; font-weight:700; font-size:16px;
+    padding:14px 16px; border-radius:14px; border:0; border-bottom:4px solid var(--info-dark); text-align:center;
+    box-shadow:0 10px 22px rgba(62,142,208,.24); cursor:pointer; font-family:inherit; }
+  
+  .subtitle { margin:12px 0 0; text-align:center; font-size:14px; font-weight:500; color:var(--gray-700); }
+  .facts { display:flex; flex-direction:column; gap:18px; margin-top:30px; }
+  .fact { display:flex; gap:10px; font-size:14px; color:var(--gray-700); }
+  .fact .dot { flex:none; width:20px; height:20px; border-radius:999px; background:#ecfdf5; color:#059669;
+    display:flex; align-items:center; justify-content:center; font-size:11px; box-shadow:0 0 0 1px #d1fae5; margin-top:1px; }
+  h2 { font-size:18px; font-weight:800; margin:34px 0 0; }
+  .paycard { margin-top:12px; background:#fff; border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:12px;
+    border:2px solid var(--info); }
+  .paycard img { height:30px; width:auto; }
+  .paycard span { font-weight:700; font-size:15px; }
+  .ordercard { margin-top:24px; background:#fff; border-radius:16px; padding:20px; }
+  .ordercard h3 { margin:0 0 12px; font-size:16px; font-weight:800; }
+  .orow { display:flex; justify-content:space-between; gap:12px; font-size:14px; color:var(--gray-700); padding:7px 0; }
+  .orow b { color:var(--gray-950); font-weight:700; white-space:nowrap; }
+  .sep { border-top:1px solid #e5e7eb; margin:14px 0; }
+  label.f { display:block; font-size:14px; font-weight:500; color:var(--gray-700); }
+  input[type=email] { width:100%; margin-top:5px; padding:10px 12px; font-size:16px; border:1px solid var(--gray-300);
+    border-radius:10px; font-family:inherit; }
+  .terms { display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--gray-700); margin-top:16px; }
+  .terms input { margin-top:3px; width:16px; height:16px; }
+  .actions { margin-top:20px; }
+
+</style></head><body>
+<div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
+
+<main>
+  <h1>Start de WisWiz proefweek voor je kind</h1>
+  <p class="subtitle">Na het starten ontvang je een uitnodigingslink waarmee je kind toegang krijgt.</p>
+  <div class="facts">
+    <div class="fact"><span class="dot">✓</span><span>Vandaag betaal je €0,01 om je betaalmethode te verifiëren.</span></div>
+    <div class="fact"><span class="dot">✓</span><span id="fact-plan">Na de proefweek start het jaarabonnement: €84 per schooljaar. Opzeggen kan altijd, ook tijdens de proefweek.</span></div>
+    <div class="fact"><span class="dot">✓</span><span>Je ontvangt direct een link om je kind aan het abonnement te koppelen.</span></div>
+  </div>
+  <h2>Hoe wil je betalen?</h2>
+  <div class="paycard"><img src="assets/ideal.png" alt="iDEAL" /><span>iDEAL</span></div>
+  <div class="ordercard">
+    <h3>Jouw bestelling</h3>
+    <div class="orow"><span id="trial-label">Proefweek</span><b>€ 0,01 eenmalig</b></div>
+    <div class="orow"><span>WisWiz abonnement na de proefweek</span><b id="plan-price">€84,00 /jaar</b></div>
+    <div class="sep"></div>
+    <label class="f" for="email">Jouw e-mailadres <span style="color:#ef4444">*</span></label>
+    <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="naam@voorbeeld.nl" />
+    <div class="terms"><input id="terms" type="checkbox" /><label for="terms">Ik ga akkoord met de <a href="https://wiswiz.nl/algemene_voorwaarden" style="text-decoration:underline">algemene voorwaarden</a></label></div>
+    <div class="actions"><button class="btn-primary" onclick="verder()">Verifieer je betaalmethode</button></div>
+  </div>
+</main>
+<script>
+  const PLANS = {
+    monthly:  { fact:"Na de proefweek start het maandabonnement: €11 per maand. Opzeggen kan altijd, ook tijdens de proefweek.", price:"€11,00 /maand" },
+    yearly:   { fact:"Na de proefweek start het jaarabonnement: €84 per schooljaar. Opzeggen kan altijd, ook tijdens de proefweek.", price:"€84,00 /jaar" },
+    lifetime: { fact:"Na de proefweek betaal je eenmalig €200 voor toegang tijdens de hele schooltijd. Tijdens de proefweek kun je nog stoppen.", price:"€200 eenmalig" }
+  };
+  const plan = new URLSearchParams(location.search).get("plan") || "yearly";
+  const p = PLANS[plan] || PLANS.yearly;
+  document.getElementById("fact-plan").textContent = p.fact;
+  document.getElementById("plan-price").textContent = p.price;
+  const end = new Date(Date.now() + 7*864e5);
+  document.getElementById("trial-label").textContent = "Proefweek tot " + end.toLocaleDateString("nl-NL", {day:"numeric", month:"long"});
+  function verder() { location.href = "betaal.html?plan=" + plan; }
+</script>
+</body></html>

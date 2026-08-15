@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" /><title>Betalen (oefening)</title>
+<link rel="icon" href="assets/wiswizlogo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root { --mathyellow:#ecc862; --mathorange:#db9a1f; --info:#3e8ed0; --info-dark:#1f6fb0;
+    --achtergrond:#f0f9ff; --gray-950:#030712; --gray-700:#374151; --gray-500:#6b7280;
+    --gray-300:#d1d5db; --gray-100:#f3f4f6; }
+  * { box-sizing:border-box; } html,body { margin:0; padding:0; }
+  body { font-family:"Ubuntu",system-ui,sans-serif; background:var(--achtergrond); color:var(--gray-950);
+    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; }
+  a { color:inherit; text-decoration:none; } img { max-width:100%; height:auto; }
+  main { max-width:480px; margin:0 auto; padding:28px 16px 64px; }
+  h1 { margin:0; text-align:center; font-size:24px; font-weight:800; line-height:1.25; }
+  .mock-banner { position:sticky; top:0; z-index:60; background:#111827; color:#fff; text-align:center;
+    font-size:11px; padding:5px 10px; letter-spacing:.02em; }
+  .mock-banner b { color:var(--mathyellow); }
+  .btn-primary { display:block; width:100%; background:var(--info); color:#fff; font-weight:700; font-size:16px;
+    padding:14px 16px; border-radius:14px; border:0; border-bottom:4px solid var(--info-dark); text-align:center;
+    box-shadow:0 10px 22px rgba(62,142,208,.24); cursor:pointer; font-family:inherit; }
+  
+  .idealcard { margin-top:28px; background:#fff; border-radius:16px; padding:24px 20px; text-align:center; }
+  .idealcard img { height:44px; width:auto; margin:0 auto 6px; }
+  .amount { font-size:34px; font-weight:800; margin:10px 0 2px; }
+  .desc { font-size:13px; color:var(--gray-500); }
+  .banks { margin-top:20px; text-align:left; }
+  .banks label { font-size:14px; font-weight:500; color:var(--gray-700); }
+  select { width:100%; margin-top:6px; padding:12px; font-size:16px; border:1px solid var(--gray-300); border-radius:10px; background:#fff; font-family:inherit; }
+  .actions { margin-top:20px; }
+  .mock-note { margin-top:14px; font-size:12px; color:var(--gray-500); }
+
+</style></head><body>
+<div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
+
+<main>
+  <h1>Verifieer je betaalmethode</h1>
+  <div class="idealcard">
+    <img src="assets/ideal.png" alt="iDEAL" />
+    <div class="amount">€ 0,01</div>
+    <p class="desc">WisWiz proefweek · verificatie van je betaalmethode</p>
+    <div class="banks">
+      <label for="bank">Kies je bank</label>
+      <select id="bank">
+        <option>ING</option><option>Rabobank</option><option>ABN AMRO</option>
+        <option>ASN Bank</option><option>bunq</option><option>SNS</option>
+        <option>Regiobank</option><option>Knab</option><option>Revolut</option>
+      </select>
+    </div>
+    <div class="actions"><button class="btn-primary" onclick="location.href='gelukt.html?plan='+(new URLSearchParams(location.search).get('plan')||'yearly')">Naar je bank</button></div>
+    <p class="mock-note">Dit is een nagebootste betaalstap. Er is geen bankkoppeling en er wordt niets afgeschreven.</p>
+  </div>
+</main></body></html>

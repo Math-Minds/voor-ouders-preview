@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" /><title>Gelukt</title>
+<link rel="icon" href="assets/wiswizlogo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root { --mathyellow:#ecc862; --mathorange:#db9a1f; --info:#3e8ed0; --info-dark:#1f6fb0;
+    --achtergrond:#f0f9ff; --gray-950:#030712; --gray-700:#374151; --gray-500:#6b7280;
+    --gray-300:#d1d5db; --gray-100:#f3f4f6; }
+  * { box-sizing:border-box; } html,body { margin:0; padding:0; }
+  body { font-family:"Ubuntu",system-ui,sans-serif; background:var(--achtergrond); color:var(--gray-950);
+    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; }
+  a { color:inherit; text-decoration:none; } img { max-width:100%; height:auto; }
+  main { max-width:480px; margin:0 auto; padding:28px 16px 64px; }
+  h1 { margin:0; text-align:center; font-size:24px; font-weight:800; line-height:1.25; }
+  .mock-banner { position:sticky; top:0; z-index:60; background:#111827; color:#fff; text-align:center;
+    font-size:11px; padding:5px 10px; letter-spacing:.02em; }
+  .mock-banner b { color:var(--mathyellow); }
+  .btn-primary { display:block; width:100%; background:var(--info); color:#fff; font-weight:700; font-size:16px;
+    padding:14px 16px; border-radius:14px; border:0; border-bottom:4px solid var(--info-dark); text-align:center;
+    box-shadow:0 10px 22px rgba(62,142,208,.24); cursor:pointer; font-family:inherit; }
+  
+  .card { margin-top:24px; background:#fff; border-radius:16px; padding:20px; }
+  .card h3 { margin:0 0 8px; font-size:16px; font-weight:800; text-align:center; }
+  .wa { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; background:#25D366; color:#fff;
+    font-weight:700; font-size:15px; padding:13px 16px; border-radius:12px; }
+  .copyrow { display:flex; gap:8px; margin-top:12px; }
+  .copyrow input { flex:1; padding:10px 12px; font-size:13px; border:1px solid var(--gray-300); border-radius:10px; color:var(--gray-500); }
+  .copyrow button { padding:10px 14px; font-size:13px; font-weight:700; border:1px solid var(--gray-300); background:#fff; border-radius:10px; font-family:inherit; cursor:pointer; }
+  .qr { display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .qr img { width:170px; height:170px; border:1px solid var(--gray-100); border-radius:12px; }
+  .qr p { margin:0; font-size:12px; color:var(--gray-500); text-align:center; }
+  .aftertext { margin-top:20px; text-align:center; font-size:14px; color:var(--gray-500); }
+  .subtitle { margin:10px 0 0; text-align:center; font-size:14px; color:var(--gray-700); }
+
+</style></head><body>
+<div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
+
+<main>
+  <h1>Gelukt! Laat je kind nu meteen starten</h1>
+  <p class="subtitle">Stuur de uitnodigingslink via WhatsApp, of laat je kind de code hieronder scannen.</p>
+  <div class="card">
+    <h3>Stuur naar je kind via WhatsApp</h3>
+    <a class="wa" href="https://wa.me/?text=Ik%20heb%20WisWiz%20voor%20je%20geactiveerd.%20Via%20deze%20link%20kun%20je%20je%20aanmelden%20en%20krijg%20je%20direct%20toegang.%20https%3A%2F%2Fwiswiz.nl%2Finvite%2Fgift%2Fvoorbeeld123">Deel uitnodiging via WhatsApp</a>
+    <div class="copyrow"><input readonly value="https://wiswiz.nl/invite/gift/voorbeeld123" /><button onclick="navigator.clipboard&&navigator.clipboard.writeText('https://wiswiz.nl/invite/gift/voorbeeld123');this.textContent='Gekopieerd'">Kopieer</button></div>
+  </div>
+  <div class="card qr">
+    <h3>Zit je kind naast je? Laat het deze code scannen</h3>
+    <img src="assets/qr-mock.png" alt="QR-code (voorbeeld)" />
+    <p>De camera-app van de telefoon van je kind opent de link direct.</p>
+  </div>
+  <p class="aftertext">We hebben de link ook naar je e-mailadres gestuurd. Claimt je kind de link niet binnen een dag, dan herinneren we je per mail.</p>
+</main></body></html>
