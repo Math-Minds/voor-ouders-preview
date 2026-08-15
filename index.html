@@ -50,7 +50,7 @@
       font-weight: 700; font-size: 15px; padding: 9px 16px; border-radius: 8px;
     }
 
-    main { max-width: 1120px; margin: 0 auto; padding: 40px 20px 96px; }
+    main { max-width: 1120px; margin: 0 auto; padding: 40px 20px 24px; }
     @media (min-width: 1024px) { main { padding-top: 64px; } }
 
     .hero {
@@ -145,13 +145,19 @@
     .link-quiet:hover { color: var(--gray-700); }
 
     footer {
-      background: var(--info); color: #fff; font-size: 13px;
+      margin-top: 40px; padding: 40px 20px 48px;
+      border-top: 1px solid #dbeafe;
+      color: var(--gray-500); font-size: 13px;
     }
     .footer-inner {
-      max-width: 1120px; margin: 0 auto; padding: 18px 20px;
-      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+      max-width: 1120px; margin: 0 auto;
+      display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;
     }
-    .footer-inner a { color: #fff; margin-left: 14px; }
+    .footer-inner img { height: 28px; width: auto; opacity: .9; }
+    .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; }
+    .footer-links a { color: var(--gray-500); }
+    .footer-links a:hover { color: var(--gray-950); }
+    .footer-copy { color: #9ca3af; font-size: 12px; }
   </style>
 </head>
 <body>
@@ -184,7 +190,7 @@
           <a class="btn btn-tour" href="https://wiswiz.nl/library/vraag/demo/a?tour=tiktok&amp;recipient=ouder&amp;audience=ouder&amp;from=voorouders" data-cta="tour">Bekijk de rondleiding</a>
           <a class="btn btn-call" href="tel:+31682974554" data-cta="bel">
             <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
-            <span>Vragen? Bel Philip — hij neemt direct op</span>
+            <span>Bel Philip — hij neemt direct op</span>
           </a>
         </div>
       </div>
@@ -203,31 +209,22 @@
       </p>
       <a class="btn btn-call" href="tel:+31682974554" data-cta="bel">
         <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
-        <span>Vragen? Bel Philip — hij neemt direct op</span>
+        <span>Bel Philip — hij neemt direct op</span>
       </a>
     </section>
 
-    <section class="final">
-      <h2>Klaar om te beginnen?</h2>
-      <div class="cta-stack">
-        <div class="cta-group">
-          <a class="btn btn-primary" href="https://wiswiz.nl/parentemailcheckout?from=voorouders" data-cta="checkout">Start de proefweek voor je kind</a>
-          <p class="subline">Eerst een gratis proefweek, daarna €84 per schooljaar.</p>
-        </div>
-        <a class="link-quiet" href="https://wiswiz.nl/library/vraag/demo/a?tour=tiktok&amp;recipient=ouder&amp;audience=ouder&amp;from=voorouders" data-cta="tour">Eerst de rondleiding bekijken</a>
-      </div>
-    </section>
   </main>
 
   <footer>
     <div class="footer-inner">
-      <span>WisWiz · Slimme ondersteuning voor wiskundeonderwijs</span>
-      <span>
+      <img src="assets/wiswizlogo.png" alt="WisWiz" />
+      <nav class="footer-links">
         <a href="mailto:info@wiswiz.nl">info@wiswiz.nl</a>
-        <a href="tel:+31682974554">06-82974554</a>
+        <a href="tel:+31682974554">06 82 97 45 54</a>
         <a href="https://wiswiz.nl/algemene_voorwaarden">Voorwaarden</a>
         <a href="https://wiswiz.nl/privacy_verklaring">Privacy</a>
-      </span>
+      </nav>
+      <p class="footer-copy">© 2026 WisWiz B.V.</p>
     </div>
   </footer>
 </body>
