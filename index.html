@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>WisWiz voor ouders – een heel schooljaar wiskundehulp voor €84</title>
+  <meta name="description" content="Eén uur bijles kost €50. Een heel schooljaar WisWiz kost €84. Stap-voor-stap uitleg bij het eigen wiskundeboek van je kind, ook 's avonds. Eerst een gratis proefweek." />
+  <link rel="icon" href="assets/wiswizlogo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --mathyellow: #ecc862;
+      --mathorange: #db9a1f;
+      --info: #3e8ed0;
+      --info-dark: #1f6fb0;
+      --achtergrond: #f0f9ff;
+      --gray-950: #030712;
+      --gray-700: #374151;
+      --gray-500: #6b7280;
+      --gray-300: #d1d5db;
+      --gray-100: #f3f4f6;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: "Ubuntu", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--achtergrond);
+      color: var(--gray-950);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    header {
+      background: #fff;
+      border-bottom: 1px solid #dbeafe;
+    }
+    .header-inner {
+      max-width: 1120px; margin: 0 auto; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-inner img { height: 40px; width: auto; }
+    .header-cta {
+      background: var(--mathyellow); color: var(--gray-950);
+      font-weight: 700; font-size: 15px; padding: 9px 16px; border-radius: 8px;
+    }
+
+    main { max-width: 1120px; margin: 0 auto; padding: 40px 20px 96px; }
+    @media (min-width: 1024px) { main { padding-top: 64px; } }
+
+    .hero {
+      display: flex; flex-direction: column; align-items: center; gap: 40px;
+    }
+    @media (min-width: 1024px) {
+      .hero { flex-direction: row; gap: 56px; }
+    }
+    .hero-visual { width: 100%; max-width: 576px; flex-shrink: 0; }
+    @media (min-width: 1024px) { .hero-visual { width: 520px; } }
+    .hero-visual img, .hero-visual video {
+      width: 100%; border-radius: 16px; border: 1px solid var(--gray-100);
+      background: #fff; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
+    }
+    .hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    @media (min-width: 1024px) { .hero-copy { align-items: flex-start; text-align: left; } }
+    h1 {
+      margin: 0; font-size: 30px; line-height: 1.2; font-weight: 800; letter-spacing: -0.01em;
+    }
+    @media (min-width: 768px) { h1 { font-size: 40px; } }
+    h1 .line2 { display: block; margin-top: 8px; }
+    .wis { color: var(--mathorange); } .wiz { color: var(--mathyellow); }
+    .lead {
+      margin: 16px 0 0; max-width: 36rem; font-size: 16px; font-weight: 500;
+      color: var(--gray-700); line-height: 1.6;
+    }
+    @media (min-width: 768px) { .lead { font-size: 18px; } }
+
+    .cta-stack {
+      margin-top: 32px; width: 100%; max-width: 384px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; border-radius: 14px; font-weight: 700; text-align: center;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      cursor: pointer;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+    .btn-primary {
+      background: var(--info); color: #fff; font-size: 16px; padding: 14px 16px;
+      border-bottom: 4px solid var(--info-dark);
+      box-shadow: 0 10px 22px rgba(62,142,208,.24);
+    }
+    .btn-primary:hover { box-shadow: 0 14px 28px rgba(62,142,208,.28); }
+    .btn-tour {
+      background: #fff; color: var(--gray-950); font-size: 14px; padding: 12px 16px;
+      border: 1px solid var(--mathyellow); border-bottom-width: 4px;
+      box-shadow: 0 10px 22px rgba(217,154,31,.16);
+    }
+    .btn-tour:hover { background: rgba(236,200,98,.10); }
+    .btn-call {
+      background: #fff; color: var(--gray-950); font-size: 14px; padding: 12px 16px;
+      border: 1px solid var(--gray-300); box-shadow: 0 2px 0 rgba(17,24,39,.12);
+    }
+    .btn-call:hover { border-color: #9ca3af; background: #f9fafb; }
+    .btn-call svg { width: 16px; height: 16px; fill: var(--info); }
+    .subline { margin: 6px 0 0; text-align: center; font-size: 12px; color: var(--gray-500); }
+    .cta-group { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+
+    section.block { margin-top: 80px; display: flex; flex-direction: column; align-items: center; }
+    h2 { margin: 0; text-align: center; font-size: 24px; font-weight: 800; }
+    @media (min-width: 768px) { h2 { font-size: 30px; } }
+    .kranten img {
+      margin-top: 24px; width: 100%; max-width: 576px; object-fit: contain;
+      filter: drop-shadow(0 10px 18px rgba(15,23,42,.12));
+    }
+
+    .story {
+      margin: 80px auto 0; max-width: 42rem;
+      background: #fff; border: 2px solid var(--mathyellow); border-radius: 16px;
+      padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
+    }
+    @media (min-width: 768px) { .story { padding: 32px; } }
+    .story p { margin: 0; font-size: 16px; line-height: 1.65; color: #1f2937; }
+    @media (min-width: 768px) { .story p { font-size: 18px; } }
+    .story .avatar {
+      display: inline-block; width: 36px; height: 36px; border-radius: 9999px;
+      object-fit: cover; vertical-align: middle; margin-right: 8px; transform: translateY(-2px);
+      box-shadow: 0 0 0 2px var(--mathorange);
+    }
+    .story .tu {
+      display: inline; height: 18px; width: 46px; vertical-align: middle;
+      margin: 0 4px; transform: translateY(-5px);
+    }
+    .story .btn { margin-top: 20px; }
+
+    .final { margin: 80px auto 0; max-width: 384px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .final .cta-stack { margin-top: 8px; }
+    .link-quiet { display: block; padding: 8px 0; text-align: center; font-size: 14px; font-weight: 500; color: var(--gray-500); }
+    .link-quiet:hover { color: var(--gray-700); }
+
+    footer {
+      background: var(--info); color: #fff; font-size: 13px;
+    }
+    .footer-inner {
+      max-width: 1120px; margin: 0 auto; padding: 18px 20px;
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px;
+    }
+    .footer-inner a { color: #fff; margin-left: 14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <a href="https://wiswiz.nl"><img src="assets/wiswizlogo.png" alt="WisWiz" /></a>
+      <a class="header-cta" href="https://wiswiz.nl/parentemailcheckout?from=voorouders" data-cta="header">Start proefweek</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-visual">
+        <img src="assets/demoherotest.png" alt="Het WisWiz stappenplan met de bijlesbot" width="1760" height="1174" />
+      </div>
+      <div class="hero-copy">
+        <h1>
+          Eén uur bijles kost €50.
+          <span class="line2">Een heel schooljaar <span class="wis">Wis</span><span class="wiz">Wiz</span> kost €84.</span>
+        </h1>
+        <p class="lead">
+          WisWiz legt elke wiskundeopgave uit het eigen lesboek van je kind stap voor stap uit.
+          Elke dag, ook 's avonds voor de toets.
+        </p>
+        <div class="cta-stack">
+          <div class="cta-group">
+            <a class="btn btn-primary" href="https://wiswiz.nl/parentemailcheckout?from=voorouders" data-cta="checkout">Start de proefweek voor je kind</a>
+            <p class="subline">Eerst een gratis proefweek, daarna €84 per schooljaar.</p>
+          </div>
+          <a class="btn btn-tour" href="https://wiswiz.nl/library/vraag/demo/a?tour=tiktok&amp;recipient=ouder&amp;audience=ouder&amp;from=voorouders" data-cta="tour">Bekijk de rondleiding</a>
+          <a class="btn btn-call" href="tel:+31682974554" data-cta="bel">
+            <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
+            <span>Vragen? Bel Philip — hij neemt direct op</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block kranten">
+      <h2>Bekend uit de krant</h2>
+      <img src="assets/kranten.png" alt="Krantenartikelen over WisWiz in Het Parool en het FD" width="1200" height="954" loading="lazy" />
+    </section>
+
+    <section class="story">
+      <p>
+        <img class="avatar" src="assets/philip.png" alt="Philip" />
+        Hoi! Ik ben Philip, een van de <img class="tu" src="assets/TU.png" alt="TU Delft" /> studenten achter WisWiz.
+        Wij wilden veel meer leerlingen helpen dan mogelijk was in onze wiskundebijlessen. Daarom hebben we WisWiz gebouwd.
+      </p>
+      <a class="btn btn-call" href="tel:+31682974554" data-cta="bel">
+        <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
+        <span>Vragen? Bel Philip — hij neemt direct op</span>
+      </a>
+    </section>
+
+    <section class="final">
+      <h2>Klaar om te beginnen?</h2>
+      <div class="cta-stack">
+        <div class="cta-group">
+          <a class="btn btn-primary" href="https://wiswiz.nl/parentemailcheckout?from=voorouders" data-cta="checkout">Start de proefweek voor je kind</a>
+          <p class="subline">Eerst een gratis proefweek, daarna €84 per schooljaar.</p>
+        </div>
+        <a class="link-quiet" href="https://wiswiz.nl/library/vraag/demo/a?tour=tiktok&amp;recipient=ouder&amp;audience=ouder&amp;from=voorouders" data-cta="tour">Eerst de rondleiding bekijken</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <span>WisWiz · Slimme ondersteuning voor wiskundeonderwijs</span>
+      <span>
+        <a href="mailto:info@wiswiz.nl">info@wiswiz.nl</a>
+        <a href="tel:+31682974554">06-82974554</a>
+        <a href="https://wiswiz.nl/algemene_voorwaarden">Voorwaarden</a>
+        <a href="https://wiswiz.nl/privacy_verklaring">Privacy</a>
+      </span>
+    </div>
+  </footer>
+</body>
+</html>
