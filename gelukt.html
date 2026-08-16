@@ -34,7 +34,8 @@
   .aftertext { margin-top:20px; text-align:center; font-size:14px; color:var(--gray-500); }
   .subtitle { margin:10px 0 0; text-align:center; font-size:14px; color:var(--gray-700); }
 
-</style></head><body>
+</style>  <link rel="manifest" href="manifest.json" />
+</head><body>
 <div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
 
 <main>
@@ -51,4 +52,5 @@
     <p>De camera-app van de telefoon van je kind opent de link direct.</p>
   </div>
   <p class="aftertext">We hebben de link ook naar je e-mailadres gestuurd. Claimt je kind de link niet binnen een dag, dan herinneren we je per mail.</p>
-</main></body></html>
+</main><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
+</body></html>

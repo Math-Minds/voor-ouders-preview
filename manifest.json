@@ -1,0 +1,9 @@
+{
+  "name": "WisWiz voor ouders (preview)",
+  "short_name": "WisWiz prev",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f0f9ff",
+  "theme_color": "#f0f9ff",
+  "icons": [{ "src": "assets/wiswizlogo.png", "sizes": "512x512", "type": "image/png" }]
+}

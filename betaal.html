@@ -31,7 +31,8 @@
   .actions { margin-top:20px; }
   .mock-note { margin-top:14px; font-size:12px; color:var(--gray-500); }
 
-</style></head><body>
+</style>  <link rel="manifest" href="manifest.json" />
+</head><body>
 <div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
 
 <main>
@@ -51,4 +52,5 @@
     <div class="actions"><button class="btn-primary" onclick="location.href='gelukt.html?plan='+(new URLSearchParams(location.search).get('plan')||'yearly')">Naar je bank</button></div>
     <p class="mock-note">Dit is een nagebootste betaalstap. Er is geen bankkoppeling en er wordt niets afgeschreven.</p>
   </div>
-</main></body></html>
+</main><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
+</body></html>

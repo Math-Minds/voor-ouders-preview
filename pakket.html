@@ -41,7 +41,8 @@
     border-radius:10px; padding:13px 16px; font-size:14px; font-weight:700; color:var(--gray-950);
     box-shadow:0 2px 0 rgba(17,24,39,.12); }
 
-</style></head><body>
+</style>  <link rel="manifest" href="manifest.json" />
+</head><body>
 <div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
 
 <main>
@@ -54,4 +55,5 @@
     <div class="plan">
 <h2>De hele schooltijd</h2><p class="detail">Eenmalig betalen na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="65" rx="26" ry="17" fill="#facc15" stroke="#111827" stroke-width="3" transform="rotate(-8 100 65)"/><path d="M108 65.6 112.9 74.3 108 82.1 95.7 87.7 78.3 88.1 60.4 81.2 47.7 67.2 45.5 48.4 56.9 29" stroke="#bfdbfe" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/><path d="M92 64.4 87.1 55.7 92 47.9 104.3 42.3 121.7 41.9 139.6 48.8 152.3 62.8 154.5 81.6 143.1 101" stroke="#fed7aa" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/></svg></div>
   </div>
-</main></body></html>
+</main><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
+</body></html>

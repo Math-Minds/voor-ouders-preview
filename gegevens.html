@@ -43,7 +43,8 @@
   .terms input { margin-top:3px; width:16px; height:16px; }
   .actions { margin-top:20px; }
 
-</style></head><body>
+</style>  <link rel="manifest" href="manifest.json" />
+</head><body>
 <div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
 
 <main>
@@ -81,4 +82,5 @@
   document.getElementById("trial-label").textContent = "Proefweek tot " + end.toLocaleDateString("nl-NL", {day:"numeric", month:"long"});
   function verder() { location.href = "betaal.html?plan=" + plan; }
 </script>
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
 </body></html>
