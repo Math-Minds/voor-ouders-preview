@@ -139,34 +139,26 @@
       display: inline-flex; align-items: center; justify-content: center; transition: transform .15s ease;
     }
     .playdot svg { width: 16px; height: 16px; fill: #fff; margin-left: 2px; }
-    /* Video-ingang: komt uit het hero-beeld zelf voort (ticket 32, ronde 3) */
+    /* Video-ingang (#32 r3c): ÉÉN duidelijk tikbaar element ín de onderrand van het hero-beeld — speelrondje + regel als één chip,
+       half over het beeld, half in de rand-vervaging; het hele beeld blijft tikbaar, de chip is de uitnodiging. */
     .hero-visual { position: relative; }
     .herolink { display: block; position: relative; color: inherit; -webkit-tap-highlight-color: transparent; }
-    #herovisual.is-lifted .playmark, #herovisual.is-lifted .halo { visibility: hidden; }
-    /* speel-teken op het telefoonscherm in de foto: glas, geen kader, hoort bij de scène */
-    .playmark {
-      position: absolute; left: 49.7%; top: 63%; transform: translate(-50%, -50%);
-      width: clamp(28px, 8.5%, 44px); aspect-ratio: 1; border-radius: 9999px;
-      background: rgba(255,255,255,.66); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-      box-shadow: 0 1px 2px rgba(3,7,18,.05), 0 3px 12px rgba(3,7,18,.09), inset 0 0 0 1px rgba(3,7,18,.10);
-      display: flex; align-items: center; justify-content: center;
-      transition: transform .18s ease, box-shadow .18s ease;
-    }
-    .playmark svg { width: 42%; height: 42%; fill: var(--gray-950); margin-left: 8%; }
-    .herolink:hover .playmark { transform: translate(-50%, -50%) scale(1.06); box-shadow: 0 1px 2px rgba(3,7,18,.06), 0 6px 18px rgba(3,7,18,.14), inset 0 0 0 1px rgba(3,7,18,.06); }
-    /* trage ademhaling: één ring die heel langzaam uitdijt en oplost (geen geknipper) */
-    .halo { position: absolute; left: 49.7%; top: 63%; width: clamp(28px, 8.5%, 44px); aspect-ratio: 1; margin: 0; border-radius: 9999px;
-      transform: translate(-50%, -50%); pointer-events: none;
-      box-shadow: 0 0 0 1.5px rgba(3,7,18,.28); opacity: 0;
-      animation: halo 4.2s ease-out 1.2s infinite; }
-    @keyframes halo { 0% { transform: translate(-50%,-50%) scale(1); opacity: .34; } 70% { transform: translate(-50%,-50%) scale(1.75); opacity: 0; } 100% { transform: translate(-50%,-50%) scale(1.75); opacity: 0; } }
-    @media (prefers-reduced-motion: reduce) { .halo { animation: none; } }
-    /* bijschrift: in de onderrand van het beeld zelf, klein en licht — beeld en regel zijn één stof */
-    .caption { position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 45%); display: inline-flex; align-items: center; gap: 6px; padding: 0 10px;
-      font-size: 13px; font-weight: 500; color: var(--gray-700); line-height: 1.3; white-space: nowrap; background: var(--achtergrond); box-shadow: 0 0 10px 6px var(--achtergrond); transition: color .15s ease; }
-    .caption svg { width: 8px; height: 8px; fill: var(--gray-700); }
-    .herolink:hover .caption { color: var(--gray-950); }
-    #herovisual.is-lifted .caption { visibility: hidden; }
+    #herovisual.is-lifted .chip { visibility: hidden; }
+    .chip { position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 50%);
+      display: inline-flex; align-items: center; gap: 9px; padding: 6px 14px 6px 6px; border-radius: 9999px; white-space: nowrap;
+      font-size: 14px; font-weight: 500; line-height: 1.2; letter-spacing: .002em;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+    .chip .dot { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 9999px; flex-shrink: 0; }
+    .chip .dot svg { width: 11px; height: 11px; margin-left: 2px; }
+    .chip .halo { position: absolute; inset: 0; border-radius: 9999px; opacity: 0; box-shadow: 0 0 0 1.5px rgba(3,7,18,.35); animation: halo 4.2s ease-out 1.2s infinite; pointer-events: none; }
+    @keyframes halo { 0% { transform: scale(1); opacity: .4; } 70%,100% { transform: scale(1.9); opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) { .chip .halo { animation: none; } }
+    .herolink:hover .chip { transform: translate(-50%, calc(50% - 1px)); }
+    @media (min-width: 1024px) { .chip { font-size: 15px; padding: 7px 16px 7px 7px; } .chip .dot { width: 28px; height: 28px; } }
+    .chip { background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: var(--gray-950);
+      box-shadow: 0 1px 2px rgba(3,7,18,.06), 0 6px 18px rgba(3,7,18,.12), inset 0 0 0 1px rgba(3,7,18,.10); }
+    .chip .dot { background: var(--gray-950); } .chip .dot svg { fill: #fff; }
+    .herolink:hover .chip { background: rgba(255,255,255,.9); box-shadow: 0 1px 2px rgba(3,7,18,.06), 0 8px 22px rgba(3,7,18,.16), inset 0 0 0 1px rgba(3,7,18,.12); }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -289,9 +281,7 @@
         <div class="blend" id="herovisual">
         <img src="assets/hero-t2.webp" alt="Een wiskundeboek, een telefoon met WisWiz en een schrift met een vastgelopen uitwerking" width="3200" height="1800" />
         <span class="edgefade" aria-hidden="true"></span>
-        <span class="caption"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>WisWiz in 40 seconden</span></span>
-        <span class="halo" aria-hidden="true"></span>
-        <span class="playmark" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+        <span class="chip" aria-hidden="true"><span class="dot"><span class="halo"></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span><span>WisWiz in 40 seconden</span></span>
         </div>
         </a>
       </div>
