@@ -18,9 +18,10 @@
       --info: #3e8ed0;
       --info-dark: #1f6fb0;
       --success: #3ec487;
-      --brand: #3ec487;            /* merkgroen: Philips keuze voor de CTA-knoppen (17 aug, 2e ronde) */
-      --brand-dark: #35b27a;
-      --brand-shadow: rgba(62,196,135,.32);
+      --brand: #ecc862;            /* de oorspronkelijke knopkleur (mathyellow), Philips order 17 aug: met zwarte tekst */
+      --brand-dark: #e6bd4a;
+      --brand-shadow: rgba(217,154,31,.32);
+      --brand-text: #030712;
       --achtergrond: #f0f9ff;
       --pad: 20px;                 /* één horizontale marge voor de hele pagina */
       --site: 1120px;              /* header/hero/footer */
@@ -54,7 +55,7 @@
     }
     .header-inner img { height: 40px; width: auto; }
     .header-cta {
-      background: var(--brand); color: #fff;
+      background: var(--brand); color: var(--brand-text);
       font-weight: 700; font-size: 15px; padding: 9px 16px; border-radius: 12px;
     }
     .header-cta:hover { background: var(--brand-dark); }
@@ -105,7 +106,7 @@
     .btn:hover { transform: translateY(-2px); }
     .btn:active { transform: translateY(0); }
     .btn-primary {
-      background: var(--brand); color: #fff; font-size: 17px;
+      background: var(--brand); color: var(--brand-text); font-size: 17px;
       padding: 16px; border-radius: 12px;
       box-shadow: 0 6px 18px var(--brand-shadow);
     }
