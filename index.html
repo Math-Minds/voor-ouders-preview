@@ -73,21 +73,6 @@
     @media (min-width: 1024px) { .hero-visual { width: 520px; } }
     .hero-visual img, .hero-visual video { width: 100%; display:block; }
     .hero-visual .blend { position: relative; }
-    .heroplay { display: block; cursor: pointer; }
-    .heroplay-btn {
-      position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px;
-      border-radius: 9999px; background: rgba(255,255,255,.94); color: var(--info);
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 24px rgba(15,23,42,.22), 0 0 0 8px rgba(255,255,255,.28);
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .heroplay-btn svg { width: 28px; height: 28px; fill: currentColor; margin-left: 4px; }
-    .heroplay:hover .heroplay-btn { transform: scale(1.06); box-shadow: 0 12px 30px rgba(15,23,42,.28), 0 0 0 10px rgba(255,255,255,.34); }
-    .heroplay-label {
-      position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); white-space: nowrap;
-      padding: 6px 12px; border-radius: 9999px; background: rgba(3,7,18,.72); color: #fff;
-      font-size: 13px; font-weight: 700; letter-spacing: .01em;
-    }
     .hero-visual .edgefade { position: absolute; inset: -1px; pointer-events: none;
       box-shadow: inset 0 0 22px 14px var(--achtergrond); }
     .hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
@@ -152,19 +137,50 @@
       display: inline-flex; align-items: center; justify-content: center; transition: transform .15s ease;
     }
     .playdot svg { width: 16px; height: 16px; fill: #fff; margin-left: 2px; }
+    .videoblock {
+      display: flex; align-items: center; gap: 12px; margin-top: 12px; width: 100%;
+      padding: 10px 14px 10px 10px; border-radius: 12px; background: #fff;
+      border: 1px solid var(--gray-300); box-shadow: 0 2px 0 rgba(17,24,39,.12);
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .videoblock:hover { transform: translateY(-2px); border-color: #9ca3af; background: #f9fafb; }
+    .videoblock .thumb { position: relative; flex-shrink: 0; width: 76px; height: 46px; border-radius: 8px; overflow: hidden; background: var(--achtergrond); }
+    .videoblock .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .videoblock .thumb .playdot { position: absolute; left: 50%; top: 50%; margin: -13px 0 0 -13px; width: 26px; height: 26px; }
+    .videoblock .thumb .playdot svg { width: 13px; height: 13px; }
+    .videoblock .vtext { display: flex; flex-direction: column; min-width: 0; flex: 1; text-align: left; }
+    .videoblock strong { font-size: 15px; font-weight: 700; color: var(--gray-950); line-height: 1.3; }
+    .videoblock small { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+    .videoblock .chev { font-size: 22px; line-height: 1; color: var(--gray-500); }
+    /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
+       met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     .lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; }
     .lightbox[hidden] { display: none; }
-    .lightbox-backdrop { position: absolute; inset: 0; background: rgba(3,7,18,.82); backdrop-filter: blur(2px); }
-    .lightbox-panel { position: relative; width: min(960px, 100%); }
-    .lightbox-panel video { display: block; width: 100%; height: auto; max-height: calc(100dvh - 32px); border-radius: 12px; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+    .lightbox-backdrop { position: absolute; inset: 0; background: rgba(3,7,18,.82); opacity: 0; transition: opacity .42s ease; }
+    .lightbox.is-open .lightbox-backdrop { opacity: 1; }
+    .lightbox-panel { position: relative; width: min(960px, 100%, calc((100dvh - 32px) * 16 / 9)); }
+    .lightbox-frame {
+      position: relative; width: 100%; aspect-ratio: 16 / 9;
+      transform-origin: 0 0; will-change: transform; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,.5);
+      transition: transform .48s cubic-bezier(.2,.8,.2,1), border-radius .48s ease, box-shadow .48s ease, opacity .3s ease;
+    }
+    .lightbox-frame.is-flying { border-radius: 0; box-shadow: none; }
+    .lightbox-frame video { display: block; width: 100%; height: 100%; background: transparent; object-fit: cover; }
+    .lb-edgefade { position: absolute; inset: -1px; pointer-events: none; box-shadow: inset 0 0 22px 14px var(--achtergrond); opacity: 1; transition: opacity .48s ease; }
+    .lightbox.is-open .lb-edgefade { opacity: 0; }
     .lightbox-close {
       position: absolute; right: -6px; top: -46px; width: 40px; height: 40px; border-radius: 9999px;
       border: 0; background: rgba(255,255,255,.14); color: #fff; font-size: 28px; line-height: 1;
       cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: inherit;
+      opacity: 0; transition: opacity .25s ease .3s;
     }
+    .lightbox.is-open .lightbox-close { opacity: 1; }
     .lightbox-close:hover { background: rgba(255,255,255,.26); }
     @media (max-width: 640px) { .lightbox { padding: 12px; } .lightbox-close { top: -44px; right: 0; } }
     body.lb-open { overflow: hidden; }
+    #herovisual.is-lifted img, #herovisual.is-lifted .edgefade { visibility: hidden; }
+    @media (prefers-reduced-motion: reduce) { .lightbox-frame, .lightbox-backdrop, .lb-edgefade { transition: none; } }
     section.block { margin-top: 80px; display: flex; flex-direction: column; align-items: center; }
     h2 { margin: 0; text-align: center; font-size: 24px; font-weight: 800; }
     @media (min-width: 768px) { h2 { font-size: 30px; } }
@@ -268,12 +284,10 @@
   <main>
     <section class="hero">
       <div class="hero-visual">
-        <a class="blend heroplay" href="assets/opening.mp4" id="heroplay" data-cta="video-hero" aria-label="Speel de video: WisWiz in 40 seconden">
+        <div class="blend" id="herovisual">
         <img src="assets/hero-t2.webp" alt="Een wiskundeboek, een telefoon met WisWiz en een schrift met een vastgelopen uitwerking" width="3200" height="1800" />
         <span class="edgefade" aria-hidden="true"></span>
-        <span class="heroplay-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-        <span class="heroplay-label" aria-hidden="true">WisWiz in 40 seconden</span>
-        </a>
+        </div>
       </div>
       <div class="hero-copy">
         <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
@@ -283,6 +297,11 @@
               <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
             </div>
           </div>
+          <a class="videoblock" href="assets/opening.mp4" id="videocard" data-cta="video">
+            <span class="thumb" aria-hidden="true"><img src="assets/hero-t2.webp" alt="" /><span class="playdot"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></span>
+            <span class="vtext"><strong>Bekijk WisWiz in 40 seconden</strong><small>Zo werkt de app · met geluid</small></span>
+            <span class="chev" aria-hidden="true">›</span>
+          </a>
           <!-- Philip-tekst + belknop: verhuisd naar de social-proof-sectie (wrk-34), Philips order 17 aug -->
         </div>
       </div>
@@ -351,19 +370,66 @@
   <div class="lightbox-backdrop" data-close></div>
   <div class="lightbox-panel">
     <button class="lightbox-close" type="button" aria-label="Sluiten" data-close>&times;</button>
-    <video id="openingvideo" src="assets/opening.mp4" poster="assets/hero-t2.webp" controls playsinline preload="none" width="1600" height="900"></video>
+    <div class="lightbox-frame" id="lbframe">
+      <video id="openingvideo" src="assets/opening.mp4" poster="assets/hero-t2.webp" playsinline preload="metadata" width="1600" height="900"></video>
+      <span class="lb-edgefade" aria-hidden="true"></span>
+    </div>
   </div>
 </div>
 <script>
   (function(){
-    var links=document.querySelectorAll("#videocard,#heroplay"), lb=document.getElementById("lightbox"), v=document.getElementById("openingvideo");
-    if(!links.length||!lb||!v) return;
-    function open(e){ e.preventDefault(); lb.hidden=false; document.body.classList.add("lb-open"); v.currentTime=0; v.play().catch(function(){}); }
-    function close(){ v.pause(); lb.hidden=true; document.body.classList.remove("lb-open"); }
-    links.forEach(function(l){ l.addEventListener("click", open); });
+    var link=document.getElementById("videocard"), lb=document.getElementById("lightbox"), v=document.getElementById("openingvideo"),
+        frame=document.getElementById("lbframe"), hero=document.getElementById("herovisual");
+    if(!link||!lb||!v||!frame||!hero) return;
+    var heroImg=hero.querySelector("img"), busy=false, isOpen=false;
+    var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Warm the video after the page is idle, so play starts without a laadgat (poster = frame 0, so a late start is invisible anyway).
+    function warm(){ if(v.preload!=="auto"){ v.preload="auto"; try{ v.load(); }catch(e){} } }
+    if("requestIdleCallback" in window) requestIdleCallback(warm,{timeout:4000}); else setTimeout(warm,2500);
+    link.addEventListener("pointerenter", warm, {once:true});
+    link.addEventListener("touchstart", warm, {once:true, passive:true});
+
+    // FLIP: put the frame visually exactly on the hero image, then release it to its real place.
+    function heroToFrameTransform(){
+      var h=heroImg.getBoundingClientRect(), f=frame.getBoundingClientRect();
+      var sx=h.width/f.width, sy=h.height/f.height;
+      return "translate("+(h.left-f.left)+"px,"+(h.top-f.top)+"px) scale("+sx+","+sy+")";
+    }
+    function open(e){
+      e.preventDefault(); if(busy||isOpen) return; busy=true; isOpen=true;
+      lb.hidden=false; document.body.classList.add("lb-open");
+      v.controls=false; v.currentTime=0;
+      var p=v.play(); if(p&&p.catch) p.catch(function(){});   // in the user gesture; frame 0 == hero, so nothing visibly changes yet
+      if(reduce){ lb.classList.add("is-open"); hero.classList.add("is-lifted"); v.controls=true; busy=false; return; }
+      frame.style.transition="none"; frame.classList.add("is-flying");
+      frame.style.transform=heroToFrameTransform();
+      void frame.offsetWidth;                                   // commit start state
+      hero.classList.add("is-lifted");                          // hero and frame coincide: swap is invisible
+      frame.style.transition=""; frame.style.transform="";      // release → glides to the player rect
+      frame.classList.remove("is-flying");
+      lb.classList.add("is-open");
+      var done=function(ev){ if(ev&&ev.target!==frame) return; frame.removeEventListener("transitionend",done); v.controls=true; busy=false; };
+      frame.addEventListener("transitionend",done); setTimeout(done,600);
+    }
+    function close(){
+      if(busy||!isOpen) return; busy=true; isOpen=false;
+      v.pause(); v.controls=false;
+      var finish=function(){ lb.hidden=true; lb.classList.remove("is-open"); frame.style.transform=""; frame.style.opacity="";
+        frame.classList.remove("is-flying"); hero.classList.remove("is-lifted"); document.body.classList.remove("lb-open"); busy=false; };
+      if(reduce){ finish(); return; }
+      lb.classList.remove("is-open");                           // backdrop + close button fade out
+      frame.classList.add("is-flying");
+      frame.style.transform=heroToFrameTransform();             // glide back onto the hero…
+      hero.classList.remove("is-lifted");                       // …the still hero is already underneath
+      frame.style.opacity="0";                                  // and cross-fades away over it (no frame jump)
+      setTimeout(finish, 500);
+    }
+    link.addEventListener("click", open);
     lb.querySelectorAll("[data-close]").forEach(function(el){ el.addEventListener("click", close); });
-    document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !lb.hidden) close(); });
+    document.addEventListener("keydown", function(e){ if(e.key==="Escape" && isOpen) close(); });
     v.addEventListener("ended", close);
+    window.addEventListener("resize", function(){ if(isOpen&&!busy){ frame.style.transition="none"; void frame.offsetWidth; frame.style.transition=""; } });
   })();
 </script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
