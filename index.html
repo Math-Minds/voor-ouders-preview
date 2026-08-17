@@ -113,22 +113,17 @@
     .subline { margin: 6px 0 0; text-align: center; font-size: 12px; color: var(--gray-500); }
     .cta-group { display: flex; flex-direction: column; gap: 6px; width: 100%; }
 
-    .videocard {
-      display: flex; align-items: center; gap: 14px; width: 100%; max-width: 384px;
-      margin-top: 14px; padding: 12px 14px; background: #fff; border-radius: 12px;
-      border: 1px solid var(--gray-300); box-shadow: 0 2px 0 rgba(17,24,39,.12);
-      text-align: left; transition: transform .15s ease;
+    .videolink {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      margin: 18px auto 0; font-size: 17px; font-weight: 700; color: var(--gray-950);
     }
-    .videocard:hover { transform: translateY(-2px); }
-    .videoicon {
-      flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--info);
-      display: flex; align-items: center; justify-content: center;
+    .videolink:hover .playdot { transform: scale(1.06); }
+    .playdot {
+      width: 30px; height: 30px; border-radius: 9999px; background: var(--info);
+      display: inline-flex; align-items: center; justify-content: center; transition: transform .15s ease;
     }
-    .videoicon svg { width: 22px; height: 22px; fill: #fff; }
-    .videotext { display: flex; flex-direction: column; line-height: 1.25; }
-    .videotitle { font-weight: 700; font-size: 15px; color: var(--gray-950); }
-    .videosub { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
-    .videowrap { width: 100%; max-width: 384px; margin-top: 12px; }
+    .playdot svg { width: 16px; height: 16px; fill: #fff; margin-left: 2px; }
+    .videowrap { width: 100%; max-width: 384px; margin-top: 14px; }
     .videowrap video { width: 100%; height: auto; border-radius: 12px; background: #000; display: block; }
     section.block { margin-top: 80px; display: flex; flex-direction: column; align-items: center; }
     h2 { margin: 0; text-align: center; font-size: 24px; font-weight: 800; }
@@ -212,9 +207,9 @@
           </div>
         </div>
 
-        <a class="videocard" href="#video" id="videocard" data-cta="video">
-          <span class="videoicon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-          <span class="videotext"><span class="videotitle">Zo werkt WisWiz</span><span class="videosub">Bekijk de video · 40 seconden</span></span>
+        <a class="videolink" href="#video" id="videocard" data-cta="video">
+          <span class="playdot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+          <span>WisWiz in 40 seconden</span>
         </a>
         <div class="videowrap" id="video" hidden>
           <video id="openingvideo" src="assets/opening.mp4" poster="assets/hero-t2.webp" controls playsinline preload="none" width="1600" height="900"></video>
