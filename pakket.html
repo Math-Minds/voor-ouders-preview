@@ -38,6 +38,15 @@
     font-size:14px; font-weight:700; color:var(--gray-500); }
   .plan .incl .chk { display:inline-flex; width:16px; height:16px; border-radius:999px; background:#ecfdf5;
     color:#059669; align-items:center; justify-content:center; font-size:10px; box-shadow:0 0 0 1px #d1fae5; }
+  .incl-details { margin-top:16px; }
+  .incl-details summary { list-style:none; cursor:pointer; margin-top:0; }
+  .incl-details summary::-webkit-details-marker { display:none; }
+  .incl .chev { display:inline-block; color:#9ca3af; transition:transform .2s; margin-left:2px; }
+  .incl-details[open] .chev { transform:rotate(180deg); }
+  .incl-list { margin:12px 0 0; padding:12px; list-style:none; text-align:left; border:1px solid var(--gray-100); border-radius:12px; display:flex; flex-direction:column; gap:10px; }
+  .incl-list li { display:flex; flex-direction:column; font-size:13px; line-height:1.4; }
+  .incl-list li b { color:var(--gray-950); }
+  .incl-list li span { color:var(--gray-500); }
   .plan .kies { display:block; margin-top:20px; width:100%; background:#3ec487; border:0;
     border-radius:12px; padding:13px 16px; font-size:15px; font-weight:700; color:#fff;
     box-shadow:0 6px 18px rgba(62,196,135,.28); }
@@ -56,25 +65,24 @@
 <div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
 
 <main>
-  
   <p class="choice-q">Welk pakket past bij jou?</p>
   <div class="plans">
     <div class="plan hl"><span class="badge">Meest gekozen</span>
       <h2>Jaarabonnement</h2><p class="detail">Jaarlijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="82" cy="67" rx="78" ry="42" transform="rotate(-10 82 67)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="82" cy="67" r="27" fill="#facc15" stroke="#111827" stroke-width="3"/><circle cx="158" cy="52" r="15" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M154 43c4-2 9-1 10 2 1 2-1 4-4 4-3-1-5 1-4 4 1 2-1 4-4 3-4-2-5-7-3-10 1-1 2-2 5-3Z" fill="#86efac"/></svg></div>
       <p class="price">€7,00 <small>/maand</small></p><div class="cmp"><div>Per maand betalen<b>€132</b>per schooljaar</div><div class="win">Startaanbod 2026/2027<b>€84</b>per schooljaar</div></div>
-      <p class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen</p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
       <a class="kies" href="gegevens.html?plan=yearly">Probeer 7 dagen gratis</a>
     </div>
     <div class="plan">
       <h2>Maandabonnement</h2><p class="detail">Maandelijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="66" rx="57" ry="37" transform="rotate(-18 100 66)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="100" cy="66" r="24" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M95 47c7-4 16-2 18 4 1 4-3 6-8 6-5-1-8 2-6 6 2 4-2 8-8 6-6-4-8-11-5-16 2-3 5-4 9-6Z" fill="#86efac"/><circle cx="149" cy="39" r="13" fill="#cbd5e1" stroke="#111827" stroke-width="3"/></svg></div>
       <p class="price">€11,00 <small>/maand</small></p>
-      <p class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen</p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
       <a class="kies" href="gegevens.html?plan=monthly">Probeer 7 dagen gratis</a>
     </div>
     <div class="plan">
       <h2>De hele schooltijd</h2><p class="detail">Eenmalig betalen na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="65" rx="26" ry="17" fill="#facc15" stroke="#111827" stroke-width="3" transform="rotate(-8 100 65)"/><path d="M108 65.6 112.9 74.3 108 82.1 95.7 87.7 78.3 88.1 60.4 81.2 47.7 67.2 45.5 48.4 56.9 29" stroke="#bfdbfe" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/><path d="M92 64.4 87.1 55.7 92 47.9 104.3 42.3 121.7 41.9 139.6 48.8 152.3 62.8 154.5 81.6 143.1 101" stroke="#fed7aa" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/></svg></div>
       <p class="price">€200 <small>eenmalig</small></p>
-      <p class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen</p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
       <a class="kies" href="gegevens.html?plan=lifetime">Probeer 7 dagen gratis</a>
     </div>
   </div>
