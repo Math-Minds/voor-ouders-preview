@@ -1,11 +1,11 @@
 // Service worker voor de iteratie-preview: alles direct uit cache openen,
 // op de achtergrond verversen. Verzoeken met ?t= (de verversknop) gaan
 // altijd puur over het netwerk.
-const CACHE = "vop-v1";
+const CACHE = "vop-v2";
 const PRECACHE = [
   "./", "index.html", "pakket.html", "gegevens.html", "betaal.html",
   "gelukt.html", "knoppen.html",
-  "assets/hero-t2.webp", "assets/kranten.webp", "assets/philip.png",
+  "assets/hero-t2.webp", "assets/opening.mp4", "assets/kranten.webp", "assets/philip.png",
   "assets/TU.png", "assets/wiswizlogo.png", "assets/ideal.png", "assets/qr-mock.png"
 ];
 self.addEventListener("install", (e) => {
