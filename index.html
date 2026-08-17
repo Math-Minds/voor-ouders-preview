@@ -156,6 +156,15 @@
     @media (prefers-reduced-motion: reduce) { .halo { animation: none; } }
     .scenelabel { position: absolute; left: 49.7%; top: 73%; transform: translate(-50%, -50%); white-space: nowrap;
       font-size: clamp(9px, 2.8%, 12px); font-weight: 500; color: var(--gray-700); line-height: 1; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+    /* Secundaire ingang (#32 r3e, Philip: 'de startknop moet er wel onder'): stille tekstlink, geen pill/knop —
+       kleine driehoek + medium tekst, ruime tapzone (min 44px), zelfde as als de CTA */
+    .videoline { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 8px 6px; margin: 4px auto 0;
+      font-size: 15px; font-weight: 500; color: var(--gray-950); line-height: 1.3; -webkit-tap-highlight-color: transparent; border-radius: 8px; transition: color .15s ease, background .15s ease; }
+    .videoline svg { width: 11px; height: 11px; fill: var(--gray-950); flex-shrink: 0; transition: transform .15s ease; }
+    .videoline .dur { color: var(--gray-500); font-weight: 400; }
+    .videoline:hover { color: var(--gray-950); background: rgba(3,7,18,.04); }
+    .videoline:hover svg { transform: translateX(1px); }
+    @media (min-width: 1024px) { .videoline { margin-left: 0; margin-right: 0; padding-left: 4px; } }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -291,6 +300,7 @@
             <div class="cta-group">
               <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
             </div>
+            <a class="videoline" href="assets/opening.mp4" id="videocard2" data-cta="video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Bekijk WisWiz <span class="dur">· 40 seconden</span></span></a>
           </div>
           <!-- Philip-tekst + belknop: verhuisd naar de social-proof-sectie (wrk-34), Philips order 17 aug -->
         </div>
@@ -410,7 +420,7 @@
       frame.style.opacity="0";                                  // and cross-fades away over it (no frame jump)
       setTimeout(finish, FLY+40);
     }
-    link.addEventListener("click", open);
+    link.addEventListener("click", open); var l2=document.getElementById("videocard2"); if(l2){ l2.addEventListener("click", open); l2.addEventListener("pointerenter", warm, {once:true}); }
     lb.querySelectorAll("[data-close]").forEach(function(el){ el.addEventListener("click", close); });
     document.addEventListener("keydown", function(e){ if(e.key==="Escape" && isOpen) close(); });
     v.addEventListener("ended", close);
