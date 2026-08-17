@@ -43,16 +43,28 @@
     box-shadow:0 6px 18px rgba(62,196,135,.28); }
   .plan .kies:hover { background:#35b27a; }
 
+
+  .badge { white-space:nowrap; }
+  .intro { text-align:center; margin:0 0 20px; }
+  .intro p { margin:0; font-size:15px; color:var(--gray-700); line-height:1.5; }
+  .intro p b { color:var(--gray-950); }
+  .cmp { margin:14px 0 0; display:flex; justify-content:center; font-size:13px; color:var(--gray-500); border-top:1px solid var(--gray-100); padding-top:12px; }
+  .cmp div { flex:1; }
+  .cmp div + div { border-left:1px solid var(--gray-100); }
+  .cmp b { display:block; font-size:16px; color:var(--gray-950); }
+  .cmp .win b { color:#059669; }
+
 </style>  <link rel="manifest" href="manifest.json" />
 </head><body>
 <div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
 
 <main>
+  <div class="intro"><p>Het schooljaar begint. Wie nu voor het jaar kiest, betaalt <b>€7</b> in plaats van €11 per maand.</p></div>
   <p class="choice-q">Welk pakket past bij jou?</p>
   <div class="plans">
-    <div class="plan hl"><span class="badge">Meest gekozen</span>
+    <div class="plan hl"><span class="badge">Startaanbod schooljaar 2026/2027</span>
       <h2>Jaarabonnement</h2><p class="detail">Jaarlijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="82" cy="67" rx="78" ry="42" transform="rotate(-10 82 67)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="82" cy="67" r="27" fill="#facc15" stroke="#111827" stroke-width="3"/><circle cx="158" cy="52" r="15" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M154 43c4-2 9-1 10 2 1 2-1 4-4 4-3-1-5 1-4 4 1 2-1 4-4 3-4-2-5-7-3-10 1-1 2-2 5-3Z" fill="#86efac"/></svg></div>
-      <p class="price">€7,00 <small>/maand</small></p>
+      <p class="price">€7,00 <small>/maand</small></p><div class="cmp"><div>Per maand betalen<b>€132</b>per schooljaar</div><div class="win">Jaarabonnement<b>€84</b>per schooljaar</div></div>
       <p class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen</p>
       <a class="kies" href="gegevens.html?plan=yearly">Probeer 7 dagen gratis</a>
     </div>
