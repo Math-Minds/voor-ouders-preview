@@ -18,7 +18,14 @@
       --info: #3e8ed0;
       --info-dark: #1f6fb0;
       --success: #3ec487;
+      --brand: #db9a1f;            /* gemeten uit assets/wiswizlogo.png (dominante logokleur) */
+      --brand-dark: #c58a19;
+      --brand-shadow: rgba(219,154,31,.30);
       --achtergrond: #f0f9ff;
+      --pad: 20px;                 /* één horizontale marge voor de hele pagina */
+      --site: 1120px;              /* header/hero/footer */
+      --col: 384px;                /* knop-kolom: CTA, video, Philip-tekst, belknop */
+      --text: 42rem;               /* leeskolom: over ons */
       --gray-950: #030712;
       --gray-700: #374151;
       --gray-500: #6b7280;
@@ -42,16 +49,17 @@
       border-bottom: 1px solid #dbeafe;
     }
     .header-inner {
-      max-width: 1120px; margin: 0 auto; padding: 14px 20px;
+      max-width: var(--site); margin: 0 auto; padding: 14px var(--pad);
       display: flex; align-items: center; justify-content: space-between;
     }
     .header-inner img { height: 40px; width: auto; }
     .header-cta {
-      background: var(--success); color: #fff;
+      background: var(--brand); color: #fff;
       font-weight: 700; font-size: 15px; padding: 9px 16px; border-radius: 12px;
     }
+    .header-cta:hover { background: var(--brand-dark); }
 
-    main { max-width: 1120px; margin: 0 auto; padding: 40px 20px 24px; }
+    main { max-width: var(--site); margin: 0 auto; padding: 40px var(--pad) 24px; }
     @media (min-width: 1024px) { main { padding-top: 64px; } }
 
     .hero {
@@ -80,8 +88,12 @@
     }
     @media (min-width: 768px) { .lead { font-size: 18px; } }
 
+    .actions {
+      margin-top: 28px; width: 100%; max-width: var(--col);
+      display: flex; flex-direction: column; align-items: stretch; text-align: left;
+    }
     .cta-stack {
-      margin-top: 32px; width: 100%; max-width: 384px;
+      width: 100%;
       display: flex; flex-direction: column; gap: 12px;
     }
     .btn {
@@ -93,11 +105,11 @@
     .btn:hover { transform: translateY(-2px); }
     .btn:active { transform: translateY(0); }
     .btn-primary {
-      background: var(--success); color: #fff; font-size: 17px;
+      background: var(--brand); color: #fff; font-size: 17px;
       padding: 16px; border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(62,196,135,.32);
+      box-shadow: 0 6px 18px var(--brand-shadow);
     }
-    .btn-primary:hover { background: #35b27a; box-shadow: 0 10px 24px rgba(62,196,135,.38); }
+    .btn-primary:hover { background: var(--brand-dark); box-shadow: 0 10px 24px var(--brand-shadow); }
     .btn-tour {
       background: #fff; color: var(--gray-950); font-size: 14px; padding: 12px 16px;
       border: 1px solid var(--mathyellow); border-bottom-width: 4px;
@@ -114,13 +126,13 @@
     .cta-group { display: flex; flex-direction: column; gap: 6px; width: 100%; }
 
     .videolink {
-      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      margin: 18px auto 0; font-size: 17px; font-weight: 700; color: var(--gray-950);
+      display: flex; align-items: center; justify-content: flex-start; gap: 12px;
+      margin: 16px 0 0; min-height: 30px;
+      font-size: 17px; font-weight: 700; color: var(--gray-950);
     }
-    @media (min-width: 1024px) { .videolink { margin-left: 0; margin-right: 0; } }
     .videolink:hover .playdot { transform: scale(1.06); }
     .playdot {
-      width: 30px; height: 30px; border-radius: 9999px; background: var(--info);
+      flex-shrink: 0; width: 30px; height: 30px; border-radius: 9999px; background: var(--brand);
       display: inline-flex; align-items: center; justify-content: center; transition: transform .15s ease;
     }
     .playdot svg { width: 16px; height: 16px; fill: #fff; margin-left: 2px; }
@@ -146,10 +158,10 @@
     }
 
     .story {
-      margin-top: 28px; width: 100%; max-width: 384px;
+      margin-top: 20px; width: 100%; max-width: var(--col);
       padding: 0; text-align: left;
     }
-    .story p { margin: 0; font-size: 14px; line-height: 1.6; color: #1f2937; }
+    .story p { margin: 0; font-size: 15px; line-height: 1.6; font-weight: 500; color: var(--gray-950); }
     .story .avatar {
       display: inline-block; width: 28px; height: 28px; border-radius: 9999px;
       object-fit: cover; vertical-align: middle; margin-right: 6px; transform: translateY(-2px);
@@ -161,28 +173,28 @@
     }
     .story .btn { margin-top: 14px; }
 
-    .final { margin: 80px auto 0; max-width: 384px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .final { margin: 80px auto 0; max-width: var(--col); display: flex; flex-direction: column; align-items: center; gap: 12px; }
     .final .cta-stack { margin-top: 8px; }
     .link-quiet { display: block; padding: 8px 0; text-align: center; font-size: 14px; font-weight: 500; color: var(--gray-500); }
     .link-quiet:hover { color: var(--gray-700); }
 
-    .about { margin: 80px auto 0; max-width: 42rem; text-align: left; }
+    .about { margin: 80px auto 0; max-width: var(--text); text-align: left; }
     .about h2 { text-align: center; margin-bottom: 20px; }
     .about h3 { margin: 22px 0 6px; font-size: 18px; font-weight: 700; }
-    .about p { margin: 0; font-size: 15px; line-height: 1.65; color: var(--gray-700); }
+    .about p { margin: 0; font-size: 15px; line-height: 1.65; font-weight: 500; color: var(--gray-950); }
     .about p a { color: var(--info); font-weight: 700; }
-    .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 36rem; margin: 28px auto 0; }
+    .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; margin: 28px auto 0; }
     .team a { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fff; border-radius: 12px; padding: 12px 6px; border: 1px solid var(--gray-100); }
     .team img { width: 56px; height: 56px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 2px var(--info); }
     .team span { font-size: 13px; font-weight: 700; color: var(--gray-950); }
     .team small { font-size: 10px; color: var(--info); font-weight: 700; }
     footer {
-      margin-top: 40px; padding: 40px 20px 48px;
+      margin-top: 40px; padding: 40px var(--pad) 48px;
       border-top: 1px solid #dbeafe;
       color: var(--gray-500); font-size: 13px;
     }
     .footer-inner {
-      max-width: 1120px; margin: 0 auto;
+      max-width: var(--site); margin: 0 auto;
       display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;
     }
     .footer-inner img { height: 28px; width: auto; opacity: .9; }
@@ -212,17 +224,17 @@
       </div>
       <div class="hero-copy">
         <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
-        <div class="cta-stack">
-          <div class="cta-group">
-            <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
+        <div class="actions">
+          <div class="cta-stack">
+            <div class="cta-group">
+              <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
+            </div>
           </div>
-        </div>
-
-        <a class="videolink" href="assets/opening.mp4" id="videocard" data-cta="video">
-          <span class="playdot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-          <span>WisWiz in 40 seconden</span>
-        </a>
-        <div class="story">
+          <a class="videolink" href="assets/opening.mp4" id="videocard" data-cta="video">
+            <span class="playdot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+            <span>WisWiz in 40 seconden</span>
+          </a>
+          <div class="story">
           <p>
             <img class="avatar" src="assets/philip.png" alt="Philip" />
             Hoi! Ik ben Philip, een van de ontwikkelaars van WisWiz. In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd.
@@ -231,6 +243,7 @@
             <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
             <span>Bel Philip voor alle vragen die je nog hebt</span>
           </a>
+          </div>
         </div>
       </div>
     </section>
