@@ -66,7 +66,7 @@
     .hero {
       display: flex; flex-direction: column; align-items: center; gap: 40px;
     }
-    .hero-visual { margin-bottom: 22px; }
+    .hero-visual { margin-bottom: 4px; }
     @media (min-width: 1024px) { .hero-visual { margin-bottom: 0; } }
     @media (min-width: 1024px) {
       .hero { flex-direction: row; gap: 56px; }
@@ -139,32 +139,35 @@
       display: inline-flex; align-items: center; justify-content: center; transition: transform .15s ease;
     }
     .playdot svg { width: 16px; height: 16px; fill: #fff; margin-left: 2px; }
-    /* Video-ingang (#32 r3d): de ingang hoort in de SCÈNE — glazen speel-teken op het telefoonscherm in de foto (Philips gewaardeerde teken),
-       met een trage ring-ademhaling; geen chip, geen pill: de pagina kent maar één knopfamilie (de gele CTA's). Hele beeld is de link. */
+    /* Video-ingang (#32 r4, Philip: 'knop weg uit de iphone; de enige startknop elegant onder de hero, duidelijk maar subtiel'):
+       de scène is weer puur de foto; ÉÉN startelement direct onder het beeld, in de stille tekstlink-taal van de pagina
+       (geen derde knopfamilie, geen sticker). Het hele beeld blijft tikbaar. */
     .hero-visual { position: relative; }
     .herolink { display: block; position: relative; color: inherit; -webkit-tap-highlight-color: transparent; }
-    #herovisual.is-lifted .playmark, #herovisual.is-lifted .halo, #herovisual.is-lifted .scenelabel { visibility: hidden; }
-    .playmark { position: absolute; left: 49.7%; top: 63%; transform: translate(-50%, -50%); width: clamp(28px, 8.5%, 44px); aspect-ratio: 1; border-radius: 9999px;
-      background: rgba(255,255,255,.66); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-      box-shadow: 0 1px 2px rgba(3,7,18,.05), 0 3px 12px rgba(3,7,18,.09), inset 0 0 0 1px rgba(3,7,18,.10);
-      display: flex; align-items: center; justify-content: center; transition: transform .18s ease, box-shadow .18s ease; }
-    .playmark svg { width: 42%; height: 42%; fill: var(--gray-950); margin-left: 8%; }
-    .herolink:hover .playmark { transform: translate(-50%, -50%) scale(1.06); box-shadow: 0 1px 2px rgba(3,7,18,.05), 0 6px 18px rgba(3,7,18,.14), inset 0 0 0 1px rgba(3,7,18,.10); }
-    .halo { position: absolute; left: 49.7%; top: 63%; width: clamp(28px, 8.5%, 44px); aspect-ratio: 1; margin: 0; border-radius: 9999px; transform: translate(-50%, -50%); pointer-events: none;
-      box-shadow: 0 0 0 1.5px rgba(3,7,18,.28); opacity: 0; animation: halo 4.2s ease-out 1.2s infinite; }
-    @keyframes halo { 0% { transform: translate(-50%,-50%) scale(1); opacity: .34; } 70%,100% { transform: translate(-50%,-50%) scale(1.75); opacity: 0; } }
-    @media (prefers-reduced-motion: reduce) { .halo { animation: none; } }
-    .scenelabel { position: absolute; left: 49.7%; top: 73%; transform: translate(-50%, -50%); white-space: nowrap;
-      font-size: clamp(9px, 2.8%, 12px); font-weight: 500; color: var(--gray-700); line-height: 1; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
-    /* Secundaire ingang (#32 r3e, Philip: 'de startknop moet er wel onder'): stille tekstlink, geen pill/knop —
-       kleine driehoek + medium tekst, ruime tapzone (min 44px), zelfde as als de CTA */
-    .videoline { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 8px 6px; margin: 4px auto 0;
-      font-size: 15px; font-weight: 500; color: var(--gray-950); line-height: 1.3; -webkit-tap-highlight-color: transparent; border-radius: 8px; transition: color .15s ease, background .15s ease; }
-    .videoline svg { width: 11px; height: 11px; fill: var(--gray-950); flex-shrink: 0; transition: transform .15s ease; }
-    .videoline .dur { color: var(--gray-500); font-weight: 400; }
-    .videoline:hover { color: var(--gray-950); background: rgba(3,7,18,.04); }
-    .videoline:hover svg { transform: translateX(1px); }
-    @media (min-width: 1024px) { .videoline { margin-left: 0; margin-right: 0; padding-left: 4px; } }
+    .vstart { display: flex; align-items: center; justify-content: center; gap: 10px; width: max-content; min-height: 44px; margin: 10px auto 0; padding: 6px 12px;
+      font-size: 15px; font-weight: 600; color: var(--gray-950); line-height: 1.3; letter-spacing: -0.005em; -webkit-tap-highlight-color: transparent; border-radius: 12px;
+      transition: color .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
+    .vstart .dur { color: var(--gray-500); font-weight: 400; }
+    .vstart-mark { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; transition: transform .18s ease, background .18s ease, box-shadow .18s ease; }
+    .vstart-mark svg { fill: var(--gray-950); }
+    /* variant A: puur typografisch (driehoekje + tekst) */
+    .vstart.va { padding: 6px 8px; gap: 9px; }
+    .vstart.va .vstart-mark { width: 12px; height: 12px; }
+    .vstart.va .vstart-mark svg { width: 12px; height: 12px; }
+    .vstart.va:hover { background: rgba(3,7,18,.04); }
+    .vstart.va:hover .vstart-mark { transform: translateX(1px); }
+    /* variant B: dunne ring om het speelteken (geen vulling) + tekst */
+    .vstart.vb .vstart-mark { width: 32px; height: 32px; box-shadow: inset 0 0 0 1.5px rgba(3,7,18,.34); }
+    .vstart.vb .vstart-mark svg { width: 13px; height: 13px; margin-left: 2px; transition: fill .18s ease; }
+    .vstart.vb:hover .vstart-mark { background: var(--gray-950); box-shadow: inset 0 0 0 1.5px var(--gray-950); transform: scale(1.06); }
+    .vstart.vb:hover .vstart-mark svg { fill: #fff; }
+    .vstart.vb:active .vstart-mark { transform: scale(.98); }
+    /* variant C: compacte knop in de bestaande belknop-familie (wit, haarlijn, 12px), zwart speelteken */
+    .vstart.vc { padding: 10px 18px 10px 14px; background: #fff; border: 1px solid var(--gray-300); box-shadow: 0 2px 0 rgba(17,24,39,.12); font-weight: 700; font-size: 14px; }
+    .vstart.vc .vstart-mark { width: 24px; height: 24px; background: var(--gray-950); }
+    .vstart.vc .vstart-mark svg { width: 11px; height: 11px; fill: #fff; margin-left: 1px; }
+    .vstart.vc:hover { border-color: #9ca3af; background: #f9fafb; transform: translateY(-1px); }
+    @media (min-width: 1024px) { .vstart { font-size: 16px; } }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -251,7 +254,7 @@
 
     /* --- social proof (ticket 34, ronde 3): rustig, gecentreerd, één typografische trap --- */
     .proof { margin-top: 80px; display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .proof .kranten-img { margin-top: 24px; width: 100%; max-width: 576px; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(15,23,42,.12)); }
+    .proof .kranten-img { margin: 0 auto; width: 100%; max-width: 576px; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(15,23,42,.12)); }
     .proof .story { margin-top: 0; }
 
     .proof .layer { margin-top: 48px; width: 100%; max-width: 32rem; }
@@ -261,12 +264,17 @@
     .proof .logos { display: flex; justify-content: center; align-items: center; gap: 22px; }
     .proof .logos img { height: 36px; width: auto; }
     .proof .school p { margin: 12px 0 0; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--gray-500); }
-    .proof .story-c { margin: 48px auto 0; max-width: var(--col); text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .proof .story-c { margin: 0 auto; max-width: var(--col); text-align: center; display: flex; flex-direction: column; align-items: center; }
     .proof .story-c .avatar { display: block; width: 44px; height: 44px; margin: 0 0 10px; transform: none; }
     .proof .story-c p { margin: 0; }
     .proof .story-c .btn { margin-top: 16px; }
 
-    .proof .school p { text-wrap: balance; }
+    .proof .school p, .proof .krant p { text-wrap: balance; }
+    .proof .krant { max-width: 576px; }
+    .proof .krant p { margin: 18px 0 0; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--gray-500); }
+    .proof .layer-s { margin-top: 32px; }
+    .proof .layer-s blockquote p { font-size: 16px; }
+    .btn-call .nr { color: var(--gray-500); font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
     .proof blockquote p { text-wrap: pretty; }
   </style>
   <link rel="preload" as="image" href="assets/hero-t2.webp" />
@@ -287,11 +295,9 @@
         <div class="blend" id="herovisual">
         <img src="assets/hero-t2.webp" alt="Een wiskundeboek, een telefoon met WisWiz en een schrift met een vastgelopen uitwerking" width="3200" height="1800" />
         <span class="edgefade" aria-hidden="true"></span>
-        <span class="halo" aria-hidden="true"></span>
-        <span class="playmark" aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></span>
-        <span class="scenelabel" aria-hidden="true">0:40</span>
         </div>
         </a>
+        <a class="vstart vb" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">Bekijk WisWiz <span class="dur">· 40 seconden</span></span></a>
       </div>
       <div class="hero-copy">
         <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
@@ -300,7 +306,6 @@
             <div class="cta-group">
               <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
             </div>
-            <a class="videoline" href="assets/opening.mp4" id="videocard2" data-cta="video"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg><span>Bekijk WisWiz <span class="dur">· 40 seconden</span></span></a>
           </div>
           <!-- Philip-tekst + belknop: verhuisd naar de social-proof-sectie (wrk-34), Philips order 17 aug -->
         </div>
@@ -308,27 +313,32 @@
     </section>
 
     <section class="proof" id="proof">
-      <h2>Bekend uit de krant</h2>
-      <img class="kranten-img" src="assets/kranten.webp" alt="Krantenartikelen over WisWiz in Het Parool en het FD" width="1200" height="954" loading="lazy" />
+      <!-- Philip als brug (#32 r4, Philips woord 18 aug): bel mij, of lees hieronder wat ouders en leerlingen zeggen -->
+      <div class="story story-c">
+        <img class="avatar" src="assets/philip.png" alt="Philip" />
+        <p>Hoi! Ik ben Philip, een van de ontwikkelaars van WisWiz. In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd. Heb je nog vragen? Bel me gerust. Of lees hieronder wat ouders en leerlingen over WisWiz zeggen.</p>
+        <a class="btn btn-call" href="tel:+31630231640" data-cta="bel">
+          <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
+          <span>Bel Philip <span class="nr">06 30 23 16 40</span></span>
+        </a>
+      </div>
       <figure class="layer">
         <blockquote><p>&#8220;We gebruiken het meestal samen. Ik lees het en leg het aan haar uit. Op die manier kan ik haar veel beter helpen. Als we deze app niet hadden gehad had ze waarschijnlijk wel op bijles gezeten.&#8221;</p></blockquote>
         <figcaption>Moeder van een brugklasleerling</figcaption>
+      </figure>
+      <figure class="layer layer-s">
+        <blockquote><p>&#8220;&#8230;ik heb namelijk echt heel veel aan WisWiz gehad voor hoofdstuk 14.&#8221;</p></blockquote>
+        <figcaption>Mattia, 6 vwo, Vossius Gymnasium</figcaption>
       </figure>
       <div class="layer school">
         <div class="logos"><img src="assets/vossius4.png" alt="Vossius Gymnasium" /><img src="assets/wijs-bijles.png" alt="Stichting Wijs Bijles" /></div>
         <p>Gebruikt op het Vossius Gymnasium en bij Stichting Wijs Bijles.</p>
       </div>
-      <div class="story story-c">
-        <img class="avatar" src="assets/philip.png" alt="Philip" />
-        <p>Hoi! Ik ben Philip, een van de ontwikkelaars van WisWiz. In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd.</p>
-        <a class="btn btn-call" href="tel:+31630231640" data-cta="bel">
-          <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
-          <span>Bel Philip voor alle vragen die je nog hebt</span>
-        </a>
+      <div class="layer krant">
+        <img class="kranten-img" src="assets/kranten.webp" alt="Krantenartikelen over WisWiz in Het Parool en het FD" width="1200" height="954" loading="lazy" />
+        <p>Bekend uit de krant: Het Parool en het FD schreven over WisWiz.</p>
       </div>
     </section>
-
-
 
     <section class="about" id="about">
       <h2>Onze missie</h2>
