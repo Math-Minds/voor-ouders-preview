@@ -123,8 +123,19 @@
       display: inline-flex; align-items: center; justify-content: center; transition: transform .15s ease;
     }
     .playdot svg { width: 16px; height: 16px; fill: #fff; margin-left: 2px; }
-    .videowrap { width: 100%; max-width: 384px; margin-top: 14px; }
-    .videowrap video { width: 100%; height: auto; border-radius: 12px; background: #000; display: block; }
+    .lightbox { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; }
+    .lightbox[hidden] { display: none; }
+    .lightbox-backdrop { position: absolute; inset: 0; background: rgba(3,7,18,.82); backdrop-filter: blur(2px); }
+    .lightbox-panel { position: relative; width: min(960px, 100%); }
+    .lightbox-panel video { display: block; width: 100%; height: auto; max-height: calc(100dvh - 32px); border-radius: 12px; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+    .lightbox-close {
+      position: absolute; right: -6px; top: -46px; width: 40px; height: 40px; border-radius: 9999px;
+      border: 0; background: rgba(255,255,255,.14); color: #fff; font-size: 28px; line-height: 1;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: inherit;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,.26); }
+    @media (max-width: 640px) { .lightbox { padding: 12px; } .lightbox-close { top: -44px; right: 0; } }
+    body.lb-open { overflow: hidden; }
     section.block { margin-top: 80px; display: flex; flex-direction: column; align-items: center; }
     h2 { margin: 0; text-align: center; font-size: 24px; font-weight: 800; }
     @media (min-width: 768px) { h2 { font-size: 30px; } }
@@ -206,13 +217,10 @@
           </div>
         </div>
 
-        <a class="videolink" href="#video" id="videocard" data-cta="video">
+        <a class="videolink" href="assets/opening.mp4" id="videocard" data-cta="video">
           <span class="playdot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
           <span>WisWiz in 40 seconden</span>
         </a>
-        <div class="videowrap" id="video" hidden>
-          <video id="openingvideo" src="assets/opening.mp4" poster="assets/hero-t2.webp" controls playsinline preload="none" width="1600" height="900"></video>
-        </div>
         <div class="story">
           <p>
             <img class="avatar" src="assets/philip.png" alt="Philip" />
@@ -261,14 +269,23 @@
       <p class="footer-copy">© 2026 WisWiz B.V.</p>
     </div>
   </footer>
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Video: WisWiz in 40 seconden">
+  <div class="lightbox-backdrop" data-close></div>
+  <div class="lightbox-panel">
+    <button class="lightbox-close" type="button" aria-label="Sluiten" data-close>&times;</button>
+    <video id="openingvideo" src="assets/opening.mp4" poster="assets/hero-t2.webp" controls playsinline preload="none" width="1600" height="900"></video>
+  </div>
+</div>
 <script>
   (function(){
-    var card=document.getElementById("videocard"), wrap=document.getElementById("video"), v=document.getElementById("openingvideo");
-    if(!card||!wrap||!v) return;
-    card.addEventListener("click", function(e){
-      e.preventDefault(); wrap.hidden=false; card.style.display="none";
-      v.scrollIntoView({behavior:"smooth", block:"center"}); v.play().catch(function(){});
-    });
+    var link=document.getElementById("videocard"), lb=document.getElementById("lightbox"), v=document.getElementById("openingvideo");
+    if(!link||!lb||!v) return;
+    function open(e){ e.preventDefault(); lb.hidden=false; document.body.classList.add("lb-open"); v.currentTime=0; v.play().catch(function(){}); }
+    function close(){ v.pause(); lb.hidden=true; document.body.classList.remove("lb-open"); }
+    link.addEventListener("click", open);
+    lb.querySelectorAll("[data-close]").forEach(function(el){ el.addEventListener("click", close); });
+    document.addEventListener("keydown", function(e){ if(e.key==="Escape" && !lb.hidden) close(); });
+    v.addEventListener("ended", close);
   })();
 </script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
