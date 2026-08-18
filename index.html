@@ -139,6 +139,25 @@
     .hero { display: flex; flex-direction: column; align-items: center; }
     .hero-visual { width: 100%; max-width: 576px; flex-shrink: 0; }
     @media (min-width: 1024px) { .hero-visual { max-width: 640px; } }
+    /* --- r12 (Philip 19 aug: "op IEDERE telefoon perfecte spacing waarbij de CTA-knop als onderste (met bottom bar)
+       zichtbaar is, maar de andere dingen nog NIET in de viewport"): op telefoonformaat vult de opening exact de
+       zichtbare viewport. 100svh = de viewport bij laden MET adresbalk (dus de vouw waar het om gaat, en hij verspringt
+       niet tijdens scrollen zoals dvh); daarvan af: 22px bovenmarge + 64px bottom bar + safe-area. De kop + video-knop
+       blijven bovenaan, de CTA landt onderaan net boven de bar, en het hero-beeld zweeft met auto-marges in het
+       flexibele midden — de restruimte verdeelt zich gelijk boven en onder het beeld, op elke hoogte. De sectie eronder
+       (reviews) begint zo altijd nét onder de vouw. Op extreem lage viewports (<±500px) krimpt het beeld mee via de
+       svh-breedtecap op .blend (aspect blijft 16:9, de FLIP-overgang meet dan nog steeds het echte beeld). --- */
+    @media (max-width: 1023px) {
+      :root { --opening-top: clamp(18px, 3.5svh, 34px); }   /* bovenmarge groeit licht mee met de schermhoogte */
+      main { padding-top: var(--opening-top); }
+      .hero { min-height: calc(100svh - 64px - var(--opening-top) - env(safe-area-inset-bottom, 0px)); }
+      /* het beeld krijgt alle restruimte en staat daarin een fractie BOVEN het midden (optisch centrum);
+         op telefoon loopt het beeld van rand tot rand (de edgefade laat het in de achtergrond overlopen) */
+      .hero-visual { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding-bottom: 4svh;
+        width: calc(100% + var(--pad) * 2); max-width: none; }
+      .hero-visual .blend { width: min(100%, calc(44svh * 16 / 9)); margin: 0 auto; }
+      .actions { padding-bottom: 12px; }
+    }
     .hero-visual img, .hero-visual video { width: 100%; display:block; }
     .hero-visual .blend { position: relative; }
     .hero-visual .edgefade { position: absolute; inset: -1px; pointer-events: none;
