@@ -26,7 +26,6 @@
       --pad: 20px;                 /* één horizontale marge voor de hele pagina */
       --site: 1120px;              /* header/hero/footer */
       --col: 384px;                /* knop-kolom: CTA, video, Philip-tekst, belknop */
-      --text: 42rem;               /* leeskolom: over ons */
       --gray-950: #030712;
       --gray-700: #374151;
       --gray-500: #6b7280;
@@ -231,12 +230,17 @@
     .link-quiet { display: block; padding: 8px 0; text-align: center; font-size: 14px; font-weight: 500; color: var(--gray-500); }
     .link-quiet:hover { color: var(--gray-700); }
 
-    .about { margin: 80px auto 0; max-width: var(--text); text-align: left; }
+    /* Over ons (r7c, Philip: 'niet coherent met de rest'). Gemeten: dezelfde 20px paginamarge als alles, maar (1) het enige
+       LINKS uitgelijnde lopende blok op een verder gecentreerde pagina, tekst-inkt tot op de marge (20px) waar de review-tekst
+       op 43px begint (kaart-padding); (2) op desktop 42rem = 672px breed, breder dan de reviews (32rem) en de knopkolom (24rem);
+       (3) h2 gecentreerd, h3/p links: twee uitlijningen in één blok. Fix: dezelfde kolom als de reviews (32rem), dezelfde
+       tekst-inzet (22px, = kaart-padding) en gecentreerd zoals hero, CTA, reviews en stapel — de site-marge, één ritme. */
+    .about { margin: 80px auto 0; max-width: 32rem; padding: 0 22px; text-align: center; }
     .about h2 { text-align: center; margin-bottom: 20px; }
     .about h3 { margin: 22px 0 6px; font-size: 18px; font-weight: 700; }
-    .about p { margin: 0; font-size: 15px; line-height: 1.65; font-weight: 500; color: var(--gray-950); }
+    .about p { margin: 0; font-size: 15px; line-height: 1.65; font-weight: 500; color: var(--gray-950); text-wrap: pretty; }
     .about p a { color: var(--info); font-weight: 700; }
-    .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; margin: 28px auto 0; }
+    .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: calc(100% + 44px); margin: 28px -22px 0; }
     .team a { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fff; border-radius: 12px; padding: 12px 6px; border: 1px solid var(--gray-100); }
     .team img { width: 56px; height: 56px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 2px var(--info); }
     .team span { font-size: 13px; font-weight: 700; color: var(--gray-950); }
@@ -302,12 +306,18 @@
     .knip .papier::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .38; mix-blend-mode: multiply; border-radius: inherit;
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55 0 0 0 0 .52 0 0 0 0 .46 0 0 0 .09 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"); }
     .knip .papier p { margin: 0; font-family: "Source Serif 4", Georgia, "Times New Roman", serif; font-weight: 600; font-size: clamp(11px, 3.2cqi, 15.5px); line-height: 1.3; color: #0a0a0a; letter-spacing: -0.006em; text-wrap: pretty; position: relative; }
+    /* Wiskunde Actief (r7c, Philip): een QUOTE van Martijn Koper in dezelfde review-vorm als de moeder- en Mattia-review —
+       aanhalingstekens, review-letter, attributie eronder in grijs; op hetzelfde papier, met hetzelfde tabje. */
+    .knip .papier.quote { text-align: center; padding: 5cqi 4.6cqi 4.6cqi; }
+    .knip .papier.quote blockquote { margin: 0; padding: 0; }
+    .knip .papier.quote p { font-family: inherit; font-weight: 400; font-size: clamp(12px, 3.3cqi, 16px); line-height: 1.5; letter-spacing: 0; }
+    .knip .papier.quote figcaption { margin-top: 2.2cqi; font-size: clamp(9px, 2.5cqi, 12px); font-weight: 500; color: var(--gray-500); position: relative; }
     /* de stapel: 2 + 2 + 1, lichte afwisselende rotatie, elke rij tikt iets onder de vorige — één elegante stapel (r6) */
     .knip.k-parool { width: 44%; margin-top: 5cqi; transform: rotate(-2deg); z-index: 1; }
     .knip.k-fd { width: 48%; margin-left: -1cqi; transform: rotate(1.4deg); z-index: 2; }
     .knip.k-vos { width: 46%; margin-top: 4.5cqi; transform: rotate(1.6deg); z-index: 3; }
     .knip.k-wijs { width: 46%; margin-top: 3.5cqi; margin-left: 2cqi; transform: rotate(-1.8deg); z-index: 4; }
-    .knip.k-wa { width: 55%; margin-top: 5cqi; transform: rotate(.9deg); z-index: 5; }
+    .knip.k-wa { width: 60%; margin-top: 5cqi; transform: rotate(.9deg); z-index: 5; }
     /* De twee reviews (moeder + Mattia) als ÉÉN familie (Philip 18 aug r7: Mattia exact hetzelfde design als de moeder-review):
        dezelfde kaartvorm, typografie en attributie; de crème-beige tint die hij voor de quote vroeg geldt voor beide.
        Rand en schaduw in de knipsel-familie; de tweede kaart staat dichter op de eerste zodat ze als paar lezen. */
@@ -390,8 +400,10 @@
           <div class="rij">
             <figure class="knip k-wa">
               <span class="knip-label"><img class="mark-wa" src="assets/stichting-wiskunde-actief.png" alt="Stichting Wiskunde Actief" /></span>
-              <div class="binnen papier">
-              <p>&#8216;WisWiz is een krachtige tool waarin verschillende kwaliteiten van kunstmatige intelligentie gecombineerd worden voor persoonlijke leerervaring.&#8217;</p>
+              <!-- r7c (Philip): Wiskunde Actief als QUOTE van Martijn Koper, in dezelfde review-vorm als de moeder- en Mattia-review -->
+              <div class="binnen papier quote">
+                <blockquote><p>&#8220;WisWiz is een krachtige tool waarin verschillende kwaliteiten van kunstmatige intelligentie gecombineerd worden voor persoonlijke leerervaring.&#8221;</p></blockquote>
+                <figcaption>Martijn Koper, Stichting Wiskunde Actief</figcaption>
               </div>
             </figure>
           </div>
@@ -405,7 +417,7 @@
       <p>Talent komt tot bloei onder persoonlijke begeleiding. Zo had Alexander de Grote les van Aristoteles, die op zijn beurt leerling was van Plato. In de klas is daar helaas te weinig ruimte voor. Met innovatieve technologie willen we daarom deze persoonlijke begeleiding mogelijk maken voor iedereen ter wereld. We beginnen met wiskunde: het vak waar leerlingen het vaakst vastlopen; een toren van opbouwende kennis die omvalt zodra een stevig fundament ontbreekt.</p>
       <h3>Over ons</h3>
       <p>WisWiz is opgericht door Philip en Louis, wiskundestudenten aan de TU Delft met jarenlange bijleservaring. We liepen steeds meer tegen de limiet aan dat we met individuele bijlessen te weinig mensen konden helpen. Samen met Hendrik, afgestudeerd statisticus en software ontwikkelaar, zijn we daarom de WisWiz app gaan bouwen. Met deze groep werken we iedere dag om zoveel mogelijk leerlingen te helpen.</p>
-      <p style="margin-top:14px">We horen graag van je. Of je nu vastloopt, een suggestie hebt of wilt meehelpen aan WisWiz. Bel of WhatsApp ons op <a href="tel:+31630231640">06 30 23 16 40</a>.</p>
+      <p style="margin-top:14px">We horen graag van je. Of je nu vastloopt, een suggestie hebt of wilt meehelpen aan WisWiz. Bel of WhatsApp ons op <a href="tel:+31630231640" style="white-space:nowrap">06&nbsp;30&nbsp;23&nbsp;16&nbsp;40</a>.</p>
       <div class="team">
         <a href="https://www.linkedin.com/in/philip-pinckaers-1604b3192/" target="_blank" rel="noopener noreferrer"><img src="assets/philip.png" alt="Philip" /><span>Philip</span><small>in</small></a>
         <a href="https://www.linkedin.com/in/hendrik-grondijs-01544117/" target="_blank" rel="noopener noreferrer"><img src="assets/hendrik.png" alt="Hendrik" /><span>Hendrik</span><small>in</small></a>
