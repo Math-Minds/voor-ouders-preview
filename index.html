@@ -10,7 +10,7 @@
   <link rel="icon" href="assets/wiswizlogo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Source+Serif+4:opsz,wght@8..60,600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --mathyellow: #ecc862;
@@ -270,16 +270,20 @@
     .proof .instituut { max-width: 576px; width: 100%; }
     .proof .instituut p { margin: 18px 0 0; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--gray-500); text-wrap: balance; }
     .inst-visual { position: relative; }
-    .inst-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 8px; }
-    .inst-tags li { display: inline-flex; align-items: center; gap: 7px; background: #fff; padding: 6px 9px 6px 7px; border-radius: 2px;
-      font-size: 12px; font-weight: 700; color: var(--gray-950); line-height: 1; letter-spacing: -0.005em; white-space: nowrap;
+    /* knipsels: elke instelling als een wit 'krantenknipsel' met een kop-label bovenop (zoals 'P Het Parool' / 'fd.' in de foto)
+       en een korte regel in krantenletter eronder — zelfde stof, zelfde schaduw als de foto */
+    .inst-clips { list-style: none; margin: calc(-6.3% + 18px) 4px 0; padding: 0; position: relative;
+      display: grid; grid-template-columns: 1fr; gap: 22px 12px; }
+    .inst-clips li { position: relative; background: #fff; border-radius: 2px; padding: 16px 14px 12px; text-align: left;
       box-shadow: 0 6px 16px rgba(15,23,42,.14); }
-    .inst-tags img { height: 18px; width: auto; display: block; }
-    .inst-tags img.wa { height: 20px; filter: brightness(0); }
-    .inst-tags img.fd { height: 18px; width: 18px; border-radius: 3px; object-fit: cover; }
-    /* A: labels hangen als strook net onder de krantenpagina's (de foto heeft onder de pagina's een lege band van 6.3% van de breedte) */
-    .instituut.ia .inst-tags { margin: calc(-6.3% + 6px) 4px 0; position: relative; }
-    @media (min-width: 640px) { .inst-tags { gap: 10px; } .inst-tags li { font-size: 14px; padding: 7px 11px 7px 8px; gap: 8px; } .inst-tags img { height: 22px; } .inst-tags img.wa { height: 24px; } }
+    .clip-tag { position: absolute; top: -12px; left: 12px; display: inline-flex; align-items: center; gap: 7px; background: #fff; padding: 5px 9px 5px 7px; border-radius: 2px;
+      font-size: 12px; font-weight: 700; color: var(--gray-950); line-height: 1; letter-spacing: -0.005em; white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(15,23,42,.14); }
+    .clip-tag img { height: 18px; width: auto; display: block; }
+    .clip-tag img.wa { height: 20px; filter: brightness(0); }
+    .inst-clips p { margin: 6px 0 0; font-family: "Source Serif 4", Georgia, "Times New Roman", serif; font-size: 15px; line-height: 1.4; font-weight: 600; color: var(--gray-950); letter-spacing: -0.005em; text-wrap: pretty; }
+    .inst-clips small { display: block; margin-top: 8px; font-size: 11px; font-weight: 500; color: var(--gray-500); }
+    @media (min-width: 640px) { .inst-clips { grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: calc(-6.3% + 22px); } .inst-clips li { padding: 18px 14px 14px; } .inst-clips p { font-size: 14px; } }
   </style>
   <link rel="preload" as="image" href="assets/hero-t2.webp" />
   <link rel="manifest" href="manifest.json" />
@@ -339,10 +343,14 @@
       <div class="layer instituut ia">
         <div class="inst-visual">
           <img class="kranten-img" src="assets/kranten.webp" alt="Krantenartikelen over WisWiz in Het Parool en het FD" width="1200" height="954" loading="lazy" />
-          <ul class="inst-tags" aria-label="Scholen en stichtingen">
-            <li><img src="assets/vossius4.png" alt="" /><span>Vossius Gymnasium</span></li>
-            <li><img src="assets/wijs-bijles.png" alt="" /><span>Stichting Wijs Bijles</span></li>
-            <li><img class="wa" src="assets/wiskunde-actief.png" alt="Stichting Wiskunde Actief" /></li>
+          <ul class="inst-clips" aria-label="Scholen en stichtingen">
+            <li><span class="clip-tag"><img src="assets/vossius4.png" alt="" /><span>Vossius Gymnasium</span></span>
+              <p>Leerlingen van het Vossius Gymnasium gebruiken WisWiz om toetsen voor te bereiden.</p></li>
+            <li><span class="clip-tag"><img src="assets/wijs-bijles.png" alt="" /><span>Stichting Wijs Bijles</span></span>
+              <p>Bijlesleerlingen van Stichting Wijs Bijles krijgen WisWiz, ook voor hulp buiten de bijles.</p></li>
+            <li><span class="clip-tag"><img class="wa" src="assets/wiskunde-actief.png" alt="Stichting Wiskunde Actief" /></span>
+              <p>&#8216;WisWiz is een krachtige tool waarin verschillende kwaliteiten van kunstmatige intelligentie gecombineerd worden voor persoonlijke leerervaring.&#8217;</p>
+              <small>Martijn Koper, Stichting Wiskunde Actief</small></li>
           </ul>
         </div>
         <p>Bekend uit Het Parool en het FD. Vertrouwd door het Vossius Gymnasium, Stichting Wijs Bijles en Stichting Wiskunde Actief.</p>
