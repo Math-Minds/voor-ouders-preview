@@ -62,8 +62,14 @@
     .contactbar .wie { display: flex; align-items: center; gap: 9px; min-width: 0; flex: 1 1 auto; text-align: left; margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     .contactbar .wie img { flex-shrink: 0; width: 38px; height: 38px; border-radius: 9999px; object-fit: cover; box-shadow: 0 1px 3px rgba(15,23,42,.18); }
     .contactbar .wie p { margin: 0; min-width: 0; flex: 1 1 auto; font-size: 14px; line-height: 1.45; font-weight: 500; color: var(--gray-950); letter-spacing: -0.008em; text-wrap: pretty;
-      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden; }
-    .contactbar.is-open .wie p, .contactbar .wie p.is-anim { -webkit-line-clamp: unset; display: block; }   /* open, of nog aan het bewegen (ook tijdens het inklappen volledig gerenderd, alleen kleiner geknipt) */
+      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+    /* r10c (Philip 18 aug: "niet duidelijk dat je het kan openen" + "er past meer tekst"): in rust TWEE regels (precies de hoogte van de
+       knoppen, de bar wordt niet hoger) met zoveel van de zin als netjes past, dan "… meer" in de link-taal van de site (blauw, vet) —
+       JS meet per breedte hoeveel woorden passen (bij load/resize/fonts); zonder JS knipt line-clamp 2 zelf af. Open: dezelfde alinea
+       schuift uit, "meer" verdwijnt; dicht: terug. */
+    .contactbar .wie p .meer { color: var(--info-dark); font-weight: 700; white-space: nowrap; }
+    .contactbar.is-open .wie p .meer, .contactbar .wie p.is-anim .meer { display: none; }
+    .contactbar.is-open .wie p, .contactbar .wie p.is-anim, .contactbar .wie p.is-meet { -webkit-line-clamp: unset; display: block; }   /* open, of nog aan het bewegen (ook tijdens het inklappen volledig gerenderd, alleen kleiner geknipt); .is-meet = even meten */
     .contactbar .wie p.is-anim { transition: height .36s cubic-bezier(.2,.7,.2,1); will-change: height; }
     @media (max-width: 374px) { .contactbar .wie p { font-size: 13px; } }
     /* knoppenkolom: in rust alleen de twee icon-knoppen (40px hoog = de hoogte van de bar); open schuift er bovenin een vak van 38px
@@ -538,7 +544,7 @@
     <div class="contactbar-inner">
       <button class="wie" type="button" id="philip-toggle" aria-expanded="false" aria-controls="philip-tekst" aria-label="Meer over Philip">
         <img src="assets/philip.png" alt="" width="38" height="38" />
-        <p id="philip-tekst">Hoi! Ik ben Philip, een van de ontwikkelaars van WisWiz. In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd. Heb je nog vragen? App of bel me gerust.</p>
+        <p id="philip-tekst"><span class="zin">Hoi! Ik ben Philip, een van de ontwikkelaars van WisWiz. In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd. Heb je nog vragen? App of bel me gerust.</span> <span class="meer" aria-hidden="true">meer</span></p>
       </button>
       <div class="acties">
         <div class="sluit-wrap">
@@ -628,22 +634,34 @@
 </script>
 <script>
 (function(){
-  // r10: bottom bar — één zin; open = DEZELFDE alinea schuift uit (hoogte 1 regel → volledig), sluiten = kruisje / opnieuw tikken / Esc / tik buiten
+  // r10: bottom bar — één zin; open = DEZELFDE alinea schuift uit (hoogte 2 regels → volledig), sluiten = kruisje / opnieuw tikken / Esc / tik buiten.
+  // r10c: in rust twee regels met zoveel van de zin als past + "… meer" (JS meet hoeveel woorden passen).
   (function(){ var nav=document.querySelector('.contactbar'), t=document.getElementById('philip-toggle'), p=document.getElementById('philip-tekst'), x=document.getElementById('philip-sluit'); if(!nav||!t||!p||!x) return;
-    var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var zin=p.querySelector('.zin'), FULL=zin.textContent, reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function h(){ return p.getBoundingClientRect().height; }
-    function done(e){ if(e&&e.target!==p) return; p.classList.remove('is-anim'); p.style.height=''; p.removeEventListener('transitionend',done); }
-    function setOpen(open){ if(nav.classList.contains('is-open')===open) return;
+    function isOpen(){ return nav.classList.contains('is-open'); }
+    function lines(n){ return n*parseFloat(getComputedStyle(p).lineHeight)+1; }
+    function kort(){ // grootste woordgrens waarbij zin + "… meer" in twee regels past
+      if(isOpen()||p.classList.contains('is-anim')) return; p.classList.add('is-meet'); p.style.height='';
+      var max=lines(2), lo=0, hi=FULL.length, best=0;
+      zin.textContent=FULL; if(h()<=max){ p.classList.remove('is-meet'); return; }   // past helemaal: geen "meer" nodig… maar dan is er ook niets te openen; laat staan
+      while(lo<=hi){ var mid=(lo+hi)>>1; zin.textContent=FULL.slice(0,mid).replace(/[\s.,!?]+$/,'')+'…'; if(h()<=max){ best=mid; lo=mid+1; } else hi=mid-1; }
+      var cut=FULL.lastIndexOf(' ',best); if(cut>0) best=cut;
+      zin.textContent=FULL.slice(0,best).replace(/[\s.,!?]+$/,'')+'…'; p.classList.remove('is-meet'); }
+    function done(e){ if(e&&e.target!==p) return; p.classList.remove('is-anim'); p.style.height=''; p.removeEventListener('transitionend',done); if(!isOpen()) kort(); }
+    function setOpen(open){ if(isOpen()===open) return;
       p.removeEventListener('transitionend',done); p.classList.remove('is-anim'); p.style.height='';
-      var h0=h(); nav.classList.toggle('is-open',open); var h1=h();          // h1 = doelhoogte (open: volledig; dicht: één regel)
+      var h0=h(); nav.classList.toggle('is-open',open); zin.textContent=FULL; var h1=open?h():lines(2)-1;   // h1 = doelhoogte (open: volledig; dicht: twee regels)
       t.setAttribute('aria-expanded',open?'true':'false'); x.tabIndex=open?0:-1;
-      if(reduce){ return; }
+      if(reduce){ if(!open) kort(); return; }
       p.style.height=h0+'px'; void p.offsetHeight; p.classList.add('is-anim'); p.style.height=h1+'px';   // .is-anim: tijdens de beweging volledig gerenderd
       p.addEventListener('transitionend',done); }
-    t.addEventListener('click',function(){ setOpen(!nav.classList.contains('is-open')); });
+    t.addEventListener('click',function(){ setOpen(!isOpen()); });
     x.addEventListener('click',function(){ setOpen(false); t.focus({preventScroll:true}); });
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&nav.classList.contains('is-open')) setOpen(false); });
-    document.addEventListener('pointerdown',function(e){ if(nav.classList.contains('is-open')&&!nav.contains(e.target)) setOpen(false); },{passive:true});
+    document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&isOpen()) setOpen(false); });
+    document.addEventListener('pointerdown',function(e){ if(isOpen()&&!nav.contains(e.target)) setOpen(false); },{passive:true});
+    kort(); window.addEventListener('resize',kort); window.addEventListener('orientationchange',kort);
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(kort);
   })();
   // r9: echte sticky knop. JS meet alleen WAAR de originele knop staat (documentcoördinaten) en legt de sticky kopie
   // daar exact op; het vastklikken aan de bovenrand doet de browser zelf (position:sticky, top = 8px+safe-area - --cta-top).
