@@ -236,10 +236,17 @@
     .vstart.vc .vstart-text { text-decoration: underline; text-decoration-color: rgba(62,142,208,.6); text-decoration-thickness: 2px; text-underline-offset: 4px; }
     .vstart.vc:hover .vstart-text { text-decoration-color: var(--info); }
     /* D — de link-taal van de site zelf: de regel in blauw (--info-dark, zoals 'meer' in de contactbar en de tekstlinks), icoon gelijk */
-    .vstart.vd .vstart-text { color: var(--info-dark); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: rgba(31,111,176,.45); transition: color .15s ease, text-decoration-color .15s ease; }
-    /* r10 (Philip 18 aug: 'zet nog een underline over de video knop tot en met in 30 seconden'): de regel is in rust ONDERSTREEPT —
-       zachte blauwe lijn 2px, 4px onder de tekst, precies onder 'WisWiz in 30 seconden'; het icoon blijft; hover: lijn vol blauw. Nog steeds geen knop/pill. */
-    .vstart.vd:hover .vstart-text { color: #17578c; text-decoration-color: var(--info-dark); }
+    .vstart.vd .vstart-text { color: var(--info-dark); transition: color .15s ease; }
+    /* r10b (Philip 18 aug: icoon een tikje kleiner, en de underline ook onder het icoon door — icoon + tekst als ÉÉN onderstreept
+       geheel): het play-blokje 46x34 → 40x30 (teken 18 → 16); de lijn is geen tekst-underline meer maar één 2px-lijn onder het
+       hele element (van de linkerkant van het icoon tot de rechterkant van de tekst, 4px lucht onder het icoon), zacht blauw,
+       hover vol blauw. Nog steeds geen knop/pill (geen rand, geen vlak). */
+    .vstart.vd { position: relative; padding-bottom: 8px; }
+    .vstart.vd .vstart-mark { width: 40px; height: 30px; }
+    .vstart.vd .vstart-mark svg { width: 16px; height: 16px; }
+    .vstart.vd::after { content: ""; position: absolute; left: 6px; right: 14px; bottom: 2px; height: 2px; border-radius: 1px; background: rgba(31,111,176,.45); transition: background .15s ease; }
+    .vstart.vd:hover .vstart-text { color: #17578c; }
+    .vstart.vd:hover::after { background: var(--info-dark); }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
