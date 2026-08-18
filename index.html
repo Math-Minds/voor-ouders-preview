@@ -151,17 +151,11 @@
       transition: transform .18s ease, background .18s ease, box-shadow .18s ease, border-color .18s ease; }
     .vstart-mark svg { width: 15px; height: 15px; margin-left: 3px; fill: var(--gray-950); transition: fill .18s ease; }
     .vstart:active .vstart-mark { transform: scale(.97); }
-    /* P1: zwart gevuld speelrondje, wit teken (mediabediening) */
-    .vstart.p1 .vstart-mark { background: var(--gray-950); }
-    .vstart.p1 .vstart-mark svg { fill: #fff; }
-    .vstart.p1:hover .vstart-mark { transform: scale(1.06); background: #1f2937; }
-    /* P2: speelrondje in de CTA-kleur (geel, zwart teken) */
-    .vstart.p2 .vstart-mark { background: var(--brand); box-shadow: 0 4px 12px var(--brand-shadow); }
-    .vstart.p2:hover .vstart-mark { background: var(--brand-dark); transform: scale(1.06); }
-    /* P3: wit speelrondje met haarlijn (belknop-familie), zwart teken; hover vult zwart */
-    .vstart.p3 .vstart-mark { background: #fff; box-shadow: inset 0 0 0 1px var(--gray-300), 0 2px 0 rgba(17,24,39,.12); }
-    .vstart.p3:hover .vstart-mark { background: var(--gray-950); box-shadow: inset 0 0 0 1px var(--gray-950); transform: scale(1.06); }
-    .vstart.p3:hover .vstart-mark svg { fill: #fff; }
+    /* video-knopje (Philip 18 aug: 'duidelijker een video knopje'): zwart afgerond rechthoekje 46x34 (9px hoek — de vorm van een
+       videotegel/CTA-familie), wit speelteken; naast de bolde regel. Gejureerd tegen rondje / mini-thumbnail / ringknop (contactvel r5). */
+    .vstart.v1 .vstart-mark { width: 46px; height: 34px; border-radius: 9px; background: var(--gray-950); }
+    .vstart.v1 .vstart-mark svg { fill: #fff; width: 14px; height: 14px; margin-left: 2px; }
+    .vstart.v1:hover .vstart-mark { transform: scale(1.05); background: #1f2937; }
     @media (min-width: 1024px) { .vstart { font-size: 18px; } }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
@@ -261,8 +255,6 @@
     .proof .story-c p { margin: 0; }
     .proof .story-c .btn { margin-top: 16px; }
 
-    .proof .layer-s { margin-top: 32px; }
-    .proof .layer-s blockquote p { font-size: 16px; }
     .btn-call .nr { color: var(--gray-500); font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
     .proof blockquote p { text-wrap: pretty; }
 
@@ -305,7 +297,7 @@
         <span class="edgefade" aria-hidden="true"></span>
         </div>
         </a>
-        <a class="vstart p1" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
+        <a class="vstart v1" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       </div>
       <div class="hero-copy">
         <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
@@ -334,8 +326,8 @@
         <blockquote><p>&#8220;We gebruiken het meestal samen. Ik lees het en leg het aan haar uit. Op die manier kan ik haar veel beter helpen. Als we deze app niet hadden gehad had ze waarschijnlijk wel op bijles gezeten.&#8221;</p></blockquote>
         <figcaption>Moeder van een brugklasleerling</figcaption>
       </figure>
-      <figure class="layer layer-s">
-        <blockquote><p>&#8220;&#8230;ik heb namelijk echt heel veel aan WisWiz gehad voor hoofdstuk 14.&#8221;</p></blockquote>
+      <figure class="layer">
+        <blockquote><p>&#8220;Ik zit zelf op 6 gymnasium op het Vossius en vroeg me af wanneer jullie H15 zullen vrijgeven, ik heb namelijk echt heel veel aan WisWiz gehad voor hoofdstuk 14.&#8221;</p></blockquote>
         <figcaption>Mattia, 6 vwo, Vossius Gymnasium</figcaption>
       </figure>
       <!-- Institutionele waardering (#32 r5, Philips woord 18 aug): kranten + scholen + stichtingen als ÉÉN element,
