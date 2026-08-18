@@ -1,7 +1,7 @@
 // Service worker voor de iteratie-preview: alles direct uit cache openen,
 // op de achtergrond verversen. Verzoeken met ?t= (de verversknop) gaan
 // altijd puur over het netwerk.
-const CACHE = "vop-v20";
+const CACHE = "vop-v21";
 const PRECACHE = [
   "./", "index.html", "pakket.html", "gegevens.html", "betaal.html",
   "gelukt.html", "knoppen.html",
@@ -22,8 +22,26 @@ self.addEventListener("fetch", (e) => {
   if (e.request.method !== "GET") return;
   const url = new URL(e.request.url);
   if (url.searchParams.has("t")) return; // verversknop: vers van het net
+  // HTML/navigaties: NETWERK EERST (18 aug — Philip zag na elke deploy eerst
+  // de vorige versie uit de cache; een iteratie-preview mag nooit oud openen).
+  // Cache is alleen nog het offline-vangnet. Assets blijven cache-eerst met
+  // achtergrond-verversing (snel, en de deploys bumpen CACHE toch).
+  const isHTML = e.request.mode === "navigate" ||
+    (e.request.destination === "document") ||
+    url.pathname.endsWith(".html") || url.pathname.endsWith("/");
   e.respondWith(
     caches.open(CACHE).then(async (c) => {
+      if (isHTML) {
+        try {
+          const r = await fetch(e.request);
+          if (r.ok) c.put(e.request, r.clone());
+          return r;
+        } catch (_) {
+          const hit = await c.match(e.request);
+          if (hit) return hit;
+          throw _;
+        }
+      }
       const hit = await c.match(e.request);
       const net = fetch(e.request)
         .then((r) => { if (r.ok) c.put(e.request, r.clone()); return r; })
