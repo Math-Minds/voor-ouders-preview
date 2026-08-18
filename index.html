@@ -321,12 +321,18 @@
     .knip .papier.quote blockquote { margin: 0; padding: 0; }
     .knip .papier.quote p { font-family: inherit; font-weight: 400; font-size: clamp(11px, 2.95cqi, 14.5px); line-height: 1.5; letter-spacing: 0; }
     .knip .papier.quote figcaption { margin-top: 2cqi; font-size: clamp(9px, 2.3cqi, 11px); font-weight: 500; color: var(--gray-500); position: relative; }
-    /* de stapel: 2 + 2 + 1, lichte afwisselende rotatie, elke rij tikt iets onder de vorige — één elegante stapel (r6) */
-    .knip.k-parool { width: 44%; margin-top: 5cqi; transform: rotate(-2deg); z-index: 1; }
-    .knip.k-fd { width: 48%; margin-left: -1cqi; transform: rotate(1.4deg); z-index: 2; }
-    .knip.k-vos { width: 46%; margin-top: 4.5cqi; transform: rotate(1.6deg); z-index: 3; }
-    .knip.k-wijs { width: 46%; margin-top: 3.5cqi; margin-left: 2cqi; transform: rotate(-1.8deg); z-index: 4; }
-    .knip.k-wa { width: 60%; margin-top: 5cqi; transform: rotate(.9deg); z-index: 5; }
+    /* de stapel (r7f, Philip: het totaal ~VIERKANT, een echte fotostapel): de container is 1:1 en de vijf liggen absoluut —
+       de twee kranten als ankers bovenaan met overlap en tegengestelde rotatie, de drie kaartjes in de onderste helft en de
+       zijkanten, over de onderranden van de kranten heen; Wiskunde Actief midden-onder ervoor. Maten in % van de stapelbreedte. */
+    .stapel { padding: 0; aspect-ratio: 1 / 1.12; }
+    @media (min-width: 640px) { .stapel { aspect-ratio: 1 / 1.06; } }
+    .stapel .rij { display: contents; }
+    .knip { position: absolute; }
+    .knip.k-parool { left: 3%; top: 8%; width: 43%; transform: rotate(-4deg); z-index: 1; }
+    .knip.k-fd { left: 44%; top: 7%; width: 48%; transform: rotate(3deg); z-index: 2; }
+    .knip.k-vos { left: 0; top: 42%; width: 44%; transform: rotate(-3deg); z-index: 3; }
+    .knip.k-wijs { left: 56%; top: 41%; width: 44%; transform: rotate(4deg); z-index: 4; }
+    .knip.k-wa { left: 17%; top: 69%; width: 66%; transform: rotate(-2deg); z-index: 5; }
     /* De twee reviews (moeder + Mattia): de VRIJE quote-stijl (Philip 18 aug r7d: geen kaart, geen tabje, geen kranten-rand —
        los van het institutionele stapeltje), onderling identiek: quote 18px + attributie, 48px lucht. */
     .proof .layer.review + .layer.review { margin-top: 40px; }
@@ -419,7 +425,7 @@
 
     <section class="about" id="about">
       <h2>Onze missie</h2>
-      <h3>Bijles voor iedereen, overal ter wereld</h3>
+      <h3>Persoonlijke begeleiding voor iedereen, overal ter wereld</h3>
       <p>Talent komt tot bloei onder persoonlijke begeleiding. Zo had Alexander de Grote les van Aristoteles, die op zijn beurt leerling was van Plato. In de klas is daar helaas te weinig ruimte voor. Met innovatieve technologie willen we daarom deze persoonlijke begeleiding mogelijk maken voor iedereen ter wereld. We beginnen met wiskunde: het vak waar leerlingen het vaakst vastlopen; een toren van opbouwende kennis die omvalt zodra een stevig fundament ontbreekt.</p>
       <h3>Over ons</h3>
       <p>WisWiz is opgericht door Philip en Louis, wiskundestudenten aan de TU Delft met jarenlange bijleservaring. We liepen steeds meer tegen de limiet aan dat we met individuele bijlessen te weinig mensen konden helpen. Samen met Hendrik, afgestudeerd statisticus en software ontwikkelaar, zijn we daarom de WisWiz app gaan bouwen. Met deze groep werken we iedere dag om zoveel mogelijk leerlingen te helpen.</p>
