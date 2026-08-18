@@ -45,22 +45,33 @@
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; height: auto; display: block; }
 
-    /* --- navigatie (#32 r6, Philip 18 aug): topbar weg; bottom bar (contact) + sticky CTA (conversie) --- */
-    body { padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
+    /* --- navigatie (#32 r6/r7, Philip 18 aug): topbar weg; bottom bar = HET Philip/contact-element + sticky CTA (conversie) ---
+       r7: de bar draagt Philip zelf — links zijn hoofdje + één kort warm tekstje (app of bel me + wie hij is), rechts twee
+       icon-only knoppen (WhatsApp, bellen) in de belknop-stijl met 44px tapzones. Het middenblok 'Hoi! Ik ben Philip' is weg. */
+    body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
     .contactbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; background: rgba(255,255,255,.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
       border-top: 1px solid #dbeafe; padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom, 0px)); }
-    .contactbar-inner { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .contactbar .btn { font-size: 14px; padding: 11px 10px; min-height: 44px; }
-    .contactbar .btn-call { box-shadow: none; }
+    .contactbar-inner { max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 10px; }
+    .contactbar .wie { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; text-align: left; }
+    .contactbar .wie img { flex-shrink: 0; width: 40px; height: 40px; border-radius: 9999px; object-fit: cover; box-shadow: 0 1px 3px rgba(15,23,42,.18); }
+    .contactbar .wie p { margin: 0; font-size: 13.5px; line-height: 1.3; font-weight: 700; color: var(--gray-950); letter-spacing: -0.005em; }
+    .contactbar .wie small { display: block; margin-top: 2px; font-size: 12.5px; font-weight: 500; color: var(--gray-500); }
+    .contactbar .acties { display: flex; gap: 8px; flex-shrink: 0; }
+    .contactbar .btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 9999px;
+      background: #fff; border: 1px solid var(--gray-300); box-shadow: 0 2px 0 rgba(17,24,39,.12); -webkit-tap-highlight-color: transparent; transition: border-color .15s ease, background .15s ease, transform .15s ease; }
+    .contactbar .btn-icon:hover { border-color: #9ca3af; background: #f9fafb; }
+    .contactbar .btn-icon:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(17,24,39,.12); }
+    .contactbar .btn-icon svg { width: 20px; height: 20px; }
     .contactbar .btn-wa svg { fill: #25d366; }
-    .contactbar .btn span { white-space: nowrap; }
+    .contactbar .btn-tel svg { width: 18px; height: 18px; fill: var(--info); }
+    @media (min-width: 400px) { .contactbar .wie p { font-size: 14px; } }
     .stickycta { position: fixed; top: 0; left: 0; right: 0; z-index: 900; padding: calc(8px + env(safe-area-inset-top, 0px)) var(--pad) 8px;
       background: rgba(240,249,255,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid #dbeafe;
       transform: translateY(-100%); opacity: 0; pointer-events: none; transition: transform .28s cubic-bezier(.2,.7,.2,1), opacity .22s ease; }
     .stickycta.is-on { transform: none; opacity: 1; pointer-events: auto; }
     .stickycta .btn-primary { max-width: 360px; margin: 0 auto; font-size: 15px; padding: 11px 16px; box-shadow: 0 4px 12px var(--brand-shadow); }
     @media (prefers-reduced-motion: reduce) { .stickycta { transition: none; } }
-    @media (min-width: 1024px) { .contactbar-inner { max-width: 420px; } }
+    @media (min-width: 1024px) { .contactbar-inner { max-width: 560px; } }
 
     main { max-width: var(--site); margin: 0 auto; padding: 28px var(--pad) 24px; }
     @media (min-width: 1024px) { main { padding-top: 64px; } }
@@ -155,11 +166,11 @@
     .vstart:active .vstart-mark { transform: scale(.97); }
     /* video-knopje (Philip 18 aug: 'duidelijker een video knopje'): zwart afgerond rechthoekje 46x34 (9px hoek — de vorm van een
        videotegel/CTA-familie), wit speelteken; naast de bolde regel. Gejureerd tegen rondje / mini-thumbnail / ringknop (contactvel r5). */
-    /* r6 (Philip 18 aug: 'het icoon in kleur, driehoek ietsje dominanter'): het blok in het merkgeel van de CTA met een
-       donkere, grotere driehoek — één kleurfamilie met de gele CTA eronder; blauw/groen gejureerd en afgevallen (contactvel r6). */
-    .vstart.v1 .vstart-mark { width: 46px; height: 34px; border-radius: 9px; background: var(--brand); }
-    .vstart.v1 .vstart-mark svg { fill: var(--gray-950); width: 18px; height: 18px; margin-left: 3px; }
-    .vstart.v1:hover .vstart-mark { transform: scale(1.05); background: var(--brand-dark); }
+    /* r7 (Philip 18 aug: het play-icoon 'in kleur' = de site-token BG-INFO, niet het geel/oranje van r6): het blok in
+       --info (#3e8ed0, exact de Tailwind-kleur `info` van de site) met een wit, groter speelteken (18px, r6); tekst ongewijzigd. */
+    .vstart.v1 .vstart-mark { width: 46px; height: 34px; border-radius: 9px; background: var(--info); }
+    .vstart.v1 .vstart-mark svg { fill: #fff; width: 18px; height: 18px; margin-left: 3px; }
+    .vstart.v1:hover .vstart-mark { transform: scale(1.05); background: var(--info-dark); }
     @media (min-width: 1024px) { .vstart { font-size: 18px; } }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
@@ -251,13 +262,10 @@
     .proof .story { margin-top: 0; }
 
     .proof .layer { margin-top: 48px; width: 100%; max-width: 32rem; }
+    .proof .layer:first-of-type { margin-top: 0; }
     .proof blockquote { margin: 0; padding: 0; }
     .proof blockquote p { margin: 0; font-size: 18px; line-height: 1.55; font-weight: 400; color: var(--gray-950); }
     .proof figcaption { margin-top: 10px; font-size: 13px; font-weight: 500; color: var(--gray-500); }
-    .proof .story-c { margin: 0 auto; max-width: var(--col); text-align: center; display: flex; flex-direction: column; align-items: center; }
-    .proof .story-c .avatar { display: block; width: 44px; height: 44px; margin: 0 0 10px; transform: none; }
-    .proof .story-c p { margin: 0; }
-    .proof .story-c .btn { margin-top: 16px; }
 
     .btn-call .nr { color: var(--gray-500); font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
     .proof blockquote p { text-wrap: pretty; }
@@ -299,9 +307,12 @@
     .knip.k-vos { width: 46%; margin-top: 4.5cqi; transform: rotate(1.6deg); z-index: 3; }
     .knip.k-wijs { width: 46%; margin-top: 3.5cqi; margin-left: 2cqi; transform: rotate(-1.8deg); z-index: 4; }
     .knip.k-wa { width: 55%; margin-top: 5cqi; transform: rotate(.9deg); z-index: 5; }
-    /* Mattia's quote op een ietsje crème-beige kaart, rand en schaduw in de knipsel-familie (Philip 18 aug) */
+    /* De twee reviews (moeder + Mattia) als ÉÉN familie (Philip 18 aug r7: Mattia exact hetzelfde design als de moeder-review):
+       dezelfde kaartvorm, typografie en attributie; de crème-beige tint die hij voor de quote vroeg geldt voor beide.
+       Rand en schaduw in de knipsel-familie; de tweede kaart staat dichter op de eerste zodat ze als paar lezen. */
     .proof .layer.kaart-quote { background: linear-gradient(168deg, #faf6ec 0%, #f4eddd 100%); border: 1px solid rgba(15,23,42,.10); border-radius: 3px;
       box-shadow: 0 10px 18px rgba(15,23,42,.10), 0 1px 3px rgba(15,23,42,.06); padding: 24px 22px 20px; }
+    .proof .layer.kaart-quote + .layer.kaart-quote { margin-top: 20px; }
   </style>
   <link rel="preload" as="image" href="assets/hero-t2.webp" />
   <link rel="manifest" href="manifest.json" />
@@ -338,16 +349,8 @@
     </section>
 
     <section class="proof" id="proof">
-      <!-- Philip als brug (#32 r4, Philips woord 18 aug): bel mij, of lees hieronder wat ouders en leerlingen zeggen -->
-      <div class="story story-c">
-        <img class="avatar" src="assets/philip.png" alt="Philip" />
-        <p>Hoi! Ik ben Philip, een van de ontwikkelaars van WisWiz. In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd. Heb je nog vragen? Bel me gerust. Of lees hieronder wat ouders en leerlingen over WisWiz zeggen.</p>
-        <a class="btn btn-call" href="tel:+31630231640" data-cta="bel">
-          <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
-          <span>Bel Philip <span class="nr">06 30 23 16 40</span></span>
-        </a>
-      </div>
-      <figure class="layer">
+      <!-- r7 (Philip 18 aug): het Philip-blok is uit de sectie — de bottom bar is voortaan het Philip/contact-element -->
+      <figure class="layer kaart-quote">
         <blockquote><p>&#8220;We gebruiken het meestal samen. Ik lees het en leg het aan haar uit. Op die manier kan ik haar veel beter helpen. Als we deze app niet hadden gehad had ze waarschijnlijk wel op bijles gezeten.&#8221;</p></blockquote>
         <figcaption>Moeder van een brugklasleerling</figcaption>
       </figure>
@@ -429,14 +432,18 @@
 
   <nav class="contactbar" aria-label="Contact met Philip">
     <div class="contactbar-inner">
-      <a class="btn btn-call btn-wa" href="https://wa.me/31630231640?text=Hoi%20Philip%2C%20ik%20heb%20een%20vraag%20over%20WisWiz%20voor%20mijn%20kind." target="_blank" rel="noopener" data-cta="whatsapp">
-        <svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-        <span>WhatsApp Philip</span>
-      </a>
-      <a class="btn btn-call" href="tel:+31630231640" data-cta="bel-bar">
-        <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
-        <span>Bel Philip</span>
-      </a>
+      <div class="wie">
+        <img src="assets/philip.png" alt="Philip" width="40" height="40" />
+        <p>Vragen? App of bel me.<small>Philip, ontwikkelaar van WisWiz</small></p>
+      </div>
+      <div class="acties">
+        <a class="btn-icon btn-wa" href="https://wa.me/31630231640?text=Hoi%20Philip%2C%20ik%20heb%20een%20vraag%20over%20WisWiz%20voor%20mijn%20kind." target="_blank" rel="noopener" data-cta="whatsapp" aria-label="WhatsApp Philip">
+          <svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
+        </a>
+        <a class="btn-icon btn-tel" href="tel:+31630231640" data-cta="bel-bar" aria-label="Bel Philip, 06 30 23 16 40">
+          <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>
+        </a>
+      </div>
     </div>
   </nav>
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Video: WisWiz in 30 seconden">
