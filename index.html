@@ -144,30 +144,25 @@
        (geen derde knopfamilie, geen sticker). Het hele beeld blijft tikbaar. */
     .hero-visual { position: relative; }
     .herolink { display: block; position: relative; color: inherit; -webkit-tap-highlight-color: transparent; }
-    .vstart { display: flex; align-items: center; justify-content: center; gap: 10px; width: max-content; min-height: 44px; margin: 10px auto 0; padding: 6px 12px;
-      font-size: 15px; font-weight: 600; color: var(--gray-950); line-height: 1.3; letter-spacing: -0.005em; -webkit-tap-highlight-color: transparent; border-radius: 12px;
-      transition: color .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
-    .vstart .dur { color: var(--gray-500); font-weight: 400; }
-    .vstart-mark { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px; transition: transform .18s ease, background .18s ease, box-shadow .18s ease; }
-    .vstart-mark svg { fill: var(--gray-950); }
-    /* variant A: puur typografisch (driehoekje + tekst) */
-    .vstart.va { padding: 6px 8px; gap: 9px; }
-    .vstart.va .vstart-mark { width: 12px; height: 12px; }
-    .vstart.va .vstart-mark svg { width: 12px; height: 12px; }
-    .vstart.va:hover { background: rgba(3,7,18,.04); }
-    .vstart.va:hover .vstart-mark { transform: translateX(1px); }
-    /* variant B: dunne ring om het speelteken (geen vulling) + tekst */
-    .vstart.vb .vstart-mark { width: 32px; height: 32px; box-shadow: inset 0 0 0 1.5px rgba(3,7,18,.34); }
-    .vstart.vb .vstart-mark svg { width: 13px; height: 13px; margin-left: 2px; transition: fill .18s ease; }
-    .vstart.vb:hover .vstart-mark { background: var(--gray-950); box-shadow: inset 0 0 0 1.5px var(--gray-950); transform: scale(1.06); }
-    .vstart.vb:hover .vstart-mark svg { fill: #fff; }
-    .vstart.vb:active .vstart-mark { transform: scale(.98); }
-    /* variant C: compacte knop in de bestaande belknop-familie (wit, haarlijn, 12px), zwart speelteken */
-    .vstart.vc { padding: 10px 18px 10px 14px; background: #fff; border: 1px solid var(--gray-300); box-shadow: 0 2px 0 rgba(17,24,39,.12); font-weight: 700; font-size: 14px; }
-    .vstart.vc .vstart-mark { width: 24px; height: 24px; background: var(--gray-950); }
-    .vstart.vc .vstart-mark svg { width: 11px; height: 11px; fill: #fff; margin-left: 1px; }
-    .vstart.vc:hover { border-color: #9ca3af; background: #f9fafb; transform: translateY(-1px); }
-    @media (min-width: 1024px) { .vstart { font-size: 16px; } }
+    .vstart { display: flex; align-items: center; justify-content: center; gap: 12px; width: max-content; min-height: 48px; margin: 10px auto 0; padding: 4px 12px 4px 4px;
+      font-size: 17px; font-weight: 700; color: var(--gray-950); line-height: 1.3; letter-spacing: -0.005em; -webkit-tap-highlight-color: transparent; border-radius: 9999px;
+      transition: color .15s ease, background .15s ease, transform .15s ease; }
+    .vstart-mark { flex-shrink: 0; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .vstart-mark svg { width: 15px; height: 15px; margin-left: 3px; fill: var(--gray-950); transition: fill .18s ease; }
+    .vstart:active .vstart-mark { transform: scale(.97); }
+    /* P1: zwart gevuld speelrondje, wit teken (mediabediening) */
+    .vstart.p1 .vstart-mark { background: var(--gray-950); }
+    .vstart.p1 .vstart-mark svg { fill: #fff; }
+    .vstart.p1:hover .vstart-mark { transform: scale(1.06); background: #1f2937; }
+    /* P2: speelrondje in de CTA-kleur (geel, zwart teken) */
+    .vstart.p2 .vstart-mark { background: var(--brand); box-shadow: 0 4px 12px var(--brand-shadow); }
+    .vstart.p2:hover .vstart-mark { background: var(--brand-dark); transform: scale(1.06); }
+    /* P3: wit speelrondje met haarlijn (belknop-familie), zwart teken; hover vult zwart */
+    .vstart.p3 .vstart-mark { background: #fff; box-shadow: inset 0 0 0 1px var(--gray-300), 0 2px 0 rgba(17,24,39,.12); }
+    .vstart.p3:hover .vstart-mark { background: var(--gray-950); box-shadow: inset 0 0 0 1px var(--gray-950); transform: scale(1.06); }
+    .vstart.p3:hover .vstart-mark svg { fill: #fff; }
+    @media (min-width: 1024px) { .vstart { font-size: 18px; } }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -261,21 +256,30 @@
     .proof blockquote { margin: 0; padding: 0; }
     .proof blockquote p { margin: 0; font-size: 18px; line-height: 1.55; font-weight: 400; color: var(--gray-950); }
     .proof figcaption { margin-top: 10px; font-size: 13px; font-weight: 500; color: var(--gray-500); }
-    .proof .logos { display: flex; justify-content: center; align-items: center; gap: 22px; }
-    .proof .logos img { height: 36px; width: auto; }
-    .proof .school p { margin: 12px 0 0; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--gray-500); }
     .proof .story-c { margin: 0 auto; max-width: var(--col); text-align: center; display: flex; flex-direction: column; align-items: center; }
     .proof .story-c .avatar { display: block; width: 44px; height: 44px; margin: 0 0 10px; transform: none; }
     .proof .story-c p { margin: 0; }
     .proof .story-c .btn { margin-top: 16px; }
 
-    .proof .school p, .proof .krant p { text-wrap: balance; }
-    .proof .krant { max-width: 576px; }
-    .proof .krant p { margin: 18px 0 0; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--gray-500); }
     .proof .layer-s { margin-top: 32px; }
     .proof .layer-s blockquote p { font-size: 16px; }
     .btn-call .nr { color: var(--gray-500); font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
     .proof blockquote p { text-wrap: pretty; }
+
+    /* --- institutionele waardering (#32 r5): kranten + labels als één element --- */
+    .proof .instituut { max-width: 576px; width: 100%; }
+    .proof .instituut p { margin: 18px 0 0; font-size: 13px; line-height: 1.6; font-weight: 500; color: var(--gray-500); text-wrap: balance; }
+    .inst-visual { position: relative; }
+    .inst-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 8px; }
+    .inst-tags li { display: inline-flex; align-items: center; gap: 7px; background: #fff; padding: 6px 9px 6px 7px; border-radius: 2px;
+      font-size: 12px; font-weight: 700; color: var(--gray-950); line-height: 1; letter-spacing: -0.005em; white-space: nowrap;
+      box-shadow: 0 6px 16px rgba(15,23,42,.14); }
+    .inst-tags img { height: 18px; width: auto; display: block; }
+    .inst-tags img.wa { height: 20px; filter: brightness(0); }
+    .inst-tags img.fd { height: 18px; width: 18px; border-radius: 3px; object-fit: cover; }
+    /* A: labels hangen als strook net onder de krantenpagina's (de foto heeft onder de pagina's een lege band van 6.3% van de breedte) */
+    .instituut.ia .inst-tags { margin: calc(-6.3% + 6px) 4px 0; position: relative; }
+    @media (min-width: 640px) { .inst-tags { gap: 10px; } .inst-tags li { font-size: 14px; padding: 7px 11px 7px 8px; gap: 8px; } .inst-tags img { height: 22px; } .inst-tags img.wa { height: 24px; } }
   </style>
   <link rel="preload" as="image" href="assets/hero-t2.webp" />
   <link rel="manifest" href="manifest.json" />
@@ -291,13 +295,13 @@
   <main>
     <section class="hero">
       <div class="hero-visual">
-        <a class="herolink" id="videocard" href="assets/opening.mp4" data-cta="video" aria-label="Bekijk WisWiz in 40 seconden (video)">
+        <a class="herolink" id="videocard" href="assets/opening.mp4" data-cta="video" aria-label="WisWiz in 30 seconden (video)">
         <div class="blend" id="herovisual">
         <img src="assets/hero-t2.webp" alt="Een wiskundeboek, een telefoon met WisWiz en een schrift met een vastgelopen uitwerking" width="3200" height="1800" />
         <span class="edgefade" aria-hidden="true"></span>
         </div>
         </a>
-        <a class="vstart vb" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">Bekijk WisWiz <span class="dur">· 40 seconden</span></span></a>
+        <a class="vstart p1" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       </div>
       <div class="hero-copy">
         <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
@@ -330,13 +334,18 @@
         <blockquote><p>&#8220;&#8230;ik heb namelijk echt heel veel aan WisWiz gehad voor hoofdstuk 14.&#8221;</p></blockquote>
         <figcaption>Mattia, 6 vwo, Vossius Gymnasium</figcaption>
       </figure>
-      <div class="layer school">
-        <div class="logos"><img src="assets/vossius4.png" alt="Vossius Gymnasium" /><img src="assets/wijs-bijles.png" alt="Stichting Wijs Bijles" /></div>
-        <p>Gebruikt op het Vossius Gymnasium en bij Stichting Wijs Bijles.</p>
-      </div>
-      <div class="layer krant">
-        <img class="kranten-img" src="assets/kranten.webp" alt="Krantenartikelen over WisWiz in Het Parool en het FD" width="1200" height="954" loading="lazy" />
-        <p>Bekend uit de krant: Het Parool en het FD schreven over WisWiz.</p>
+      <!-- Institutionele waardering (#32 r5, Philips woord 18 aug): kranten + scholen + stichtingen als ÉÉN element,
+           in de beeldtaal van de kranten (witte naamlabels zoals de kranten hun kop dragen). Domein #34. -->
+      <div class="layer instituut ia">
+        <div class="inst-visual">
+          <img class="kranten-img" src="assets/kranten.webp" alt="Krantenartikelen over WisWiz in Het Parool en het FD" width="1200" height="954" loading="lazy" />
+          <ul class="inst-tags" aria-label="Scholen en stichtingen">
+            <li><img src="assets/vossius4.png" alt="" /><span>Vossius Gymnasium</span></li>
+            <li><img src="assets/wijs-bijles.png" alt="" /><span>Stichting Wijs Bijles</span></li>
+            <li><img class="wa" src="assets/wiskunde-actief.png" alt="Stichting Wiskunde Actief" /></li>
+          </ul>
+        </div>
+        <p>Bekend uit Het Parool en het FD. Vertrouwd door het Vossius Gymnasium, Stichting Wijs Bijles en Stichting Wiskunde Actief.</p>
       </div>
     </section>
 
@@ -368,7 +377,7 @@
       <p class="footer-copy">© 2026 WisWiz B.V.</p>
     </div>
   </footer>
-<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Video: WisWiz in 40 seconden">
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Video: WisWiz in 30 seconden">
   <div class="lightbox-backdrop" data-close></div>
   <div class="lightbox-panel">
     <button class="lightbox-close" type="button" aria-label="Sluiten" data-close>&times;</button>
