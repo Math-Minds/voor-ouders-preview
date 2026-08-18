@@ -129,28 +129,28 @@
     @media (prefers-reduced-motion: reduce) { .stickybar { transition: none; } }
     @media (min-width: 1024px) { .contactbar-inner { max-width: 560px; } }
 
-    main { max-width: var(--site); margin: 0 auto; padding: 28px var(--pad) 24px; }
-    @media (min-width: 1024px) { main { padding-top: 64px; } }
+    /* --- r11 (Philip 19 aug: "header bovenaan, dan de video-knop eronder, dan de hero-opstelling en daaronder de
+       Start-proefweek-button — als opening/viewport voor alle devices"): de opening is één gecentreerde verticale stapel
+       op ALLE formaten (de desktop-twee-kolommen-rij is weg). Volgorde: logo-header → startelement → hero-beeld → kop →
+       CTA; alles gemeten zodat het op telefoon (375x667) én desktop boven de vouw past. --- */
+    .sitekop { max-width: var(--site); margin: 0 auto; padding: 12px var(--pad) 0; display: flex; justify-content: center; }
+    .sitekop img { height: 30px; width: auto; }
+    @media (min-width: 1024px) { .sitekop { padding-top: 18px; } .sitekop img { height: 34px; } }
 
-    .hero {
-      display: flex; flex-direction: column; align-items: center; gap: 40px;
-    }
-    .hero-visual { margin-bottom: 4px; }
-    @media (min-width: 1024px) { .hero-visual { margin-bottom: 0; } }
-    @media (min-width: 1024px) {
-      .hero { flex-direction: row; gap: 56px; }
-    }
+    main { max-width: var(--site); margin: 0 auto; padding: 0 var(--pad) 24px; }
+
+    .hero { display: flex; flex-direction: column; align-items: center; }
     .hero-visual { width: 100%; max-width: 576px; flex-shrink: 0; }
-    @media (min-width: 1024px) { .hero-visual { width: 520px; } }
     .hero-visual img, .hero-visual video { width: 100%; display:block; }
     .hero-visual .blend { position: relative; }
     .hero-visual .edgefade { position: absolute; inset: -1px; pointer-events: none;
       box-shadow: inset 0 0 22px 14px var(--achtergrond); }
-    .hero-copy { display: flex; flex-direction: column; align-items: center; text-align: center; }
-    @media (min-width: 1024px) { .hero-copy { align-items: flex-start; text-align: left; } }
+    .hero-copy { margin-top: 14px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     h1 {
       margin: 0; font-size: 28px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em;
     }
+    /* r11: op smalle telefoons (<390px) net kleiner, zodat de kop twee regels blijft en de opening in één viewport past */
+    @media (max-width: 389px) { h1 { font-size: 25px; } }
     @media (min-width: 768px) { h1 { font-size: 36px; } }
     h1 .line2 { display: block; margin-top: 8px; }
     .wis { color: var(--mathorange); } .wiz { color: var(--mathyellow); }
@@ -161,7 +161,7 @@
     @media (min-width: 768px) { .lead { font-size: 18px; } }
 
     .actions {
-      margin-top: 28px; width: 100%; max-width: var(--col);
+      margin-top: 20px; width: 100%; max-width: var(--col);
       display: flex; flex-direction: column; align-items: stretch; text-align: left;
     }
     .cta-stack {
@@ -213,7 +213,8 @@
        (geen derde knopfamilie, geen sticker). Het hele beeld blijft tikbaar. */
     .hero-visual { position: relative; }
     .herolink { display: block; position: relative; color: inherit; -webkit-tap-highlight-color: transparent; }
-    .vstart { display: flex; align-items: center; justify-content: center; gap: 12px; width: max-content; min-height: 48px; margin: 10px auto 0; padding: 4px 12px 4px 4px;
+    /* r11: het startelement staat nu BOVEN het hero-beeld (direct onder de header), zelfde element als goedgekeurd */
+    .vstart { display: flex; align-items: center; justify-content: center; gap: 12px; width: max-content; min-height: 48px; margin: 6px auto 0; padding: 4px 12px 4px 4px;
       font-size: 17px; font-weight: 700; color: var(--gray-950); line-height: 1.3; letter-spacing: -0.005em; -webkit-tap-highlight-color: transparent; border-radius: 9999px;
       transition: color .15s ease, background .15s ease, transform .15s ease; }
     .vstart-mark { flex-shrink: 0; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px;
@@ -233,7 +234,7 @@
        (2) affordance: het icoon krijgt een dunne, iets donkerder rand + een zachte 1px-slagschaduw (meer contrast, 'ligt op' de
            pagina); het GEHEEL is één tikvlak dat onmerkbaar groter is (padding 6px, marge 2px terug zodat niets verschuift) en
            reageert als één blok — hover: icoon donkerder, tekst iets dieper; press: het hele blok een fractie in (.985). */
-    .vstart.v1 { gap: 9px; padding: 6px 14px 6px 6px; margin-top: 8px; }
+    .vstart.v1 { gap: 9px; padding: 6px 14px 6px 6px; margin-top: 4px; margin-bottom: 8px; }
     .vstart.v1 .vstart-text { padding-top: 1px; }
     .vstart.v1 .vstart-mark { box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(31,111,176,.28); }
     .vstart.v1:hover .vstart-mark { transform: none; }
@@ -441,15 +442,20 @@
   <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <!-- Topbar weg (#32 r6, Philips woord 18 aug): geen header meer; conversie = sticky CTA bovenaan zodra de originele knop
-       uit beeld scrolt, contact = de bottom bar (WhatsApp / bel Philip). -->
+  <!-- r11 (Philip 19 aug): de opening is één verticale stapel — header, video-knop, hero-beeld, kop, CTA.
+       Conversie bij scrollen blijft de sticky CTA; contact blijft de bottom bar (WhatsApp / bel Philip). -->
   <div class="stickybar" id="stickybar" aria-hidden="true"></div>
   <div class="stickycta" id="stickycta">
     <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
   </div>
 
+  <header class="sitekop">
+    <img src="assets/wiswizlogo.png" alt="WisWiz" />
+  </header>
+
   <main>
     <section class="hero">
+      <a class="vstart v1 vd" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       <div class="hero-visual">
         <a class="herolink" id="videocard" href="assets/opening.mp4" data-cta="video" aria-label="WisWiz in 30 seconden (video)">
         <div class="blend" id="herovisual">
@@ -457,7 +463,6 @@
         <span class="edgefade" aria-hidden="true"></span>
         </div>
         </a>
-        <a class="vstart v1 vd" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       </div>
       <div class="hero-copy">
         <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
