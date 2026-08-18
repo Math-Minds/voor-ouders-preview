@@ -129,25 +129,22 @@
     @media (prefers-reduced-motion: reduce) { .stickybar { transition: none; } }
     @media (min-width: 1024px) { .contactbar-inner { max-width: 560px; } }
 
-    /* --- r11 (Philip 19 aug: "header bovenaan, dan de video-knop eronder, dan de hero-opstelling en daaronder de
-       Start-proefweek-button — als opening/viewport voor alle devices"): de opening is één gecentreerde verticale stapel
-       op ALLE formaten (de desktop-twee-kolommen-rij is weg). Volgorde: logo-header → startelement → hero-beeld → kop →
-       CTA; alles gemeten zodat het op telefoon (375x667) én desktop boven de vouw past. --- */
-    .sitekop { max-width: var(--site); margin: 0 auto; padding: 12px var(--pad) 0; display: flex; justify-content: center; }
-    .sitekop img { height: 30px; width: auto; }
-    @media (min-width: 1024px) { .sitekop { padding-top: 18px; } .sitekop img { height: 34px; } }
-
-    main { max-width: var(--site); margin: 0 auto; padding: 0 var(--pad) 24px; }
+    /* --- r11 (Philip 19 aug, tweede versie: GEEN logo-header — "de kop bovenaan, dan de video-knop eronder, dan de
+       hero-opstelling en daaronder de Start-proefweek-button — als opening/viewport voor alle devices"): de opening is
+       één gecentreerde verticale stapel op ALLE formaten (de desktop-twee-kolommen-rij is weg). Volgorde: kop →
+       startelement → hero-beeld → CTA; alles gemeten zodat het op telefoon (375x667) én desktop boven de vouw past. --- */
+    main { max-width: var(--site); margin: 0 auto; padding: 22px var(--pad) 24px; }
+    @media (min-width: 1024px) { main { padding-top: 36px; } }
 
     .hero { display: flex; flex-direction: column; align-items: center; }
     .hero-visual { width: 100%; max-width: 576px; flex-shrink: 0; }
+    @media (min-width: 1024px) { .hero-visual { max-width: 640px; } }
     .hero-visual img, .hero-visual video { width: 100%; display:block; }
     .hero-visual .blend { position: relative; }
     .hero-visual .edgefade { position: absolute; inset: -1px; pointer-events: none;
       box-shadow: inset 0 0 22px 14px var(--achtergrond); }
-    .hero-copy { margin-top: 14px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     h1 {
-      margin: 0; font-size: 28px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em;
+      margin: 0; font-size: 28px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; text-align: center;
     }
     /* r11: op smalle telefoons (<390px) net kleiner, zodat de kop twee regels blijft en de opening in één viewport past */
     @media (max-width: 389px) { h1 { font-size: 25px; } }
@@ -161,7 +158,7 @@
     @media (min-width: 768px) { .lead { font-size: 18px; } }
 
     .actions {
-      margin-top: 20px; width: 100%; max-width: var(--col);
+      margin-top: 18px; width: 100%; max-width: var(--col);
       display: flex; flex-direction: column; align-items: stretch; text-align: left;
     }
     .cta-stack {
@@ -234,7 +231,7 @@
        (2) affordance: het icoon krijgt een dunne, iets donkerder rand + een zachte 1px-slagschaduw (meer contrast, 'ligt op' de
            pagina); het GEHEEL is één tikvlak dat onmerkbaar groter is (padding 6px, marge 2px terug zodat niets verschuift) en
            reageert als één blok — hover: icoon donkerder, tekst iets dieper; press: het hele blok een fractie in (.985). */
-    .vstart.v1 { gap: 9px; padding: 6px 14px 6px 6px; margin-top: 4px; margin-bottom: 8px; }
+    .vstart.v1 { gap: 9px; padding: 6px 14px 6px 6px; margin-top: 6px; margin-bottom: 10px; }
     .vstart.v1 .vstart-text { padding-top: 1px; }
     .vstart.v1 .vstart-mark { box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(31,111,176,.28); }
     .vstart.v1:hover .vstart-mark { transform: none; }
@@ -442,19 +439,16 @@
   <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <!-- r11 (Philip 19 aug): de opening is één verticale stapel — header, video-knop, hero-beeld, kop, CTA.
+  <!-- r11 (Philip 19 aug, tweede versie): de opening is één verticale stapel — kop, video-knop, hero-beeld, CTA.
        Conversie bij scrollen blijft de sticky CTA; contact blijft de bottom bar (WhatsApp / bel Philip). -->
   <div class="stickybar" id="stickybar" aria-hidden="true"></div>
   <div class="stickycta" id="stickycta">
     <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
   </div>
 
-  <header class="sitekop">
-    <img src="assets/wiswizlogo.png" alt="WisWiz" />
-  </header>
-
   <main>
     <section class="hero">
+      <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
       <a class="vstart v1 vd" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       <div class="hero-visual">
         <a class="herolink" id="videocard" href="assets/opening.mp4" data-cta="video" aria-label="WisWiz in 30 seconden (video)">
@@ -464,16 +458,13 @@
         </div>
         </a>
       </div>
-      <div class="hero-copy">
-        <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
-        <div class="actions">
-          <div class="cta-stack">
-            <div class="cta-group">
-              <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
-            </div>
+      <div class="actions">
+        <div class="cta-stack">
+          <div class="cta-group">
+            <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
           </div>
-          <!-- Philip-tekst + belknop: verhuisd naar de social-proof-sectie (wrk-34), Philips order 17 aug -->
         </div>
+        <!-- Philip-tekst + belknop: verhuisd naar de social-proof-sectie (wrk-34), Philips order 17 aug -->
       </div>
     </section>
 
