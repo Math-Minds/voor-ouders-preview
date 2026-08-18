@@ -179,6 +179,19 @@
     .vstart.v1 .vstart-mark { width: 46px; height: 34px; border-radius: 9px; background: var(--info); }
     .vstart.v1 .vstart-mark svg { fill: #fff; width: 18px; height: 18px; margin-left: 3px; }
     .vstart.v1:hover .vstart-mark { transform: scale(1.05); background: var(--info-dark); }
+    /* r8 (Philip 18 aug): icoon + regel ietsje meer ÉÉN geheel en een heel klein tikje drukbaarder — géén knop, géén pill.
+       (1) tussenruimte 12 → 9px, het icoon zit dichter tegen de tekst; icoon en tekst delen dezelfde optische middenlijn
+           (de tekstregel loopt 1px lager, zodat de x-hoogte op de as van het icoon ligt).
+       (2) affordance: het icoon krijgt een dunne, iets donkerder rand + een zachte 1px-slagschaduw (meer contrast, 'ligt op' de
+           pagina); het GEHEEL is één tikvlak dat onmerkbaar groter is (padding 6px, marge 2px terug zodat niets verschuift) en
+           reageert als één blok — hover: icoon donkerder, tekst iets dieper; press: het hele blok een fractie in (.985). */
+    .vstart.v1 { gap: 9px; padding: 6px 14px 6px 6px; margin-top: 8px; }
+    .vstart.v1 .vstart-text { padding-top: 1px; }
+    .vstart.v1 .vstart-mark { box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(31,111,176,.28); }
+    .vstart.v1:hover .vstart-mark { transform: none; }
+    .vstart.v1:hover .vstart-text { color: #111827; }
+    .vstart.v1:active { transform: scale(.985); }
+    .vstart.v1:active .vstart-mark { transform: none; background: var(--info-dark); box-shadow: 0 0 0 rgba(15,23,42,0), inset 0 0 0 1px rgba(31,111,176,.28); }
     @media (min-width: 1024px) { .vstart { font-size: 18px; } }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
@@ -343,6 +356,12 @@
     /* De twee reviews (moeder + Mattia): de VRIJE quote-stijl (Philip 18 aug r7d: geen kaart, geen tabje, geen kranten-rand —
        los van het institutionele stapeltje), onderling identiek: quote 18px + attributie, 48px lucht. */
     .proof .layer.review + .layer.review { margin-top: 40px; }
+    /* r8 (Philip): de moeder-review is nu de volledige tekst — zelfde losse stijl, iets ruimere regelafstand zodat de lange
+       quote rustig leest; Mattia identiek ernaast. */
+    .proof .layer.review blockquote p { line-height: 1.6; }
+    .proof .layer.review.lang { max-width: 34rem; }
+    .proof .layer.review.lang blockquote p { font-size: 17px; line-height: 1.65; }
+    @media (min-width: 640px) { .proof .layer.review.lang blockquote p { font-size: 18px; } }
   </style>
   <link rel="preload" as="image" href="assets/hero-t2.webp" />
   <link rel="manifest" href="manifest.json" />
@@ -380,8 +399,9 @@
 
     <section class="proof" id="proof">
       <!-- r7 (Philip 18 aug): het Philip-blok is uit de sectie — de bottom bar is voortaan het Philip/contact-element -->
-      <figure class="layer review">
-        <blockquote><p>&#8220;We gebruiken het meestal samen. Ik lees het en leg het aan haar uit. Op die manier kan ik haar veel beter helpen. Als we deze app niet hadden gehad had ze waarschijnlijk wel op bijles gezeten.&#8221;</p></blockquote>
+      <figure class="layer review lang">
+        <!-- r8 (Philip 18 aug): de VOLLEDIGE originele review, verbatim (was ingekort) — in dezelfde losse quote-stijl, met lucht -->
+        <blockquote><p>&#8220;Mijn dochter is dit jaar voor het eerst naar de middelbare gegaan en al snel had ze wat hulp nodig bij wiskunde dus toen ik hoorde van WisWiz was ik heel enthousiast. Je krijgt bij elke opgave een goeie uitleg en kan zelfs vragen stellen. We gebruiken het meestal samen. Ik lees het en leg het aan haar uit. Op die manier kan ik haar veel beter helpen. Maar ze kan het ook in haar eentje gebruiken als ze wil. Als we deze app niet hadden gehad had ze waarschijnlijk wel op bijles gezeten. Echt een aanrader voor ouders en kinderen.&#8221;</p></blockquote>
         <figcaption>Moeder van een brugklasleerling</figcaption>
       </figure>
       <figure class="layer review">
