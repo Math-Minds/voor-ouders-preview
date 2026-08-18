@@ -73,12 +73,24 @@
     .contactbar .btn-icon svg { width: 19px; height: 19px; }
     .contactbar .btn-wa svg { fill: #25d366; }
     .contactbar .btn-tel svg { width: 17px; height: 17px; fill: var(--info); }
-    .stickycta { position: fixed; top: 0; left: 0; right: 0; z-index: 900; padding: calc(8px + env(safe-area-inset-top, 0px)) var(--pad) 8px;
+    /* r9 (Philip 18 aug: "hij moet gewoon op zn plek sliden en dan daar blijven"): geen inschuif-animatie meer.
+       De knop is nu ECHT position:sticky — hij scrolt gewoon mee met de pagina, en zodra hij de bovenrand raakt (8px +
+       safe-area) blijft hij daar staan; scroll je terug, dan gaat hij op dezelfde rand weer mee naar beneden. Eén beweging
+       heen, één terug, door de browser zelf gepositioneerd (geen JS-vertraging, geen sprong, geen dubbele beweging).
+       Techniek: de zichtbare knop is een sticky kopie (#stickycta, 0px hoog, eerste kind van body) met de knop absoluut op
+       de plek van de originele knop (JS meet --cta-top/--cta-left/--cta-w bij load/resize/fonts); de originele knop in de
+       hero blijft als onzichtbare plaatshouder staan (ruimte, geen sprong). De bar-achtergrond (#stickybar) is los en
+       fadet alleen zacht in/uit als de knop gedokt staat. */
+    .stickycta { display: none; position: sticky; top: calc(8px + env(safe-area-inset-top, 0px) - var(--cta-top, 0px)); height: 0; z-index: 900; }
+    body.js-dock .stickycta { display: block; }
+    body.js-dock .cta-group .btn-primary[data-cta="checkout"] { visibility: hidden; }   /* plaatshouder: de sticky kopie ligt er exact op */
+    .stickycta .btn-primary { position: absolute; top: var(--cta-top, 0px); left: var(--cta-left, 0px); width: var(--cta-w, 100%); margin: 0; }
+    .stickybar { position: fixed; top: 0; left: 0; right: 0; z-index: 899; padding: calc(8px + env(safe-area-inset-top, 0px)) 0 8px; pointer-events: none;
       background: rgba(240,249,255,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid #dbeafe;
-      transform: translateY(-100%); opacity: 0; pointer-events: none; transition: transform .28s cubic-bezier(.2,.7,.2,1), opacity .22s ease; }
-    .stickycta.is-on { transform: none; opacity: 1; pointer-events: auto; }
-    .stickycta .btn-primary { max-width: 360px; margin: 0 auto; font-size: 15px; padding: 11px 16px; box-shadow: 0 4px 12px var(--brand-shadow); }
-    @media (prefers-reduced-motion: reduce) { .stickycta { transition: none; } }
+      opacity: 0; transition: opacity .2s ease; }
+    .stickybar::after { content: ""; display: block; height: var(--cta-h, 57.5px); }
+    .stickybar.is-on { opacity: 1; }
+    @media (prefers-reduced-motion: reduce) { .stickybar { transition: none; } }
     @media (min-width: 1024px) { .contactbar-inner { max-width: 560px; } }
 
     main { max-width: var(--site); margin: 0 auto; padding: 28px var(--pad) 24px; }
@@ -369,8 +381,9 @@
 <body>
   <!-- Topbar weg (#32 r6, Philips woord 18 aug): geen header meer; conversie = sticky CTA bovenaan zodra de originele knop
        uit beeld scrolt, contact = de bottom bar (WhatsApp / bel Philip). -->
-  <div class="stickycta" id="stickycta" aria-hidden="true">
-    <a class="btn btn-primary" href="pakket.html" data-cta="checkout-sticky" tabindex="-1">Start een proefweek voor jouw kind</a>
+  <div class="stickybar" id="stickybar" aria-hidden="true"></div>
+  <div class="stickycta" id="stickycta">
+    <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
   </div>
 
   <main>
@@ -572,10 +585,26 @@
   // r7e: bottom bar — korte intro, 'meer' klapt de volledige tekst in de bar open
   (function(){ var nav=document.querySelector('.contactbar'), t=document.getElementById('philip-toggle'), lbl=document.getElementById('philip-meer-lbl'); if(!nav||!t) return;
     t.addEventListener('click', function(){ var open=nav.classList.toggle('is-open'); t.setAttribute('aria-expanded', open?'true':'false'); lbl.textContent=open?'minder':'meer'; }); })();
-  var cta=document.querySelector('.cta-group .btn-primary[data-cta="checkout"]'), bar=document.getElementById('stickycta');
-  if(!cta||!bar||!('IntersectionObserver' in window)) return;
-  function set(on){ bar.classList.toggle('is-on',on); bar.setAttribute('aria-hidden',on?'false':'true'); bar.querySelector('a').tabIndex=on?0:-1; }
-  new IntersectionObserver(function(es){ var e=es[0]; set(!e.isIntersecting && e.boundingClientRect.top<0); },{threshold:0}).observe(cta);
+  // r9: echte sticky knop. JS meet alleen WAAR de originele knop staat (documentcoördinaten) en legt de sticky kopie
+  // daar exact op; het vastklikken aan de bovenrand doet de browser zelf (position:sticky, top = 8px+safe-area - --cta-top).
+  // Op scroll checkt JS enkel of de knop gedokt staat, voor de bar-achtergrond (fade) en het data-cta-label.
+  var cta=document.querySelector('.cta-group .btn-primary[data-cta="checkout"]'), box=document.getElementById('stickycta'), bar=document.getElementById('stickybar');
+  if(!cta||!box||!bar) return;
+  var sbtn=box.querySelector('a'), on=false, raf=0;
+  function dockTop(){ return parseFloat(getComputedStyle(bar).paddingTop)||8; }
+  function check(){ raf=0; var d=sbtn.getBoundingClientRect().top<=dockTop()+0.5; if(d===on) return; on=d;
+    bar.classList.toggle('is-on',d); sbtn.setAttribute('data-cta',d?'checkout-sticky':'checkout'); }
+  function ask(){ if(!raf) raf=requestAnimationFrame(check); }
+  function measure(){ // meet in één stelsel (viewport): originele knop t.o.v. de NATUURLIJKE plek van de sticky doos (even static, geen paint ertussen)
+    document.body.classList.add('js-dock'); box.style.position='static'; var bt=box.getBoundingClientRect(); box.style.position='';
+    var r=cta.getBoundingClientRect();
+    box.style.setProperty('--cta-top',(r.top-bt.top)+'px'); box.style.setProperty('--cta-left',(r.left-bt.left)+'px');
+    box.style.setProperty('--cta-w',r.width+'px'); bar.style.setProperty('--cta-h',r.height+'px'); ask(); }
+  measure();
+  document.addEventListener('scroll',ask,{passive:true,capture:true});
+  window.addEventListener('resize',measure); window.addEventListener('orientationchange',measure); window.addEventListener('load',measure);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(measure);
+  if('ResizeObserver' in window){ new ResizeObserver(function(){ measure(); }).observe(document.body); }
 })();
 </script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
