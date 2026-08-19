@@ -20,7 +20,7 @@ dst = os.path.expanduser('~/mocks/wiswiz-stapel')
 if os.path.isdir(dst):
     shutil.copy(os.path.join(here, 'stapel-layout.html'), os.path.join(dst, 'index.html'))
     os.makedirs(os.path.join(dst, 'assets'), exist_ok=True)
-    for f in ['stapel.css', 'stapel.js', 'parool.png', 'fd-woordmerk.png', 'vossius4.png', 'wijs-bijles.png', 'stichting-wiskunde-actief.png', 'knipsel-parool.webp', 'knipsel-fd.webp']:
+    for f in ['stapel.css', 'stapel.js', 'parool.png', 'fd-woordmerk.png', 'vossius4.png', 'wijs-bijles.png', 'stichting-wiskunde-actief.png', 'knipsel-parool.webp', 'knipsel-parool-2pag.webp', 'knipsel-fd.webp']:
         shutil.copy(os.path.join(here, 'assets', f), os.path.join(dst, 'assets', f))
     print('gekopieerd naar', dst)
 print('stapel-layout.html gebouwd')
