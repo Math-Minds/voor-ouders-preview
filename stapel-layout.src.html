@@ -1,0 +1,177 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Stapel-layout — sleep, draai, label en volgorde</title>
+<!-- GEGENEREERD door build-stapel-tool.py uit stapel-layout.src.html + index.html: niet met de hand bewerken. -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="assets/stapel.css" />
+<style>
+  :root { --gray-950:#030712; --gray-500:#6b7280; --achtergrond:#f0f9ff; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: "Ubuntu", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--achtergrond); color: var(--gray-950);
+    -webkit-font-smoothing: antialiased; line-height: 1.5; padding: 10px 20px calc(var(--paneel-h, 230px) + 12px); }   /* 20px zijmarge = --pad van de site: het blok is hier even breed als op de pagina op dezelfde telefoon */
+  img { max-width: 100%; height: auto; display: block; }
+  h1.slh { font: 600 16px/1.3 Ubuntu, sans-serif; margin: 2px 4px 4px; }
+  p.slh { font: 13px/1.4 Ubuntu, sans-serif; color: #475569; margin: 0 4px 10px; }
+  p.slh b { color: #0f172a; }
+  #melding { display: none; margin: 0 4px 10px; padding: 8px 10px; border-radius: 8px; background: #fef3c7; color: #78350f; font: 13px/1.4 Ubuntu, sans-serif; }
+  #melding.aan { display: block; }
+  #melding button { margin-left: 8px; background: #b45309; color: #fff; border: 0; border-radius: 6px; padding: 4px 9px; font: 600 12px Ubuntu, sans-serif; }
+
+  /* het veld: exact de context van de site (.proof .stapel-wrap), met lucht eromheen zodat kaarten ook buiten het kader kunnen */
+  #veld { position: relative; width: 100%; max-width: 576px; margin: 0 auto; padding: 34px 0 24px; }
+  .proof { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  /* het referentiekader (spec.ref): dat is het blok dat op de pagina in de stroom staat — alles daarbuiten steekt over andere inhoud */
+  .stapel { outline: 1.5px dashed #94a3b8; outline-offset: 0; }
+  body.schoon .stapel { outline: none; }
+  .knip { cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .knip img { -webkit-user-drag: none; pointer-events: none; }
+  .knip.is-sel { outline: calc(2px * var(--inv, 1)) dashed #2f81f7; outline-offset: calc(3px * var(--inv, 1)); }
+  .knip.is-sel .knip-label { outline: calc(1.5px * var(--inv, 1)) dotted #2f81f7; outline-offset: calc(-1.5px * var(--inv, 1)); cursor: move; }
+  .knip-label { touch-action: none; }
+  body.schoon .knip.is-sel, body.schoon .knip.is-sel .knip-label { outline: none; }
+  /* handvat draaien: rechtsonder, tegen-geschaald zodat het op elke schermbreedte ~30 schermpixels is */
+  .gr-rot { position: absolute; right: -13px; bottom: -13px; width: 30px; height: 30px; border-radius: 9999px; background: #2f81f7; border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(15,23,42,.3); display: none; align-items: center; justify-content: center; cursor: grab; z-index: 9; touch-action: none;
+    transform: scale(var(--inv, 1)); transform-origin: 100% 100%; }
+  .knip.is-sel .gr-rot { display: flex; }
+  body.schoon .gr-rot { display: none; }
+  .gr-rot svg { width: 16px; height: 16px; fill: #fff; pointer-events: none; }
+
+  /* paneel onderaan */
+  #paneel { position: fixed; left: 0; right: 0; bottom: 0; z-index: 9999; background: #111820; color: #e6edf3;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 5px; font: 12px Ubuntu, sans-serif; }
+  #paneel .rij { display: flex; gap: 4px; align-items: center; flex-wrap: nowrap; }
+  #paneel .rij .t { color: #9fb0c3; font-size: 11px; flex: 0 0 auto; }
+  #paneel .sep { width: 1px; height: 22px; background: #2a3644; margin: 0 3px; flex: 0 0 auto; }
+  #paneel button { background: #2f81f7; color: #fff; border: 0; border-radius: 7px; padding: 0 9px; font: 600 12px Ubuntu, sans-serif; line-height: 1; height: 32px; flex: 0 0 auto; }
+  #paneel button.sec { background: #334155; }
+  #paneel button.klein { padding: 0; min-width: 32px; font-size: 14px; }
+  #paneel button:disabled { opacity: .4; }
+  #paneel button.aan { background: #16a34a; }
+  #naam { font-weight: 700; color: #fff; flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; }
+  #rot { font-variant-numeric: tabular-nums; color: #93c5fd; min-width: 30px; text-align: center; }
+  #uit { width: 100%; height: 34px; min-height: 34px; max-height: 120px; resize: vertical; background: #0b1017; color: #93c5fd; border: 1px solid #263241; border-radius: 7px;
+    padding: 5px 8px; font: 11px/1.35 ui-monospace, Menlo, monospace; white-space: pre; overflow: auto; }
+  #uit.vol { height: 84px; }
+  #status { color: #86efac; font-size: 11px; flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: right; }
+  @media (max-width: 359px) { #paneel button.klein { min-width: 29px; } #paneel .rij { gap: 3px; } }
+</style></head><body>
+<h1 class="slh">Stapel-layout</h1>
+<p class="slh">Tik een kaart. <b>Sleep</b> hem; <b>draai</b> met de ronde knop. Sleep het <b>label</b> naar elke plek (of kies: ◤▲◥ = tabje op de rand, pijlen = in de kaart). <b>▲/▼</b> = boven of onder de andere. Gestippeld kader = het blok op de pagina; wat je hier ziet rendert de component exact zo. Klaar: <b>Kopieer spec</b>, plak in de chat.</p>
+<div id="melding"><span id="melding-t"></span><button onclick="resetLive()">Reset naar live</button></div>
+<div id="veld"><section class="proof"><div class="layer stapel-wrap">
+  <div class="stapel" role="group" aria-label="Stapel-layout">
+<!--STAPEL-CANVAS-->
+  </div>
+</div></section></div>
+<script type="application/json" id="stapel-spec"><!--STAPEL-SPEC--></script>
+<div id="paneel">
+  <div class="rij"><span id="naam">—</span>
+    <button class="klein" id="b-voren" onclick="zStap(1)" title="naar voren (boven de andere)">▲</button><button class="klein" id="b-achter" onclick="zStap(-1)" title="naar achteren (onder de andere)">▼</button>
+    <span class="sep"></span><span class="t">draai</span><button class="klein sec" onclick="rotStap(-1)" title="1 graad linksom">−</button><span id="rot">0°</span><button class="klein sec" onclick="rotStap(1)" title="1 graad rechtsom">+</button>
+  </div>
+  <div class="rij"><span class="t">label</span>
+    <button class="klein sec" onclick="labelPreset('tab-l')" title="tabje op de rand, links">◤</button><button class="klein sec" onclick="labelPreset('tab-c')" title="tabje op de rand, midden">▲</button><button class="klein sec" onclick="labelPreset('tab-r')" title="tabje op de rand, rechts">◥</button>
+    <span class="sep"></span><button class="klein sec" onclick="labelPreset('in-tl')" title="in de kaart, linksboven">↖</button><button class="klein sec" onclick="labelPreset('in-tc')" title="in de kaart, bovenmidden">↑</button><button class="klein sec" onclick="labelPreset('in-tr')" title="in de kaart, rechtsboven">↗</button><button class="klein sec" onclick="labelPreset('in-bl')" title="in de kaart, linksonder">↙</button><button class="klein sec" onclick="labelPreset('in-bc')" title="in de kaart, ondermidden">↓</button><button class="klein sec" onclick="labelPreset('in-br')" title="in de kaart, rechtsonder">↘</button>
+  </div>
+  <div class="rij">
+    <button id="b-kopieer" onclick="kopieer()">Kopieer spec</button>
+    <button class="sec" id="b-laad" onclick="laad()" title="laad de spec die in het tekstvak staat">Laad</button>
+    <button class="sec klein" onclick="ongedaan()" id="b-undo" title="ongedaan maken">↶</button>
+    <button class="sec" onclick="kaderStrak()" title="kader strak om de stapel (ref = omhullende doos)">Kader</button>
+    <button class="sec klein" id="b-schoon" onclick="schoon()" title="schoon beeld: zonder handvatten en kaders">👁</button>
+    <button class="sec" id="b-live" onclick="resetLive()" title="terug naar de stand die nu live staat">Live</button>
+    <span id="status"></span>
+  </div>
+  <textarea id="uit" spellcheck="false" placeholder="spec verschijnt hier na Kopieer spec — of plak hier een spec en tik Laad"></textarea>
+</div>
+<script src="assets/stapel.js"></script>
+<script>
+(function(){
+  const KEY='wiswiz-stapel-spec-v2';
+  const LIVE=Stapel.readSpec();                    // de stand die nu in index.html staat
+  const root=document.querySelector('.stapel'), canvas=root.querySelector('.stapel-canvas');
+  let spec=JSON.parse(JSON.stringify(LIVE)), sel=null, undo=[];
+  const opgeslagen=localStorage.getItem(KEY);
+  if(opgeslagen){ try{ const s=JSON.parse(opgeslagen); if(JSON.stringify(s)!==JSON.stringify(LIVE)){ spec=s; melding('Dit is je eigen bewaarde stand (nog niet live).'); } }catch(e){} }
+  const items=()=>spec.items, item=id=>items().find(i=>i.id===id), el=id=>canvas.querySelector('[data-knip="'+id+'"]');
+  const NAMEN={parool:'Het Parool',fd:'FD',vos:'Vossius',wijs:'Wijs Bijles',wa:'Wiskunde Actief'};
+  function melding(t){ document.getElementById('melding-t').textContent=t; document.getElementById('melding').classList.add('aan'); }
+  function schaal(){ return canvas.getBoundingClientRect().width/spec.ref.w; }
+  function render(){
+    Stapel.apply(root,spec);
+    root.style.setProperty('--inv',1/schaal());
+    canvas.querySelectorAll('.knip').forEach(k=>k.classList.toggle('is-sel',k.dataset.knip===sel));
+    const it=sel&&item(sel); document.getElementById('naam').textContent=it?NAMEN[it.id]||it.id:'— kies een kaart —';
+    document.getElementById('rot').textContent=(it?it.rot||0:0)+'°';
+    document.getElementById('b-undo').disabled=!undo.length;
+    localStorage.setItem(KEY,JSON.stringify(spec));
+  }
+  window.addEventListener('resize',()=>root.style.setProperty('--inv',1/schaal()));
+  function snapshot(){ undo.push(JSON.stringify(spec)); if(undo.length>60)undo.shift(); }
+  function status(t){ const s=document.getElementById('status'); s.textContent=t; clearTimeout(s._t); s._t=setTimeout(()=>s.textContent='',2200); }
+  // handvatten
+  canvas.querySelectorAll('.knip').forEach(k=>{ const h=document.createElement('div'); h.className='gr-rot';
+    h.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 6V3L8 7l4 4V8a4 4 0 1 1-4 4H6a6 6 0 1 0 6-6z"/></svg>'; k.appendChild(h); });
+
+  /* labelrekenwerk: spec-label (a,x,y) <-> linkerbovenhoek (left,top) in kaartcoördinaten (ongedraaid, ref-px) */
+  function labelBox(it){ const e=el(it.id), lab=e.querySelector('.knip-label'), lw=lab.offsetWidth, w=it.w, L=it.label||{a:'l',x:0,y:Stapel.TAB_Y};
+    const left=L.a==='c'? w/2+(+L.x||0)-lw/2 : L.a==='r'? w-(+L.x||0)-lw : (+L.x||0); return {left,top:+L.y,lw,w,h:e.offsetHeight}; }
+  function labelVanBox(it,left,top){ const b=labelBox(it); const c=left+b.lw/2; let lab;
+    if(c<b.w/3) lab={a:'l',x:left}; else if(c>2*b.w/3) lab={a:'r',x:b.w-(left+b.lw)}; else lab={a:'c',x:c-b.w/2};
+    lab.x=Stapel.r1(lab.x); lab.y=Stapel.r1(top); return lab; }
+  function presets(it){ const b=labelBox(it), m=10, t=Stapel.TAB_Y, r=Stapel.r1, lh=Stapel.LABEL_H;
+    return {'tab-l':{a:'l',x:r(.022*b.w),y:t},'tab-c':{a:'c',x:0,y:t},'tab-r':{a:'r',x:r(.022*b.w),y:t},
+      'in-tl':{a:'l',x:m,y:m},'in-tc':{a:'c',x:0,y:m},'in-tr':{a:'r',x:m,y:m},
+      'in-bl':{a:'l',x:m,y:r(b.h-lh-m)},'in-bc':{a:'c',x:0,y:r(b.h-lh-m)},'in-br':{a:'r',x:m,y:r(b.h-lh-m)}}; }
+  function boxVanLabel(it,lab){ const b=labelBox(it); const left=lab.a==='c'? b.w/2+lab.x-b.lw/2 : lab.a==='r'? b.w-lab.x-b.lw : lab.x; return {left,top:lab.y}; }
+  function snap(it,left,top){ const P=presets(it); for(const k in P){ const b=boxVanLabel(it,P[k]); if(Math.abs(b.left-left)<8&&Math.abs(b.top-top)<8) return {left:b.left,top:b.top,preset:k}; } return {left,top}; }
+
+  /* pointer: één handler op de canvas — kaart slepen, label slepen, draaien */
+  let g=null;
+  canvas.addEventListener('pointerdown',e=>{
+    const k=e.target.closest('.knip'); if(!k){ return; }
+    const id=k.dataset.knip, it=item(id); if(sel!==id){ sel=id; render(); }
+    const s=schaal(); g={id,it,s,sx:e.clientX,sy:e.clientY,moved:false,start:JSON.stringify(it)};
+    if(e.target.closest('.gr-rot')){ const r=k.getBoundingClientRect(); g.type='rot'; g.cx=r.left+r.width/2; g.cy=r.top+r.height/2; g.sa=Math.atan2(e.clientY-g.cy,e.clientX-g.cx)*180/Math.PI; g.sr=it.rot||0; }
+    else if(e.target.closest('.knip-label')){ g.type='label'; const b=labelBox(it); g.left=b.left; g.top=b.top; }
+    else { g.type='move'; g.x=it.x; g.y=it.y; }
+    canvas.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  canvas.addEventListener('pointermove',e=>{ if(!g) return; const dx=(e.clientX-g.sx)/g.s, dy=(e.clientY-g.sy)/g.s;
+    if(!g.moved&&Math.hypot(e.clientX-g.sx,e.clientY-g.sy)<3) return; if(!g.moved){ g.moved=true; snapshot(); }
+    const it=g.it;
+    if(g.type==='move'){ it.x=Math.round(g.x+dx); it.y=Math.round(g.y+dy); }
+    else if(g.type==='rot'){ const a=Math.atan2(e.clientY-g.cy,e.clientX-g.cx)*180/Math.PI; it.rot=Math.round(g.sr+(a-g.sa)); if(it.rot>180)it.rot-=360; if(it.rot<-180)it.rot+=360; }
+    else if(g.type==='label'){ const r=-(it.rot||0)*Math.PI/180; const lx=dx*Math.cos(r)-dy*Math.sin(r), ly=dx*Math.sin(r)+dy*Math.cos(r);
+      const sn=snap(it,g.left+lx,g.top+ly); it.label=labelVanBox(it,sn.left,sn.top); if(sn.preset) status('label: '+sn.preset); }
+    Stapel.apply(root,spec); document.getElementById('rot').textContent=(it.rot||0)+'°'; });
+  const einde=e=>{ if(!g) return; if(g.moved) render(); g=null; };
+  canvas.addEventListener('pointerup',einde); canvas.addEventListener('pointercancel',einde);
+  document.getElementById('veld').addEventListener('pointerdown',e=>{ if(!e.target.closest('.knip')&&sel){ sel=null; render(); } });
+
+  /* paneel */
+  window.zStap=d=>{ if(!sel) return status('kies eerst een kaart'); const arr=items().slice().sort((a,b)=>a.z-b.z); const i=arr.findIndex(x=>x.id===sel), j=i+d; if(j<0||j>=arr.length) return;
+    snapshot(); [arr[i],arr[j]]=[arr[j],arr[i]]; arr.forEach((x,n)=>x.z=n+1); render(); status(d>0?'naar voren':'naar achteren'); };
+  window.rotStap=d=>{ if(!sel) return status('kies eerst een kaart'); snapshot(); const it=item(sel); it.rot=(it.rot||0)+d; render(); };
+  window.labelPreset=k=>{ if(!sel) return status('kies eerst een kaart'); snapshot(); const it=item(sel); it.label=presets(it)[k]; render(); status('label: '+k); };
+  window.kopieer=()=>{ const s=Stapel.format(spec); const u=document.getElementById('uit'); u.value=s; u.classList.add('vol'); if(navigator.clipboard) navigator.clipboard.writeText(s).then(()=>status('gekopieerd'),()=>status('staat in het tekstvak')); else status('staat in het tekstvak'); };
+  window.laad=()=>{ try{ const s=JSON.parse(document.getElementById('uit').value); if(!s.ref||!s.items) throw 0; snapshot(); spec=s; render(); status('geladen'); }catch(e){ status('geen geldige spec in het tekstvak'); } };
+  window.ongedaan=()=>{ if(!undo.length) return; spec=JSON.parse(undo.pop()); render(); status('ongedaan'); };
+  window.resetLive=()=>{ snapshot(); spec=JSON.parse(JSON.stringify(LIVE)); document.getElementById('melding').classList.remove('aan'); render(); status('live-stand'); };
+  window.schoon=()=>{ document.body.classList.toggle('schoon'); document.getElementById('b-schoon').classList.toggle('aan',document.body.classList.contains('schoon')); };
+  /* kader strak: ref = de omhullende doos van alle kaarten (gedraaid, incl. labels); alle x,y verschuiven mee */
+  window.kaderStrak=()=>{ snapshot(); let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;
+    items().forEach(it=>{ const e=el(it.id), w=it.w, h=e.offsetHeight, cx=it.x+w/2, cy=it.y+h/2, r=(it.rot||0)*Math.PI/180, b=labelBox(it);
+      const pts=[[0,0],[w,0],[0,h],[w,h],[b.left,b.top],[b.left+b.lw,b.top],[b.left,b.top+Stapel.LABEL_H],[b.left+b.lw,b.top+Stapel.LABEL_H]];
+      pts.forEach(([px,py])=>{ const dx=px-w/2, dy=py-h/2; const X=cx+dx*Math.cos(r)-dy*Math.sin(r), Y=cy+dx*Math.sin(r)+dy*Math.cos(r); minx=Math.min(minx,X);maxx=Math.max(maxx,X);miny=Math.min(miny,Y);maxy=Math.max(maxy,Y); }); });
+    const ox=Math.floor(minx), oy=Math.floor(miny); items().forEach(it=>{ it.x-=ox; it.y-=oy; }); spec.ref={w:Math.ceil(maxx-ox),h:Math.ceil(maxy-oy)}; render(); status('kader '+spec.ref.w+'×'+spec.ref.h); };
+  // paneelhoogte → ruimte onderaan
+  const P=document.getElementById('paneel'); new ResizeObserver(()=>document.documentElement.style.setProperty('--paneel-h',P.offsetHeight+'px')).observe(P);
+  render();
+})();
+</script>
+</body></html>

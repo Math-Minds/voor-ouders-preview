@@ -1,0 +1,46 @@
+/* De institutie-stapel (#32): Het Parool, het FD, het Vossius Gymnasium, Stichting Wijs Bijles en Stichting Wiskunde Actief
+   als VIJF kaarten in de originele kranten-stijl (dunne witte matte, zachte schaduw, het logo als wit tabje).
+   WYSIWYG (Philip 19 aug, #32): ÉÉN layout-spec (JSON, zie assets/stapel.js) drijft de sleep-pagina (stapel-layout.html)
+   én deze component. De vijf liggen op een VASTE referentie-canvas (spec.ref, nu 548×618 referentie-px; binnen de canvas is
+   1 referentie-px = 1 CSS-px) en de HELE canvas wordt als één blok geschaald: scale = blokbreedte / ref.w. Zo is de
+   compositie op elke schermbreedte 1:1 wat Philip op de sleep-pagina zag — niets wordt per item herbewerkt.
+   Alle maten hieronder staan in referentie-px. Positie, breedte, draai, z en labelplek komen UIT DE SPEC (stapel.js zet ze
+   als inline-stijl), niet uit deze CSS. */
+.proof .stapel-wrap { max-width: 576px; width: 100%; container-type: inline-size; }
+@media (max-width: 639px) { .proof .stapel-wrap { width: calc(100% + 24px); max-width: none; margin-left: -12px; margin-right: -12px; } }   /* telefoon: het blok loopt 12px in de paginamarge — grotere schaal */
+.stapel { position: relative; width: 100%; aspect-ratio: var(--ref-w) / var(--ref-h); }   /* --ref-w/--ref-h: uit de spec (stapel.js) */
+/* de canvas: ref.w × ref.h CSS-px, als één geheel geschaald naar de blokbreedte (tan(atan2(a,b)) = a/b als getal) */
+.stapel-canvas { position: absolute; left: 0; top: 0; width: calc(var(--ref-w) * 1px); height: calc(var(--ref-h) * 1px);
+  transform-origin: 0 0; transform: scale(tan(atan2(100cqi, calc(var(--ref-w) * 1px)))); }
+.knip { position: absolute; margin: 0; padding: 3.52px; background: #fff; border-radius: 1.5px;
+  filter: drop-shadow(0 10px 16px rgba(15,23,42,.13)) drop-shadow(0 1px 2px rgba(15,23,42,.10)); transform-origin: 50% 50%; }
+.knip .binnen { display: block; position: relative; overflow: hidden; border-radius: 1px; }
+.knip .foto { display: block; width: 100%; height: auto; }
+/* het label: wit tabje, in één stuk met de matte (zelfde wit; de drop-shadow van de kaart neemt label + rand samen).
+   Eén stijl, één maat (39.7 hoog) op alle vijf. De PLEK komt uit de spec: als TABJE op de bovenrand (label.y = -36.2:
+   bovenhoeken rond, ankers .lab-tab) of als STICKER ergens op/om de kaart (alle hoeken rond + een zacht randschaduwtje,
+   .lab-sticker) — bijv. boven op de FD-kop. */
+.knip-label { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: .34em; height: 39.7px; padding: 0 .62em 0 .5em;
+  background: #fff; font-family: Georgia, "Times New Roman", serif; font-weight: 800; font-size: 19.5px; line-height: 1; color: #0a0a0a;
+  white-space: nowrap; letter-spacing: -0.01em; }
+.knip-label.lab-tab { border-radius: .28em .28em 0 0; }
+.knip-label.lab-sticker { border-radius: .28em; box-shadow: 0 1px 3px rgba(15,23,42,.16); }
+.knip-label img { display: block; height: 27.5px; width: auto; }
+.knip-label img.mark-fd { height: 26.2px; }
+.knip-label img.mark-wa { height: 25px; filter: brightness(0); }
+.knip-label img.mark-vos { height: 33.9px; }
+.knip-label img.mark-wijs { height: 32.6px; }
+.knip-label img.mark-p { height: 25px; }
+/* de papieren binnenkant van de drie: krantenpapier (warm licht grijs + fijne korrel) binnen dezelfde witte matte
+   (r7b: geen scheidingslijn en geen bronregel — de naam staat op het tabje). */
+.knip .papier { padding: 21px; text-align: left; background: linear-gradient(168deg, #f9f7f1 0%, #f0ede5 100%); }
+.knip .papier::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .38; mix-blend-mode: multiply; border-radius: inherit;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55 0 0 0 0 .52 0 0 0 0 .46 0 0 0 .09 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"); }
+/* r7g: Vossius/Wijs Bijles in de typografie van de Wiskunde Actief-quote (schone sans, 400). Letter 14 ref-px, padding 21, géén
+   text-wrap:pretty: zo blijven Vossius en Wijs Bijles 3 regels en de quote 4 — en door de blok-schaal nu op ELKE breedte exact zo. */
+.knip .papier p { margin: 0; font-family: inherit; font-weight: 400; font-size: 14px; line-height: 1.5; color: #0a0a0a; letter-spacing: 0; text-wrap: wrap; position: relative; }
+/* Wiskunde Actief (r7c): een QUOTE van Martijn Koper in dezelfde review-vorm als de moeder- en Mattia-review */
+.knip .papier.quote { text-align: center; padding: 29.4px 28.2px 28.2px; }
+.knip .papier.quote blockquote { margin: 0; padding: 0; }
+.knip .papier.quote p { font-family: inherit; font-weight: 400; font-size: 14.5px; line-height: 1.5; letter-spacing: 0; }
+.knip .papier.quote figcaption { margin-top: 12.8px; font-size: 11px; font-weight: 500; color: var(--gray-500, #6b7280); position: relative; }
