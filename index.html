@@ -150,12 +150,25 @@
     @media (max-width: 1023px) {
       :root { --opening-top: clamp(18px, 3.5svh, 34px); }   /* bovenmarge groeit licht mee met de schermhoogte */
       main { padding-top: var(--opening-top); }
-      .hero { min-height: calc(100svh - 64px - var(--opening-top) - env(safe-area-inset-bottom, 0px)); }
+      .hero { min-height: calc(100svh - 64px - var(--opening-top) - env(safe-area-inset-bottom, 0px));
+        /* nacht r13: grid i.p.v. flex, zodat de beeldrij (1fr) een DEFINIETE hoogte heeft en het beeldvenster erop kan meten (cqh) */
+        display: grid; grid-template-rows: auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }
       /* het beeld krijgt alle restruimte en staat daarin een fractie BOVEN het midden (optisch centrum);
          op telefoon loopt het beeld van rand tot rand (de edgefade laat het in de achtergrond overlopen) */
-      .hero-visual { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding-bottom: 4svh;
+      /* nacht r13 (Philip 19 aug: 'de layout van de hero met alle elementen voor verschillende telefoonmaten' — supernice op ELKE
+         maat): het beeld is niet langer een vast 16:9-vlak dat op hoge telefoons in een zee van lucht zweeft. Het beeldvenster
+         krijgt de restruimte (container-query op de hoogte) en toont daarin de foto BEELDVULLEND, gecentreerd op de telefoon:
+         • lage viewports (restruimte < 16:9): het venster krimpt in de breedte, de foto blijft volledig 16:9 (zoals r12);
+         • normale telefoons: het venster is rand-tot-rand en groeit in hoogte mee tot maximaal --hero-cap (h/b), de zijkanten
+           van boek en schrift lopen dan zacht uit het beeld (edgefade), de telefoon in het midden wordt groter en leesbaarder;
+         • daarboven blijft het venster op de cap en zweeft het in de restruimte, iets boven het optisch centrum.
+         De video-overgang meet het ECHTE (ongeknipte) beeld en klipt het speler-frame mee (clip-path), zodat het frame precies
+         uit het venster groeit. */
+      .hero-visual { min-height: 0; align-self: stretch; container-type: size; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-bottom: 4svh;
         width: calc(100% + var(--pad) * 2); max-width: none; }
-      .hero-visual .blend { width: min(100%, calc(44svh * 16 / 9)); margin: 0 auto; }
+      .hero-visual .blend { --cap: var(--hero-cap, 0.8); flex: 0 0 auto;
+        width: min(100cqw, calc(100cqh * 16 / 9)); height: min(100cqh, calc(100cqw * var(--cap))); margin: 0 auto; overflow: hidden; }
+      .hero-visual .blend img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
       .actions { padding-bottom: 12px; }
     }
     .hero-visual img, .hero-visual video { width: 100%; display:block; }
@@ -163,10 +176,12 @@
     .hero-visual .edgefade { position: absolute; inset: -1px; pointer-events: none;
       box-shadow: inset 0 0 22px 14px var(--achtergrond); }
     h1 {
-      margin: 0; font-size: 28px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; text-align: center;
+      margin: 0; font-size: 28px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em; text-align: center; text-wrap: balance;
     }
-    /* r11: op smalle telefoons (<390px) net kleiner, zodat de kop twee regels blijft en de opening in één viewport past */
-    @media (max-width: 389px) { h1 { font-size: 25px; } }
+    /* r11: op smalle telefoons (<390px) net kleiner, zodat de kop twee regels blijft en de opening in één viewport past.
+       nacht r13: de kop schaalt vloeiend met de telefoonbreedte en blijft op ELKE breedte precies twee regels (gemeten: 'Betaalbare
+       wiskundebijles' is de maatregel — 21.8px op 320, 24.7 op 360, 25.8 op 375, 26.9 op 390, 29.8 op 430), gebalanceerd. */
+    @media (max-width: 767px) { h1 { font-size: clamp(21px, calc(7.2vw - 1.2px), 30px); } }
     @media (min-width: 768px) { h1 { font-size: 36px; } }
     h1 .line2 { display: block; margin-top: 8px; }
     .wis { color: var(--mathorange); } .wiz { color: var(--mathyellow); }
@@ -296,7 +311,7 @@
       position: relative; width: 100%; aspect-ratio: 16 / 9;
       transform-origin: 0 0; will-change: transform; border-radius: 12px; overflow: hidden;
       box-shadow: 0 30px 80px rgba(0,0,0,.5);
-      transition: transform var(--fly) var(--flycurve), border-radius var(--fly) var(--flycurve), box-shadow var(--fly) var(--flycurve), opacity .42s ease .2s;
+      transition: transform var(--fly) var(--flycurve), clip-path var(--fly) var(--flycurve), border-radius var(--fly) var(--flycurve), box-shadow var(--fly) var(--flycurve), opacity .42s ease .2s;
     }
     .lightbox-frame.is-flying { border-radius: 0; box-shadow: none; }
     .lightbox-frame video { display: block; width: 100%; height: 100%; background: transparent; object-fit: cover; }
@@ -619,9 +634,18 @@
     link.addEventListener("touchstart", warm, {once:true, passive:true});
 
     // FLIP: put the frame visually exactly on the hero image, then release it to its real place.
+    // nacht r13: het hero-beeld staat op telefoon beeldvullend in een venster (object-fit: cover, zijkanten geknipt). We meten
+    // het ECHTE beeld (de ongeknipte 16:9-inhoud, deels buiten het venster) en klippen het frame aan het begin met exact het
+    // venster (clip-path in frame-eigen maat), zodat het speler-frame precies uit het venster groeit en onderweg open-klipt.
+    function heroContent(){
+      var r=heroImg.getBoundingClientRect(), nw=heroImg.naturalWidth||16, nh=heroImg.naturalHeight||9, sc=Math.max(r.width/nw, r.height/nh);
+      var cw=nw*sc, ch=nh*sc, left=r.left+(r.width-cw)/2, top=r.top+(r.height-ch)/2;
+      return {left:left, top:top, width:cw, height:ch, clipL:r.left-left, clipT:r.top-top, clipR:(left+cw)-r.right, clipB:(top+ch)-r.bottom};
+    }
     function heroToFrameTransform(){
-      var h=heroImg.getBoundingClientRect(), f=frame.getBoundingClientRect();
+      var h=heroContent(), f=frame.getBoundingClientRect();
       var sx=h.width/f.width, sy=h.height/f.height;
+      frame.style.clipPath="inset("+Math.max(0,h.clipT/sy)+"px "+Math.max(0,h.clipR/sx)+"px "+Math.max(0,h.clipB/sy)+"px "+Math.max(0,h.clipL/sx)+"px)";
       return "translate("+(h.left-f.left)+"px,"+(h.top-f.top)+"px) scale("+sx+","+sy+")";
     }
     function open(e){
@@ -634,7 +658,7 @@
       frame.style.transform=heroToFrameTransform();
       void frame.offsetWidth;                                   // commit start state
       hero.classList.add("is-lifted");                          // hero and frame coincide: swap is invisible
-      frame.style.transition=""; frame.style.transform="";      // release → glides to the player rect
+      frame.style.transition=""; frame.style.transform=""; frame.style.clipPath="inset(0px 0px 0px 0px)";      // release → glides to the player rect, klipt open
       frame.classList.remove("is-flying");
       lb.classList.add("is-open");
       var landed=false, done=function(ev){ if(ev&&ev.target!==frame) return; if(landed) return; landed=true; frame.removeEventListener("transitionend",done);
@@ -644,7 +668,7 @@
     function close(){
       if(busy||!isOpen) return; busy=true; isOpen=false;
       v.pause(); v.controls=false;
-      var finish=function(){ lb.hidden=true; lb.classList.remove("is-open"); frame.style.transform=""; frame.style.opacity="";
+      var finish=function(){ lb.hidden=true; lb.classList.remove("is-open"); frame.style.transform=""; frame.style.opacity=""; frame.style.clipPath="";
         frame.classList.remove("is-flying"); hero.classList.remove("is-lifted"); document.body.classList.remove("lb-open"); busy=false; };
       if(reduce){ finish(); return; }
       lb.classList.remove("is-open");                           // backdrop + close button fade out
