@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="nl"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" /><title>Kies een pakket</title>
+<link rel="icon" href="../assets/wiswizlogo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  /* #32 (Philip 19 aug: 'je moet de pakketkeuze-pagina terugzetten, ik vond het nicer met die kaartjes en planeten. Haal daar ook
+     die zwarte iteratie-balk bovenaan weg'): dit is de kaartjes+planeten-versie van 17/18 aug (#31 ronde 4 clean, 530e2b7) terug —
+     drie losse kaarten met planeet-illustratie, jaar bovenaan met 'Meest gekozen' + startaanbod, elk met eigen knop; de zwarte
+     OEFENVERSIE-balk is weg; de bottom bar van de nacht (r15) blijft eronder staan (contactbar.css/.js). */
+  :root { --mathyellow:#ecc862; --mathorange:#db9a1f; --info:#3e8ed0; --info-dark:#1f6fb0;
+    --achtergrond:#f0f9ff; --gray-950:#030712; --gray-700:#374151; --gray-500:#6b7280;
+    --gray-300:#d1d5db; --gray-100:#f3f4f6; --pad:20px; }
+  * { box-sizing:border-box; } html,body { margin:0; padding:0; }
+  body { font-family:"Ubuntu",system-ui,sans-serif; background:var(--achtergrond); color:var(--gray-950);
+    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+  a { color:inherit; text-decoration:none; } img { max-width:100%; height:auto; }
+  main { max-width:480px; margin:0 auto; padding:28px 16px 64px; }
+  h1 { margin:0; text-align:center; font-size:24px; font-weight:800; line-height:1.25; }
+  .btn-primary { display:block; width:100%; background:#ecc862; color:#030712; font-weight:700; font-size:16px;
+    padding:14px 16px; border-radius:12px; border:0; text-align:center;
+    box-shadow:0 6px 18px rgba(217,154,31,.32); cursor:pointer; font-family:inherit; }
+  .btn-primary:hover { background:#e6bd4a; }
+  
+  .choice-q { text-align:center; font-size:16px; font-weight:700; color:var(--gray-700); margin:4px 0 0; }
+  .plans { display:flex; flex-direction:column; gap:24px; margin-top:32px; }
+  /* #31 ronde 4 (clean): 8px-ritme, hairlines, geen kaartschaduw, één trap: 14 / 22 / 34 */
+  .plan { position:relative; background:#fff; border:1px solid var(--gray-300); border-radius:16px;
+    padding:24px 20px 20px; text-align:center; }
+  .plan.hl { border-color:var(--mathyellow); padding-top:28px; }
+  .badge { position:absolute; top:-16px; left:50%; transform:translateX(-50%); min-width:160px;
+    background:var(--mathyellow); color:var(--gray-950); font-size:14px; font-weight:700; padding:8px 20px; border-radius:8px; }
+  .plan h2 { margin:0; font-size:22px; font-weight:700; letter-spacing:-0.01em; }
+  .plan .detail { margin:4px 0 0; font-size:14px; color:var(--gray-500); }
+  .plan .visual { margin:16px auto; height:80px; display:flex; align-items:center; justify-content:center; }
+  .plan .price { margin:0; font-size:34px; font-weight:700; line-height:1.1; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; }
+  .plan .price small { font-size:15px; font-weight:400; color:var(--gray-500); }
+  .plan .incl { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:16px;
+    font-size:14px; font-weight:500; color:var(--gray-700); }
+  .plan .incl .chk { display:inline-flex; width:16px; height:16px; border-radius:999px; background:#d1fae5;
+    color:#059669; align-items:center; justify-content:center; font-size:10px; }
+  .incl-details { margin-top:16px; }
+  .incl-details summary { list-style:none; cursor:pointer; margin-top:0; }
+  .incl-details summary::-webkit-details-marker { display:none; }
+  .incl .chev { display:inline-block; color:#9ca3af; transition:transform .2s; margin-left:2px; }
+  .incl-details[open] .chev { transform:rotate(180deg); }
+  .incl-list { margin:12px 0 0; padding:12px; list-style:none; text-align:left; border:1px solid var(--gray-100); border-radius:12px; display:flex; flex-direction:column; gap:10px; }
+  .incl-list li { display:flex; flex-direction:column; font-size:13px; line-height:1.4; }
+  .incl-list li b { color:var(--gray-950); }
+  .incl-list li span { color:var(--gray-500); }
+  .plan .kies { display:block; margin-top:16px; width:100%; background:#ecc862; border:0;
+    border-radius:12px; padding:13px 16px; font-size:15px; font-weight:700; color:#030712;
+    box-shadow:0 6px 18px rgba(217,154,31,.28); }
+  .plan .kies:hover { background:#e6bd4a; }
+
+
+  .badge { white-space:nowrap; }
+  /* #31 ronde 3+4: het startaanbod als stil, omlijnd label BIJ de prijs; één prijsverhaal */
+  .offer-tag { display:inline-block; margin:0 0 8px; font-size:13px; font-weight:600; color:#047857; border:1px solid #6ee7b7; border-radius:999px; padding:4px 12px; }
+  .offer-total { margin:4px 0 0; font-size:14px; color:var(--gray-700); font-variant-numeric:tabular-nums; }
+
+</style>
+  
+<style>
+
+/* ===== contact-varianten (#32): gedeelde knoppen/blokken in de site-taal ===== */
+.cv-btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 12px 18px; border-radius: 12px;
+  background: #fff; color: var(--gray-950); font-size: 15.5px; font-weight: 700; letter-spacing: -0.005em; border: 1px solid var(--gray-300);
+  box-shadow: 0 2px 0 rgba(17,24,39,.12); -webkit-tap-highlight-color: transparent; transition: transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease; cursor: pointer; }
+.cv-btn:hover { border-color: #9ca3af; background: #f9fafb; transform: translateY(-1px); }
+.cv-btn:active { transform: translateY(1px); box-shadow: 0 0 0 rgba(17,24,39,.12); }
+.cv-btn svg { width: 18px; height: 18px; flex: none; }
+.cv-btn.cv-tel svg { fill: var(--info-dark); width: 16px; height: 16px; }
+.cv-btn.cv-wa svg { fill: #1da851; }
+.cv-btn .cv-nr { color: var(--gray-500); font-weight: 500; font-variant-numeric: tabular-nums; }
+/* getinte varianten (de V2-tinten van de nacht-bar): lezen meteen als appen / bellen, blijven rustig naast de gele CTA */
+.cv-btn.cv-tint.cv-wa { background: #e7f8ee; border-color: #cdeedb; color: #0f6e35; } .cv-btn.cv-tint.cv-wa:hover { background: #d9f3e3; }
+.cv-btn.cv-tint.cv-tel { background: #e8f1fb; border-color: #cfe1f5; color: #174f80; } .cv-btn.cv-tint.cv-tel:hover { background: #dbe9f8; }
+/* grote, volle knoppen (B): zwart voor bellen (de hoofdactie), WhatsApp-groen voor appen */
+.cv-btn.cv-big { min-height: 54px; font-size: 16.5px; border-radius: 12px; }
+.cv-btn.cv-fill.cv-tel { background: var(--gray-950); border-color: var(--gray-950); color: #fff; box-shadow: 0 6px 18px rgba(3,7,18,.18); } .cv-btn.cv-fill.cv-tel svg { fill: #fff; } .cv-btn.cv-fill.cv-tel:hover { background: #111827; }
+.cv-btn.cv-fill.cv-tel .cv-nr { color: rgba(255,255,255,.72); }
+.cv-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 9999px; background: #fff; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(15,23,42,.06); -webkit-tap-highlight-color: transparent; transition: background .15s ease, transform .15s ease; }
+.cv-icon::after { content: ""; position: absolute; inset: -4px; border-radius: inherit; }
+.cv-icon svg { width: 20px; height: 20px; }
+.cv-icon.cv-wa { background: #e7f8ee; border-color: #cdeedb; } .cv-icon.cv-wa svg { fill: #1da851; }
+.cv-icon.cv-tel { background: #e8f1fb; border-color: #cfe1f5; } .cv-icon.cv-tel svg { fill: var(--info-dark); width: 18px; height: 18px; }
+.cv-icon:active { transform: translateY(1px); }
+/* terug-chip naar het overzicht (alleen preview-hulp, verdwijnt bij scrollen) */
+.cv-chip { position: fixed; top: calc(6px + env(safe-area-inset-top, 0px)); left: 8px; z-index: 1200; display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 9px 0 7px; border-radius: 9999px;
+  background: rgba(3,7,18,.72); color: #fff; font-size: 11.5px; font-weight: 700; letter-spacing: .01em; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: opacity .25s ease, transform .25s ease; }
+.cv-chip b { color: var(--mathyellow); }
+.cv-chip.is-weg { opacity: 0; transform: translateY(-8px); pointer-events: none; }
+
+/* --- het Philip-moment (A, F): foto + één warme alinea + bel/app, direct onder de opening — géén kaart (tekst op de achtergrond) --- */
+.cv-moment { display: flex; gap: 16px; align-items: flex-start; width: 100%; max-width: 32rem; margin: 56px auto 0; padding: 0 2px; text-align: left; }
+.cv-moment img { flex: none; width: 64px; height: 64px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 3px #fff, 0 2px 8px rgba(15,23,42,.18); }
+.cv-moment .cv-tekst { min-width: 0; flex: 1 1 auto; }
+.cv-moment .cv-kop { margin: 0; font-size: 17px; font-weight: 700; line-height: 1.35; letter-spacing: -0.005em; }
+.cv-moment p { margin: 6px 0 0; font-size: 16px; line-height: 1.55; color: var(--gray-950); text-wrap: pretty; }
+.cv-moment .cv-knoppen { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.cv-moment .cv-knoppen .cv-btn { flex: 1 1 140px; min-height: 46px; padding: 10px 14px; font-size: 15px; }
+.cv-moment .cv-sub { margin: 10px 0 0; font-size: 13px; color: var(--gray-500); font-variant-numeric: tabular-nums; }
+@media (max-width: 374px) { .cv-moment { gap: 12px; } .cv-moment img { width: 54px; height: 54px; } }
+
+/* --- het Bel-of-app-Philip-blok (B): het contact als eigen, prominent element — foto, kop, één regel, twee grote knoppen --- */
+.cv-blok { width: 100%; max-width: var(--col, 384px); margin: 56px auto 0; text-align: center; }
+.cv-blok img { width: 84px; height: 84px; border-radius: 9999px; object-fit: cover; margin: 0 auto; box-shadow: 0 0 0 4px #fff, 0 4px 14px rgba(15,23,42,.18); }
+.cv-blok h2 { margin: 16px 0 0; font-size: 22px; font-weight: 800; line-height: 1.25; letter-spacing: -0.01em; }
+.cv-blok p { margin: 8px 0 0; font-size: 16px; line-height: 1.55; color: var(--gray-950); text-wrap: pretty; }
+.cv-blok .cv-knoppen { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.cv-blok .cv-sub { margin: 10px 0 0; font-size: 13px; color: var(--gray-500); }
+
+/* --- slanke nut-bar (A, C, F): één regel 'Vragen? Bel of app Philip' + de twee iconen; 52px --- */
+.cv-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; background: rgba(255,255,255,.96); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(191,219,254,.55); box-shadow: 0 -8px 24px rgba(15,23,42,.05); padding: 6px var(--pad) calc(6px + env(safe-area-inset-bottom, 0px)); }
+.cv-bar-in { max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 10px; min-height: 40px; }
+.cv-bar-wie { display: flex; align-items: center; gap: 9px; min-width: 0; flex: 1 1 auto; }
+.cv-bar-wie img { flex: none; width: 28px; height: 28px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 2px #fff, 0 1px 3px rgba(15,23,42,.2); }
+.cv-bar-txt { font-size: 14.5px; font-weight: 500; color: var(--gray-950); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cv-bar-txt b { font-weight: 700; }
+.cv-bar-knoppen { display: flex; gap: 8px; flex: none; }
+@media (min-width: 640px) { .cv-bar-in { max-width: 560px; } }
+/* C/F: de bar staat weg tot je voorbij de opening bent, en schuift dan van onder in (één zachte beweging; terug naar boven = weer weg) */
+.cv-bar.cv-laat { transform: translateY(110%); transition: transform .42s cubic-bezier(.32,.72,0,1); will-change: transform; }
+.cv-bar.cv-laat.is-zichtbaar { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .cv-bar.cv-laat { transition: none; } }
+
+/* --- founder-forward op de pakketkeuze (D, F): direct onder de vraag, vóór de kaarten --- */
+.cv-founder { display: flex; align-items: center; gap: 12px; width: 100%; margin: 14px auto 0; padding: 0 2px; text-align: left; }
+.cv-founder img { flex: none; width: 44px; height: 44px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 2px #fff, 0 1px 6px rgba(15,23,42,.18); }
+.cv-founder p { margin: 0; min-width: 0; flex: 1 1 auto; font-size: 14.5px; line-height: 1.45; color: var(--gray-950); text-wrap: pretty; }
+.cv-founder p small { display: block; margin-top: 1px; font-size: 12.5px; color: var(--gray-500); }
+.cv-founder .cv-btn { flex: none; min-height: 42px; padding: 8px 14px; font-size: 14.5px; border-radius: 9999px; }
+@media (max-width: 374px) { .cv-founder { flex-wrap: wrap; } .cv-founder .cv-btn { flex: 1 1 100%; } }
+.cv-founder-wrap { margin: 0; }
+body { padding-bottom: 48px; }
+</style>
+</head><body>
+
+<main>
+  <p class="choice-q">Welk pakket past bij jou?</p>
+  <div class="plans">
+    <div class="plan hl"><span class="badge">Meest gekozen</span>
+      <h2>Jaarabonnement</h2><p class="detail">Jaarlijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="82" cy="67" rx="78" ry="42" transform="rotate(-10 82 67)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="82" cy="67" r="27" fill="#facc15" stroke="#111827" stroke-width="3"/><circle cx="158" cy="52" r="15" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M154 43c4-2 9-1 10 2 1 2-1 4-4 4-3-1-5 1-4 4 1 2-1 4-4 3-4-2-5-7-3-10 1-1 2-2 5-3Z" fill="#86efac"/></svg></div>
+      <span class="offer-tag">Startaanbod schooljaar 2026/2027</span><p class="price offer-price">€7,00 <small>/maand</small></p><p class="offer-total">€84 per schooljaar</p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
+      <a class="kies" href="../gegevens.html?plan=yearly">Probeer 7 dagen gratis</a>
+    </div>
+    <div class="plan">
+      <h2>Maandabonnement</h2><p class="detail">Maandelijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="66" rx="57" ry="37" transform="rotate(-18 100 66)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="100" cy="66" r="24" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M95 47c7-4 16-2 18 4 1 4-3 6-8 6-5-1-8 2-6 6 2 4-2 8-8 6-6-4-8-11-5-16 2-3 5-4 9-6Z" fill="#86efac"/><circle cx="149" cy="39" r="13" fill="#cbd5e1" stroke="#111827" stroke-width="3"/></svg></div>
+      <p class="price">€11,00 <small>/maand</small></p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
+      <a class="kies" href="../gegevens.html?plan=monthly">Probeer 7 dagen gratis</a>
+    </div>
+    <div class="plan">
+      <h2>De hele schooltijd</h2><p class="detail">Eenmalig betalen na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="65" rx="26" ry="17" fill="#facc15" stroke="#111827" stroke-width="3" transform="rotate(-8 100 65)"/><path d="M108 65.6 112.9 74.3 108 82.1 95.7 87.7 78.3 88.1 60.4 81.2 47.7 67.2 45.5 48.4 56.9 29" stroke="#bfdbfe" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/><path d="M92 64.4 87.1 55.7 92 47.9 104.3 42.3 121.7 41.9 139.6 48.8 152.3 62.8 154.5 81.6 143.1 101" stroke="#fed7aa" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/></svg></div>
+      <p class="price">€200 <small>eenmalig</small></p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
+      <a class="kies" href="../gegevens.html?plan=lifetime">Probeer 7 dagen gratis</a>
+    </div>
+  </div>
+
+      <!-- Bel-of-app-Philip-blok (variant B): geen vaste balk; het contact is een prominent element met foto en grote knoppen -->
+      <section class="cv-blok" aria-label="Bel of app Philip">
+        <img src="../assets/philip.png" alt="Philip" width="84" height="84" />
+        <h2>Twijfel je welk pakket? Bel Philip.</h2>
+        <p>Ik ben Philip, oprichter van WisWiz. Ik neem altijd zelf op en denk met je mee welk pakket past.</p>
+        <div class="cv-knoppen">
+          <a class="cv-btn cv-big cv-fill cv-tel" href="tel:+31630231640" data-cta="bel-blok"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg>Bel Philip <span class="cv-nr">06&nbsp;30&nbsp;23&nbsp;16&nbsp;40</span></a>
+          <a class="cv-btn cv-big cv-tint cv-wa" href="https://wa.me/31630231640?text=Hoi%20Philip%2C%20ik%20heb%20een%20vraag%20over%20WisWiz%20voor%20mijn%20kind." target="_blank" rel="noopener" data-cta="whatsapp-blok"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>App Philip via WhatsApp</a>
+        </div>
+      </section>
+</main>
+<a class="cv-chip" id="cv-chip" href="index.html" aria-label="Terug naar het overzicht van de varianten"><b>B</b> geen vaste balk · ‹ overzicht</a>
+<script>
+(function(){ var c=document.getElementById('cv-chip'); if(!c) return; function t(){ c.classList.toggle('is-weg', (window.scrollY||0)>40); } document.addEventListener('scroll',t,{passive:true}); t(); })();
+</script>
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("../sw.js");</script>
+</body></html>
