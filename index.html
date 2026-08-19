@@ -299,9 +299,16 @@
        dezelfde tekst-inzet (22px = de review-tekstrand) — de site-marge, één ritme; h2 gecentreerd, tekst links zoals het was. */
     .about { margin: 80px auto 0; max-width: 32rem; padding: 0 22px; text-align: left; }
     .about h2 { text-align: center; margin-bottom: 20px; }
-    .about h3 { margin: 22px 0 6px; font-size: 18px; font-weight: 700; }
-    .about p { margin: 0; font-size: 15px; line-height: 1.65; font-weight: 500; color: var(--gray-950); text-wrap: pretty; }
-    .about p a { color: var(--info); font-weight: 700; }
+    /* r13 (Philip 19 aug: "Geef de About-us-tekst hetzelfde font als de reviews, maar houd het left aligned."): de lopende
+       tekst staat nu in EXACT de zetstijl van de moeder-/Mattia-review (.proof .layer.review.lang: Ubuntu 400, 17px/1.65 op
+       telefoon, 18px vanaf 640px, gray-950) — was 15px medium. Alleen de typografie; LINKS uitgelijnd blijft (zijn eis 18 aug),
+       kolom 32rem + tekst-inzet 22px (r7c) blijven. h3 een maat mee omhoog (19/20px) zodat de kop boven de grotere body blijft
+       staan; de link niet meer vet (500) — vet sprong eruit in de lichte review-letter. */
+    .about h3 { margin: 26px 0 8px; font-size: 19px; font-weight: 700; line-height: 1.3; }
+    .about p { margin: 0; font-size: 17px; line-height: 1.65; font-weight: 400; color: var(--gray-950); text-wrap: pretty; }
+    .about p + p { margin-top: 14px; }
+    .about p a { color: var(--info); font-weight: 500; }
+    @media (min-width: 640px) { .about h3 { font-size: 20px; } .about p { font-size: 18px; } }
     .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: calc(100% + 44px); margin: 28px -22px 0; }
     .team a { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fff; border-radius: 12px; padding: 12px 6px; border: 1px solid var(--gray-100); }
     .team img { width: 56px; height: 56px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 2px var(--info); }
@@ -496,7 +503,7 @@
       <p>Talent komt tot bloei onder persoonlijke begeleiding. Zo had Alexander de Grote les van Aristoteles, die op zijn beurt leerling was van Plato. In de klas is daar helaas te weinig ruimte voor. Met innovatieve technologie willen we daarom deze persoonlijke begeleiding mogelijk maken voor iedereen ter wereld. We beginnen met wiskunde: het vak waar leerlingen het vaakst vastlopen; een toren van opbouwende kennis die omvalt zodra een stevig fundament ontbreekt.</p>
       <h3>Over ons</h3>
       <p>WisWiz is opgericht door Philip en Louis, wiskundestudenten aan de TU Delft met jarenlange bijleservaring. We liepen steeds meer tegen de limiet aan dat we met individuele bijlessen te weinig mensen konden helpen. Samen met Hendrik, afgestudeerd statisticus en software ontwikkelaar, zijn we daarom de WisWiz app gaan bouwen. Met deze groep werken we iedere dag om zoveel mogelijk leerlingen te helpen.</p>
-      <p style="margin-top:14px">We horen graag van je. Of je nu vastloopt, een suggestie hebt of wilt meehelpen aan WisWiz. Bel of WhatsApp ons op <a href="tel:+31630231640" style="white-space:nowrap">06&nbsp;30&nbsp;23&nbsp;16&nbsp;40</a>.</p>
+      <p>We horen graag van je. Of je nu vastloopt, een suggestie hebt of wilt meehelpen aan WisWiz. Bel of WhatsApp ons op <a href="tel:+31630231640" style="white-space:nowrap">06&nbsp;30&nbsp;23&nbsp;16&nbsp;40</a>.</p>
       <div class="team">
         <a href="https://www.linkedin.com/in/philip-pinckaers-1604b3192/" target="_blank" rel="noopener noreferrer"><img src="assets/philip.png" alt="Philip" /><span>Philip</span><small>in</small></a>
         <a href="https://www.linkedin.com/in/hendrik-grondijs-01544117/" target="_blank" rel="noopener noreferrer"><img src="assets/hendrik.png" alt="Hendrik" /><span>Hendrik</span><small>in</small></a>
