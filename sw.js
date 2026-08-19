@@ -1,7 +1,7 @@
 // Service worker voor de iteratie-preview: alles direct uit cache openen,
 // op de achtergrond verversen. Verzoeken met ?t= (de verversknop) gaan
 // altijd puur over het netwerk.
-const CACHE = "vop-v61";
+const CACHE = "vop-v62";
 const PRECACHE = [
   "./", "index.html", "pakket.html", "gegevens.html", "betaal.html",
   "gelukt.html", "knoppen.html", "assets/sheet.css", "assets/sheet.js", "assets/morph.js", "assets/stapel.css", "assets/stapel.js", "assets/contactbar.css", "assets/contactbar.js",
