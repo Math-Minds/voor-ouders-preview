@@ -35,72 +35,7 @@
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; height: auto; display: block; }
 
-    /* --- navigatie (#32 r6/r7, Philip 18 aug): topbar weg; bottom bar = HET Philip/contact-element + sticky CTA (conversie) ---
-       r7: de bar draagt Philip zelf — links zijn hoofdje + één kort warm tekstje (app of bel me + wie hij is), rechts twee
-       icon-only knoppen (WhatsApp, bellen) in de belknop-stijl met 44px tapzones. Het middenblok 'Hoi! Ik ben Philip' is weg.
-       r10: de tekst is één uitschuivende zin, zie hieronder. */
     body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
-    .contactbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; background: rgba(255,255,255,.94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-      border-top: 1px solid #dbeafe; padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom, 0px)); }
-    .contactbar-inner { max-width: 520px; margin: 0 auto; display: flex; align-items: stretch; gap: 10px; }
-    /* r10 (Philip 18 aug: "die zin van mij moet niet twee hiërarchieën zijn, gewoon starten met meteen Hoi... en dan moet je het
-       kunnen openen en dan schuift hetzelfde tekstje gewoon uit naar (langer); voeg ook een elegant sluitmechanisme toe"):
-       ÉÉN doorlopende zin (de volledige Hoi-ik-ben-Philip-tekst), in rust op één regel afgekapt met een ellipsis (line-clamp 1);
-       tik op tekst/foto = DEZELFDE alinea schuift uit naar de volledige tekst (JS animeert de hoogte van de alinea zelf, 1 regel →
-       volledig, .36s); sluiten = klein kruisje rechtsboven (fadet in als hij open staat), opnieuw tikken, Esc of tik buiten de bar;
-       inklappen is dezelfde beweging terug. Foto blijft links (bij 'Hoi'), de twee icon-knoppen blijven rechtsonder — in rust
-       staat alles op één as, open groeit de bar alleen naar boven. */
-    .contactbar .wie { display: flex; align-items: center; gap: 9px; min-width: 0; flex: 1 1 auto; text-align: left; margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .contactbar .wie img { flex-shrink: 0; width: 38px; height: 38px; border-radius: 9999px; object-fit: cover; box-shadow: 0 1px 3px rgba(15,23,42,.18); }
-    .contactbar .wie p { margin: 0; min-width: 0; flex: 1 1 auto; font-size: 14px; line-height: 1.45; font-weight: 500; color: var(--gray-950); letter-spacing: -0.008em; text-wrap: pretty;
-      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
-    /* r10c (Philip 18 aug: "niet duidelijk dat je het kan openen" + "er past meer tekst"): in rust TWEE regels (precies de hoogte van de
-       knoppen, de bar wordt niet hoger) met zoveel van de zin als netjes past, dan "… meer" in de link-taal van de site (blauw, vet) —
-       JS meet per breedte hoeveel woorden passen (bij load/resize/fonts); zonder JS knipt line-clamp 2 zelf af. Open: dezelfde alinea
-       schuift uit, "meer" verdwijnt; dicht: terug. */
-    .contactbar .wie p .meer { color: var(--info-dark); font-weight: 700; white-space: nowrap; display: inline-flex; align-items: center; gap: 3px; vertical-align: baseline; transition: opacity .2s ease; }
-    .contactbar .wie p .meer.is-fade { opacity: 0; transition: none; }
-    /* r10d (Philip 18 aug: het sluiten moet eleganter — affordance én collapse). Drie kandidaten, live naast elkaar op
-       sluiten-varianten.html; de klasse op de nav kiest: sluit-a = het woord zelf draait om ('meer' ⇄ 'minder', aan het eind van
-       de zin, in de link-taal — geen kruisje, niets in de hoek); sluit-b = idem met een klein chevron dat meedraait (˅ ⇄ ˄);
-       sluit-c = een stil, dun kruisje rechtsboven (24px, geen bolletje, grijs). Voor alle drie: openen blijft zoals goedgekeurd
-       (.36s, snelle start); SLUITEN is een iets langzamere ease-in-out (.5s, cubic-bezier(.65,0,.35,1)) — de tekst blijft
-       volledig gerenderd en wordt alleen kleiner geknipt (niets verspringt), het label 'meer' fadet aan het eind zacht terug in. */
-    .contactbar .wie p .meer .chev { display: none; width: 9px; height: 9px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; transition: transform .3s cubic-bezier(.65,0,.35,1); }
-    .contactbar.sluit-b .wie p .meer .chev { display: inline-block; }
-    .contactbar.sluit-b.is-open .wie p .meer .chev { transform: rotate(180deg); }
-    .contactbar.sluit-c.is-open .wie p .meer, .contactbar.sluit-c .wie p.is-anim .meer { display: none; }   /* C: het woord weg als open, het kruisje sluit */
-    .contactbar.is-open .wie p, .contactbar .wie p.is-anim, .contactbar .wie p.is-meet { -webkit-line-clamp: unset; display: block; }   /* open, of nog aan het bewegen (ook tijdens het inklappen volledig gerenderd, alleen kleiner geknipt); .is-meet = even meten */
-    .contactbar .wie p.is-anim { transition: height .36s cubic-bezier(.2,.7,.2,1); will-change: height; }
-    .contactbar.is-dicht .wie p.is-anim { transition-duration: .5s; transition-timing-function: cubic-bezier(.65,0,.35,1); }   /* sluiten: iets langzamer, ease-in-out */
-    @media (max-width: 374px) { .contactbar .wie p { font-size: 13px; } }
-    /* knoppenkolom: in rust alleen de twee icon-knoppen (40px hoog = de hoogte van de bar), open blijven ze onderaan (space-between).
-       Alleen bij sluit-c schuift er bovenin een vak bij (kruisje 24 + 8 lucht) dat met de tekst mee groeit — het kruisje staat dan
-       altijd boven de knoppen, nooit op de tekst en nooit op de knoppen (ook bij 3 regels op desktop). */
-    .contactbar .acties { display: flex; flex-direction: column; justify-content: flex-end; align-self: stretch; flex-shrink: 0; }   /* knoppen onderaan */
-    .contactbar.sluit-c .acties { justify-content: space-between; }   /* C: kruisje boven, knoppen onder */
-    .contactbar .knoppen { display: flex; gap: 8px; }
-    .contactbar .sluit-wrap { display: none; }
-    .contactbar.sluit-c .sluit-wrap { display: block; position: relative; height: 0; transition: height .36s cubic-bezier(.2,.7,.2,1); }
-    .contactbar.sluit-c.is-open .sluit-wrap { height: 32px; }
-    .contactbar.sluit-c.is-dicht .sluit-wrap { transition-duration: .5s; transition-timing-function: cubic-bezier(.65,0,.35,1); }
-    .contactbar .sluit { position: absolute; top: 0; right: -2px; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 9999px;
-      border: 0; background: none; color: #9ca3af; cursor: pointer; -webkit-tap-highlight-color: transparent;
-      opacity: 0; transform: scale(.8); pointer-events: none; transition: opacity .25s ease, transform .25s ease, color .15s ease; }
-    .contactbar .sluit::after { content: ""; position: absolute; inset: -10px; border-radius: inherit; }   /* 44px tapzone */
-    .contactbar .sluit svg { width: 12px; height: 12px; }
-    .contactbar .sluit:hover { color: var(--gray-950); }
-    .contactbar.sluit-c.is-open .sluit { opacity: 1; transform: none; pointer-events: auto; transition-delay: .15s; }
-    @media (prefers-reduced-motion: reduce) { .contactbar .wie p.is-anim, .contactbar .sluit, .contactbar .sluit-wrap, .contactbar .wie p .meer, .contactbar .wie p .meer .chev { transition: none; } }
-    .contactbar .btn-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 9999px;
-      background: #fff; border: 1px solid var(--gray-300); box-shadow: 0 2px 0 rgba(17,24,39,.12); -webkit-tap-highlight-color: transparent; transition: border-color .15s ease, background .15s ease, transform .15s ease; }
-    .contactbar .btn-icon::after { content: ""; position: absolute; inset: -4px; border-radius: inherit; }  /* 48px tapzone */
-    .contactbar .btn-icon:hover { border-color: #9ca3af; background: #f9fafb; }
-    .contactbar .btn-icon:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(17,24,39,.12); }
-    .contactbar .btn-icon svg { width: 19px; height: 19px; }
-    .contactbar .btn-wa svg { fill: #25d366; }
-    .contactbar .btn-tel svg { width: 17px; height: 17px; fill: var(--info); }
-    .contactbar .btn-icon .lbl { display: none; }
     /* r9 (Philip 18 aug: "hij moet gewoon op zn plek sliden en dan daar blijven"): geen inschuif-animatie meer.
        De knop is nu ECHT position:sticky — hij scrolt gewoon mee met de pagina, en zodra hij de bovenrand raakt (8px +
        safe-area) blijft hij daar staan; scroll je terug, dan gaat hij op dezelfde rand weer mee naar beneden. Eén beweging
@@ -119,50 +54,6 @@
     .stickybar::after { content: ""; display: block; height: var(--cta-h, 57.5px); }
     .stickybar.is-on { opacity: 1; }
     @media (prefers-reduced-motion: reduce) { .stickybar { transition: none; } }
-    @media (min-width: 1024px) { .contactbar-inner { max-width: 560px; } }
-    /* --- nacht r14 (Philip 19 aug, nachtgoal 2: 'de bottom bar veel eleganter, mooier en duidelijker'): één verfijnde basis
-       (.bar-n) + vijf knop-richtingen (.bar-v1…v5), naast elkaar te zien op bar-varianten.html; de gekozen staat op de nav.
-       Basis: de bar staat als een licht opgetild vlak op de pagina (zachte schaduw naar boven i.p.v. alleen een lijn), de foto is
-       40px met een dun wit randje en staat BOVENAAN naast 'Hoi' (open én dicht — geen sprong bij het openen), de tekst iets ruimer
-       van de foto, 'meer'/'minder' in de link-taal; de knoppen verliezen de harde 2px-onderrand (schaduw-'druk') voor een dun
-       hairline + zachte schaduw. --- */
-    .contactbar.bar-n { background: rgba(255,255,255,.96); border-top: 1px solid rgba(191,219,254,.55); box-shadow: 0 -8px 24px rgba(15,23,42,.05); padding-top: 11px; }
-    .contactbar.bar-n .contactbar-inner { gap: 12px; }
-    .contactbar.bar-n .wie { align-items: flex-start; gap: 11px; }
-    .contactbar.bar-n .wie img { width: 40px; height: 40px; box-shadow: 0 0 0 2px #fff, 0 1px 4px rgba(15,23,42,.20); }
-    .contactbar.bar-n .wie p { font-size: 14px; line-height: 1.45; letter-spacing: 0; padding-top: 0; }
-    .contactbar.bar-n .btn-icon { border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(15,23,42,.06); }
-    .contactbar.bar-n .btn-icon:hover { border-color: #d1d5db; background: #f9fafb; }
-    .contactbar.bar-n .btn-icon:active { transform: translateY(1px); box-shadow: 0 0 0 rgba(15,23,42,0); }
-    .contactbar.bar-n .btn-icon svg { width: 20px; height: 20px; }
-    .contactbar.bar-n .btn-tel svg { width: 18px; height: 18px; }
-    .contactbar.bar-n .btn-icon .lbl { display: none; }
-    /* v2 — getinte cirkels: WhatsApp op een licht groen vlak, bellen op een licht blauw vlak; icoon in de volle kleur (rustig, maar de
-       twee lezen meteen als 'appen' en 'bellen') */
-    .contactbar.bar-v2 .btn-wa { background: #e7f8ee; border-color: #cdeedb; } .contactbar.bar-v2 .btn-wa svg { fill: #1da851; }
-    .contactbar.bar-v2 .btn-tel { background: #e8f1fb; border-color: #cfe1f5; } .contactbar.bar-v2 .btn-tel svg { fill: var(--info-dark); }
-    .contactbar.bar-v2 .btn-wa:hover { background: #d9f3e3; } .contactbar.bar-v2 .btn-tel:hover { background: #dbe9f8; }
-    /* v3 — gevulde cirkels: WhatsApp-groen en het site-blauw als vlak, wit icoon (het duidelijkst 'dit zijn knoppen', het drukst) */
-    .contactbar.bar-v3 .btn-wa { background: #25d366; border-color: #25d366; box-shadow: 0 2px 6px rgba(37,211,102,.35); } .contactbar.bar-v3 .btn-wa svg { fill: #fff; }
-    .contactbar.bar-v3 .btn-tel { background: var(--info); border-color: var(--info); box-shadow: 0 2px 6px rgba(62,142,208,.35); } .contactbar.bar-v3 .btn-tel svg { fill: #fff; }
-    .contactbar.bar-v3 .btn-wa:hover { background: #1fbd5a; } .contactbar.bar-v3 .btn-tel:hover { background: var(--info-dark); }
-    /* v4 — pillen met woord: [WhatsApp-icoon App] [bel-icoon Bel] — de knop zegt zelf wat hij doet; wit met hairline */
-    .contactbar.bar-v4 .btn-icon, .contactbar.bar-v5 .btn-icon { width: auto; height: 38px; padding: 0 13px 0 10px; gap: 7px; border-radius: 9999px; }
-    .contactbar.bar-v4 .btn-icon .lbl, .contactbar.bar-v5 .btn-icon .lbl { display: inline; font-size: 13.5px; font-weight: 700; color: var(--gray-950); letter-spacing: -0.005em; }
-    .contactbar.bar-v4 .btn-icon svg, .contactbar.bar-v5 .btn-icon svg { width: 18px; height: 18px; } .contactbar.bar-v4 .btn-tel svg, .contactbar.bar-v5 .btn-tel svg { width: 16px; height: 16px; }
-    .contactbar.bar-v4 .knoppen, .contactbar.bar-v5 .knoppen { gap: 7px; }
-    /* GEKOZEN: V2 (getinte cirkels) — op brede schermen (≥640px, waar de bar-kolom ruimte over heeft) worden dezelfde knoppen
-       getinte pillen mét woord (App · Bel), zoals V5; op telefoon blijven het cirkels zodat de zin twee volle regels houdt. */
-    @media (min-width: 640px) {
-      .contactbar.bar-v2 .btn-icon { width: auto; height: 38px; padding: 0 13px 0 10px; gap: 7px; border-radius: 9999px; }
-      .contactbar.bar-v2 .btn-icon .lbl { display: inline; font-size: 13.5px; font-weight: 700; letter-spacing: -0.005em; }
-      .contactbar.bar-v2 .btn-icon svg { width: 18px; height: 18px; } .contactbar.bar-v2 .btn-tel svg { width: 16px; height: 16px; }
-      .contactbar.bar-v2 .btn-wa .lbl { color: #0f6e35; } .contactbar.bar-v2 .btn-tel .lbl { color: #174f80; }
-    }
-    /* v5 — getinte pillen met woord: v4 in de tinten van v2 */
-    .contactbar.bar-v5 .btn-wa { background: #e7f8ee; border-color: #cdeedb; } .contactbar.bar-v5 .btn-wa svg { fill: #1da851; } .contactbar.bar-v5 .btn-wa .lbl { color: #0f6e35; }
-    .contactbar.bar-v5 .btn-tel { background: #e8f1fb; border-color: #cfe1f5; } .contactbar.bar-v5 .btn-tel svg { fill: var(--info-dark); } .contactbar.bar-v5 .btn-tel .lbl { color: #174f80; }
-
     /* --- r11 (Philip 19 aug, tweede versie: GEEN logo-header — "de kop bovenaan, dan de video-knop eronder, dan de
        hero-opstelling en daaronder de Start-proefweek-button — als opening/viewport voor alle devices"): de opening is
        één gecentreerde verticale stapel op ALLE formaten (de desktop-twee-kolommen-rij is weg). Volgorde: kop →
@@ -503,6 +394,7 @@
     .proof .layer.review.lang blockquote p { font-size: 17px; line-height: 1.65; }
     @media (min-width: 640px) { .proof .layer.review.lang blockquote p { font-size: 18px; } }
   </style>
+<link rel="stylesheet" href="assets/contactbar.css" />
 <style>
   body { padding: 24px 16px 60px; }
   .var { max-width: 860px; margin: 0 auto 34px; }
@@ -779,41 +671,6 @@
       </div>
     </div>
   </nav></div></div></section>
-<script>
-(function(){
-  // r10: bottom bar — één zin; open = DEZELFDE alinea schuift uit (hoogte 2 regels → volledig); r10c: in rust twee regels + "… meer";
-  // r10d: sluiten verfijnd — variant via klasse op de nav (sluit-a: 'meer' ⇄ 'minder'; sluit-b: + chevron; sluit-c: stil kruisje),
-  // sluiten iets langzamer ease-in-out, tekst blijft volledig gerenderd, 'meer' fadet aan het eind terug in. Sluit ook via Esc / tik buiten.
-  window.initContactbar=function(nav){ var t=nav.querySelector('.wie'), p=t&&t.querySelector('p'), zin=p&&p.querySelector('.zin'), meer=p&&p.querySelector('.meer'), lbl=p&&p.querySelector('.lbl'), x=nav.querySelector('.sluit'); if(!t||!p||!zin||!meer||!lbl) return;
-    var FULL=zin.textContent, C=nav.classList.contains('sluit-c'), reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function h(){ return p.getBoundingClientRect().height; }
-    function isOpen(){ return nav.classList.contains('is-open'); }
-    function lines(n){ return n*parseFloat(getComputedStyle(p).lineHeight)+1; }
-    function kort(){ // grootste woordgrens waarbij zin + "… meer" in twee regels past
-      if(isOpen()||p.classList.contains('is-anim')) return; lbl.textContent='meer'; p.classList.add('is-meet'); p.style.height='';
-      var max=lines(2), lo=0, hi=FULL.length, best=0;
-      zin.textContent=FULL; if(h()<=max){ p.classList.remove('is-meet'); return; }
-      while(lo<=hi){ var mid=(lo+hi)>>1; zin.textContent=FULL.slice(0,mid).replace(/[\s.,!?]+$/,'')+'…'; if(h()<=max){ best=mid; lo=mid+1; } else hi=mid-1; }
-      var cut=FULL.lastIndexOf(' ',best); if(cut>0) best=cut;
-      zin.textContent=FULL.slice(0,best).replace(/[\s.,!?]+$/,'')+'…'; p.classList.remove('is-meet'); }
-    function done(e){ if(e&&e.target!==p) return; p.removeEventListener('transitionend',done); p.classList.remove('is-anim'); nav.classList.remove('is-dicht'); p.style.height='';
-      if(!isOpen()){ kort(); meer.classList.add('is-fade'); void meer.offsetWidth; meer.classList.remove('is-fade'); } }   // dicht: korte vorm terug, 'meer' fadet zacht in
-    function setOpen(open){ if(isOpen()===open) return;
-      p.removeEventListener('transitionend',done); p.classList.remove('is-anim'); nav.classList.remove('is-dicht'); p.style.height='';
-      var h0=h(); nav.classList.toggle('is-open',open); zin.textContent=FULL; if(open) lbl.textContent='minder'; var h1=open?h():lines(2)-1;   // h1 = doelhoogte (open: volledig; dicht: twee regels)
-      t.setAttribute('aria-expanded',open?'true':'false'); if(x) x.tabIndex=(open&&C)?0:-1;
-      if(reduce){ if(!open) kort(); return; }
-      p.style.height=h0+'px'; void p.offsetHeight; p.classList.add('is-anim'); if(!open) nav.classList.add('is-dicht'); p.style.height=h1+'px';   // .is-anim: tijdens de beweging volledig gerenderd
-      p.addEventListener('transitionend',done); }
-    t.addEventListener('click',function(){ setOpen(!isOpen()); });
-    if(x) x.addEventListener('click',function(){ setOpen(false); t.focus({preventScroll:true}); });
-    document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&isOpen()) setOpen(false); });
-    document.addEventListener('pointerdown',function(e){ if(isOpen()&&!nav.contains(e.target)) setOpen(false); },{passive:true});
-    kort(); window.addEventListener('resize',kort); window.addEventListener('orientationchange',kort);
-    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(kort);
-    nav._bar={setOpen:setOpen,isOpen:isOpen}; };
-  document.querySelectorAll('.contactbar').forEach(window.initContactbar);
-  })();
-</script>
+<script src="assets/contactbar.js"></script>
 <script>document.querySelectorAll('.row').forEach(function(r){var navs=r.querySelectorAll('.contactbar'); if(navs[1]&&navs[1]._bar) setTimeout(function(){navs[1]._bar.setOpen(true);},300);});</script>
 </body></html>
