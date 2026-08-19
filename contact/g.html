@@ -18,10 +18,10 @@
       --info: #3e8ed0;
       --info-dark: #1f6fb0;
       --success: #3ec487;
-      --brand: #ecc862;            /* de oorspronkelijke knopkleur (mathyellow), Philips order 17 aug: met zwarte tekst */
-      --brand-dark: #e6bd4a;
-      --brand-shadow: rgba(217,154,31,.32);
-      --brand-text: #030712;
+      --brand: #3ec487;            /* Philips order 19 aug: alle conversie-CTAs in het site-groen (--success) met witte tekst, site-ronding + -schaduw */
+      --brand-dark: #35b277;
+      --brand-shadow: rgba(62,196,135,.32);
+      --brand-text: #fff;
       --achtergrond: #f0f9ff;
       --pad: 20px;                 /* één horizontale marge voor de hele pagina */
       --site: 1120px;              /* header/hero/footer */
@@ -84,7 +84,7 @@
     @media (max-width: 1023px) {
       :root { --opening-top: clamp(18px, 3.5svh, 34px); }   /* bovenmarge groeit licht mee met de schermhoogte */
       main { padding-top: var(--opening-top); }
-      .hero { min-height: calc(100svh - 64px - var(--opening-top) - env(safe-area-inset-bottom, 0px));
+      .hero { min-height: calc(100svh - 24px - var(--opening-top) - env(safe-area-inset-bottom, 0px));  /* #32 Apple-bar: geen bar in de opening meer (64px → 24px lucht onder de CTA) */
         /* nacht r13: grid i.p.v. flex, zodat de beeldrij (1fr) een DEFINIETE hoogte heeft en het beeldvenster erop kan meten (cqh) */
         display: grid; grid-template-rows: auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }
       /* het beeld krijgt alle restruimte en staat daarin een fractie BOVEN het midden (optisch centrum);
@@ -343,74 +343,23 @@
     .btn-call .nr { color: var(--gray-500); font-weight: 500; margin-left: 4px; font-variant-numeric: tabular-nums; }
     .proof blockquote p { text-wrap: pretty; }
 
-    /* --- institutionele waardering (#32 r7, Philip 18 aug): VIJF kaarten in de ORIGINELE kranten-stijl ---
-       De referentie is de oude krantenfoto: een dunne witte rand (matte) om het beeld, zachte schaduw, en het logo-label als
-       wit TABJE dat op de bovenrand vastzit (het label en de rand zijn één witte vorm; de schaduw volgt het silhouet van
-       kaart+label samen). Parool en FD krijgen dat terug; Vossius, Wijs Bijles en Wiskunde Actief krijgen EXACT dezelfde
-       omlijsting en hetzelfde label — vijf identieke kaart-objecten, binnenin foto óf drukwerk-papier.
-       r8 (Philip 18 aug: 'daar lagen ze compacter, geen lucht ertussen'): de stapel is ÉÉN BLOK met een vaste referentie —
-       zijn gesleepte compositie (sleep-pagina, veld 616px; de vijf beslaan daar 548×614px, gemeten incl. tabjes en draai).
-       ALLE maten — posities, breedtes, matte, tabjes, papier-padding én letters — staan in één eenheid --u = 1 referentie-px,
-       die met de blokbreedte meeschaalt (100cqi / 548). Zo blijft de onderlinge overlap 1:1 op elke breedte; niets wordt
-       apart tegen de breedte geschaald (dat gaf in r7g de verticale lucht). Op desktop is --u ≈ 1px (blok 548–576px). */
-    .proof .stapel-wrap { max-width: 576px; width: 100%; }
-    @media (max-width: 639px) { .proof .stapel-wrap { width: calc(100% + 24px); max-width: none; margin-left: -12px; margin-right: -12px; } }   /* telefoon: het blok loopt 12px in de paginamarge — grotere schaal, letters ~10px */
-    .stapel { container-type: inline-size; position: relative; width: 100%; --u: calc(100cqi / 548); --matte: calc(3.52 * var(--u)); }
-    .stapel::before { content: ""; display: block; height: calc(618 * var(--u)); }   /* de blokhoogte (op de container zelf zou cqi de viewport pakken) */
-    .stapel .rij { display: contents; }
-    .knip { position: absolute; margin: 0; padding: var(--matte); background: #fff; border-radius: 1.5px;
-      filter: drop-shadow(0 10px 16px rgba(15,23,42,.13)) drop-shadow(0 1px 2px rgba(15,23,42,.10)); transform-origin: 50% 50%; }
-    .knip .binnen { display: block; position: relative; overflow: hidden; border-radius: 1px; }
-    .knip .foto { display: block; width: 100%; height: auto; }
-    /* het label: wit tabje op de bovenrand, links, in één stuk met de matte (zelfde wit, geen eigen schaduw: de drop-shadow
-       van de kaart neemt label + rand samen). Eén stijl, één maat op alle vijf. */
-    .knip-label { position: absolute; left: 2.2%; bottom: 100%; margin-bottom: calc(-1 * var(--matte)); z-index: 2;
-      display: inline-flex; align-items: center; gap: .34em; height: calc(39.7 * var(--u)); padding: 0 .62em 0 .5em; background: #fff;
-      border-radius: .28em .28em 0 0; font-family: Georgia, "Times New Roman", serif; font-weight: 800; font-size: calc(19.5 * var(--u));
-      line-height: 1; color: #0a0a0a; white-space: nowrap; letter-spacing: -0.01em; }
-    .knip-label img { display: block; height: calc(27.5 * var(--u)); width: auto; }
-    .knip-label img.mark-fd { height: calc(26.2 * var(--u)); }
-    .knip-label img.mark-wa { height: calc(25 * var(--u)); filter: brightness(0); }
-    .knip-label img.mark-vos { height: calc(33.9 * var(--u)); }
-    .knip-label img.mark-wijs { height: calc(32.6 * var(--u)); }
-    .knip-label img.mark-p { height: calc(25 * var(--u)); }
-    /* de papieren binnenkant van de drie: krantenpapier (warm licht grijs + fijne korrel) binnen dezelfde witte matte.
-       r7b (Philip): geen scheidingslijn en geen bronregel meer — de naam staat op het tabje (Vossius/Wijs Bijles: alleen
-       het logo; Wiskunde Actief: 'STICHTING' in de zetstijl van het logo, gebakken asset). */
-    .knip .papier { padding: calc(21 * var(--u)); text-align: left; background: linear-gradient(168deg, #f9f7f1 0%, #f0ede5 100%); }
-    .knip .papier::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .38; mix-blend-mode: multiply; border-radius: inherit;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55 0 0 0 0 .52 0 0 0 0 .46 0 0 0 .09 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"); }
-    /* r7g (Philip): Vossius/Wijs Bijles in exact de typografie van de Wiskunde Actief-quote (schone sans, 400, zelfde maat/kleur).
-       r8: de letter schaalt met het blok mee (14.5 referentie-px), met een leesbaarheidsvloer op telefoon. */
-    .knip .papier p { margin: 0; font-family: inherit; font-weight: 400; font-size: calc(14 * var(--u)); line-height: 1.5; color: #0a0a0a; letter-spacing: 0; text-wrap: wrap; position: relative; }
-    /* r8: géén text-wrap:pretty in de kaartjes — die zette op sommige breedtes een extra regel die dan onder het volgende
-       kaartje verdween. Letter 14 referentie-px (de maat van zijn goedgekeurde kaartjes) en padding 21: gemeten in Ubuntu
-       blijven Vossius en Wijs Bijles daarmee op elke schaal 3 regels en de quote 4 — de kaarthoogtes van zijn compositie. */
-    /* Wiskunde Actief (r7c, Philip): een QUOTE van Martijn Koper in dezelfde review-vorm als de moeder- en Mattia-review —
-       aanhalingstekens, review-letter, attributie eronder in grijs; op hetzelfde papier, met hetzelfde tabje. */
-    .knip .papier.quote { text-align: center; padding: calc(29.4 * var(--u)) calc(28.2 * var(--u)) calc(28.2 * var(--u)); }
-    .knip .papier.quote blockquote { margin: 0; padding: 0; }
-    .knip .papier.quote p { font-family: inherit; font-weight: 400; font-size: calc(14.5 * var(--u)); line-height: 1.5; letter-spacing: 0; }
-    .knip .papier.quote figcaption { margin-top: calc(12.8 * var(--u)); font-size: calc(11 * var(--u)); font-weight: 500; color: var(--gray-500); position: relative; }
-    /* de compositie (r8): Philips gesleepte posities, veld-px → blok-px (x−15, y−97: de linker-/bovenrand van de vijf samen).
-       Rotaties zoals in zijn veld (rot 0 in zijn JSON = de kaart-eigen draai). Kranten boven met overlap, Vossius linksonder en
-       Wijs Bijles rechtsonder over de kranten-onderranden, Wiskunde Actief breed midden-onder over beide kaartjes heen. */
-    .knip.k-parool { left: calc(12 * var(--u)); top: calc(47 * var(--u)); width: calc(265 * var(--u)); transform: rotate(-4deg); z-index: 1; }
-    .knip.k-fd { left: calc(245 * var(--u)); top: calc(42 * var(--u)); width: calc(291 * var(--u)); transform: rotate(3deg); z-index: 2; }
-    .knip.k-vos { left: calc(2 * var(--u)); top: calc(300 * var(--u)); width: calc(255 * var(--u)); transform: rotate(-3deg); z-index: 3; }
-    .knip.k-wijs { left: calc(251 * var(--u)); top: calc(317 * var(--u)); width: calc(257 * var(--u)); transform: rotate(4deg); z-index: 4; }
-    .knip.k-wa { left: calc(88 * var(--u)); top: calc(425 * var(--u)); width: calc(379 * var(--u)); transform: rotate(-2deg); z-index: 5; }
+    /* --- institutionele waardering (#32): de vijf kaarten (Parool, FD, Vossius, Wijs Bijles, Wiskunde Actief) staan in assets/stapel.css
+       + assets/stapel.js en worden gedreven door ÉÉN layout-spec (<script id="stapel-spec"> onder de stapel) — dezelfde spec als de
+       sleep-pagina stapel-layout.html, zodat wat Philip daar klaarzet 1:1 is wat hier rendert (hele blok als één eenheid geschaald). --- */
     /* De twee reviews (moeder + Mattia): de VRIJE quote-stijl (Philip 18 aug r7d: geen kaart, geen tabje, geen kranten-rand —
        los van het institutionele stapeltje), onderling identiek: quote 18px + attributie, 48px lucht. */
     .proof .layer.review + .layer.review { margin-top: 40px; }
     /* r8 (Philip): de moeder-review is nu de volledige tekst — zelfde losse stijl, iets ruimere regelafstand zodat de lange
        quote rustig leest; Mattia identiek ernaast. */
-    .proof .layer.review blockquote p { line-height: 1.6; }
-    .proof .layer.review.lang { max-width: 34rem; }
-    .proof .layer.review.lang blockquote p { font-size: 17px; line-height: 1.65; }
-    @media (min-width: 640px) { .proof .layer.review.lang blockquote p { font-size: 18px; } }
+    /* #32 Apple-bar-ronde (Philip 19 aug: "de Mattia-quote OOGT groter dan de moeder-quote; dat moet gelijk — EXACT dezelfde
+       font-size en stijl"): was moeder 17px/1.65 (lang) naast Mattia 18px/1.6 — nu BEIDE reviews in precies dezelfde zetstijl:
+       17px/1.65 op telefoon, 18px vanaf 640px, zelfde kolombreedte (34rem). */
+    .proof .layer.review { max-width: 34rem; }
+    .proof .layer.review blockquote p { font-size: 17px; line-height: 1.65; }
+    @media (min-width: 640px) { .proof .layer.review blockquote p { font-size: 18px; } }
   </style>
-  
+  <link rel="stylesheet" href="../assets/sheet.css" />
+  <link rel="stylesheet" href="../assets/stapel.css" />
   <link rel="preload" as="image" href="../assets/hero-t2.webp" />
   
 <style>
@@ -512,7 +461,8 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
 </head>
 <body>
   <!-- r11 (Philip 19 aug, tweede versie): de opening is één verticale stapel — kop, video-knop, hero-beeld, CTA.
-       Conversie bij scrollen blijft de sticky CTA; contact blijft de bottom bar (WhatsApp / bel Philip). -->
+       Conversie bij scrollen blijft de sticky CTA; contact is de Apple-slide contact-sheet (#32, assets/sheet.js, data-trigger=hero):
+       WEG zolang de opening in beeld is, glijdt in zodra je voorbij de hero bent. -->
   <div class="stickybar" id="stickybar" aria-hidden="true"></div>
   <div class="stickycta" id="stickycta">
     <a class="btn btn-primary" href="../pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
@@ -555,32 +505,28 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
            Stichting Wijs Bijles en Stichting Wiskunde Actief — op één elegante stapel, met vijf identieke labels. Domein #34. -->
       <div class="layer stapel-wrap">
         <div class="stapel" role="group" aria-label="Bekend uit Het Parool en het FD; gebruikt op het Vossius Gymnasium, bij Stichting Wijs Bijles en Stichting Wiskunde Actief">
-          <div class="rij">
-            <figure class="knip k-parool">
+          <div class="stapel-canvas">
+            <figure class="knip" data-knip="parool">
               <span class="knip-label"><img class="mark-p" src="../assets/parool.png" alt="" /><span>Het Parool</span></span>
               <span class="binnen"><img class="foto" src="../assets/knipsel-parool.webp" alt="Artikel over WisWiz in Het Parool" width="427" height="555" loading="lazy" /></span>
             </figure>
-            <figure class="knip k-fd">
+            <figure class="knip" data-knip="fd">
               <span class="knip-label"><img class="mark-fd" src="../assets/fd-woordmerk.png" alt="Het Financieele Dagblad" /></span>
               <span class="binnen"><img class="foto" src="../assets/knipsel-fd.webp" alt="Artikel over WisWiz in Het Financieele Dagblad" width="705" height="1000" loading="lazy" /></span>
             </figure>
-          </div>
-          <div class="rij">
-            <figure class="knip k-vos">
+            <figure class="knip" data-knip="vos">
               <span class="knip-label"><img class="mark-vos" src="../assets/vossius4.png" alt="Vossius Gymnasium" /></span>
               <div class="binnen papier">
               <p>Leerlingen van het Vossius Gymnasium gebruiken WisWiz om toetsen voor te bereiden.</p>
               </div>
             </figure>
-            <figure class="knip k-wijs">
+            <figure class="knip" data-knip="wijs">
               <span class="knip-label"><img class="mark-wijs" src="../assets/wijs-bijles.png" alt="Stichting Wijs Bijles" /></span>
               <div class="binnen papier">
               <p>Bijlesleerlingen van Stichting Wijs Bijles krijgen WisWiz, ook voor hulp buiten de bijles.</p>
               </div>
             </figure>
-          </div>
-          <div class="rij">
-            <figure class="knip k-wa">
+            <figure class="knip" data-knip="wa">
               <span class="knip-label"><img class="mark-wa" src="../assets/stichting-wiskunde-actief.png" alt="Stichting Wiskunde Actief" /></span>
               <!-- r7c (Philip): Wiskunde Actief als QUOTE van Martijn Koper, in dezelfde review-vorm als de moeder- en Mattia-review -->
               <div class="binnen papier quote">
@@ -590,6 +536,18 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
             </figure>
           </div>
         </div>
+        <!-- DE LAYOUT-SPEC (#32 WYSIWYG): dit blok komt 1:1 van de sleep-pagina (stapel-layout.html → 'Kopieer spec'). Referentie-canvas
+             ref.w × ref.h; per kaart x, y, w, rot (graden), z (stapelvolgorde) en de plek van het label (a: l/c/r, x, y; y=-36.2 = tabje op de
+             bovenrand). De stand hieronder = Philips goedgekeurde compositie (r8, 18 aug), ongewijzigd overgezet. -->
+        <script type="application/json" id="stapel-spec">{"ref":{"w":548,"h":618},"items":[
+  {"id":"parool","x":12,"y":47,"w":265,"rot":-4,"z":1,"label":{"a":"l","x":5.8,"y":-36.2}},
+  {"id":"fd","x":245,"y":42,"w":291,"rot":3,"z":2,"label":{"a":"l","x":6.4,"y":-36.2}},
+  {"id":"vos","x":2,"y":300,"w":255,"rot":-3,"z":3,"label":{"a":"l","x":5.6,"y":-36.2}},
+  {"id":"wijs","x":251,"y":317,"w":257,"rot":4,"z":4,"label":{"a":"l","x":5.7,"y":-36.2}},
+  {"id":"wa","x":88,"y":425,"w":379,"rot":-2,"z":5,"label":{"a":"l","x":8.3,"y":-36.2}}
+]}</script>
+        <script src="../assets/stapel.js"></script>
+        <script>Stapel.apply(document.querySelector('.stapel'), Stapel.readSpec());</script>
       </div>
     </section>
 
@@ -700,6 +658,7 @@ body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
     window.addEventListener("resize", function(){ if(isOpen&&!busy){ frame.style.transition="none"; void frame.offsetWidth; frame.style.transition=""; } });
   })();
 </script>
+<script src="../assets/sheet.js" data-trigger="hero"></script>
 <script>
 (function(){
   // r9: echte sticky knop. JS meet alleen WAAR de originele knop staat (documentcoördinaten) en legt de sticky kopie
