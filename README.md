@@ -16,6 +16,8 @@ Hard-refresh op de telefoon als je de oude versie nog ziet.
 
 - `index.html` — de hele pagina, CSS inline bovenin.
 - `assets/` — logo, Philip, TU, app-schermafbeelding (hero), krantencompositie.
+- `assets/contactbar.css` + `assets/contactbar.js` — de bottom bar (Philip/contact-element), gedeeld door `index.html`, `pakket.html` en `bar-varianten.html` (nacht #32, 19 aug). Pas de bar dáár aan, niet per pagina.
+- `pakket.html` — de pakketkeuze als compacte selecteerbare kaarten + één knop (nacht #32); de knop geeft `?plan=` door aan `gegevens.html`.
 - Het videoslot in de hero is nu een statische schermafbeelding van de app.
   Als de productvideo er is: zet `product.mp4` in `assets/` en vervang de
   `<img>` in `.hero-visual` door een `<video autoplay muted loop playsinline>`.
