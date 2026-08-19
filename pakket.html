@@ -5,6 +5,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
 <style>
+  /* #32 (Philip 19 aug: 'je moet de pakketkeuze-pagina terugzetten, ik vond het nicer met die kaartjes en planeten. Haal daar ook
+     die zwarte iteratie-balk bovenaan weg'): dit is de kaartjes+planeten-versie van 17/18 aug (#31 ronde 4 clean, 530e2b7) terug —
+     drie losse kaarten met planeet-illustratie, jaar bovenaan met 'Meest gekozen' + startaanbod, elk met eigen knop; de zwarte
+     OEFENVERSIE-balk is weg; de bottom bar van de nacht (r15) blijft eronder staan (contactbar.css/.js). */
   :root { --mathyellow:#ecc862; --mathorange:#db9a1f; --info:#3e8ed0; --info-dark:#1f6fb0;
     --achtergrond:#f0f9ff; --gray-950:#030712; --gray-700:#374151; --gray-500:#6b7280;
     --gray-300:#d1d5db; --gray-100:#f3f4f6; --pad:20px; }
@@ -12,118 +16,75 @@
   body { font-family:"Ubuntu",system-ui,sans-serif; background:var(--achtergrond); color:var(--gray-950);
     -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
   a { color:inherit; text-decoration:none; } img { max-width:100%; height:auto; }
-  .mock-banner { position:sticky; top:0; z-index:60; background:#111827; color:#fff; text-align:center;
-    font-size:11px; padding:5px 10px; letter-spacing:.02em; }
-  .mock-banner b { color:var(--mathyellow); }
-
-  /* --- nacht r15 (Philip 19 aug, nachtgoal 4: 'de pakketkeuze-pagina perfect mobiel maken'): de pagina was drie hoge
-     desktop-kaarten onder elkaar (elk met eigen knop en een grote illustratie) — op telefoon paste er één kaart in beeld en de
-     keuze was niet te overzien. Nu: één keuzescherm dat op elke telefoon in één blik past — de drie pakketten als compacte
-     SELECTEERBARE kaarten (radio-kaarten, jaar voorgeselecteerd, 'Meest gekozen' als tag bij de naam, het startaanbod IN de
-     jaarkaart, prijs rechts uitgelijnd op één lijn met de naam — de planeet-illustraties zijn op dit compacte scherm weggelaten:
-     te klein om iets te zeggen, en ze kostten de naamregel zijn ruimte), daaronder
-     ÉÉN 'Alles van WisWiz inbegrepen'-uitklap (voor alle drie gelijk) en ÉÉN knop 'Probeer 7 dagen gratis' die naar de
-     gegevenspagina gaat met het gekozen pakket. Onderaan dezelfde bottom bar als de ouderpagina (nachtgoal 3). --- */
-  main { max-width:520px; margin:0 auto; padding:26px var(--pad) 28px; }
-  @media (min-width: 640px) { main { padding-top: 40px; } }
-  .choice-q { margin:0; text-align:center; font-size:22px; font-weight:800; line-height:1.25; letter-spacing:-0.01em; }
-  @media (min-width: 640px) { .choice-q { font-size:26px; } }
-  .choice-sub { margin:6px 0 0; text-align:center; font-size:14px; color:var(--gray-500); font-weight:500; }
-
-  .plans { display:flex; flex-direction:column; gap:12px; margin:20px 0 0; }
-  .plan { position:relative; display:flex; align-items:center; gap:12px; width:100%; margin:0; padding:13px 14px 13px 16px;
-    background:#fff; border:1.5px solid #e2e8f0; border-radius:16px; cursor:pointer; text-align:left;
-    transition:border-color .18s ease, box-shadow .18s ease, background .18s ease, transform .12s ease; -webkit-tap-highlight-color:transparent; }
-  .plan input { position:absolute; opacity:0; width:1px; height:1px; margin:0; pointer-events:none; }
-  .plan:hover { border-color:#cbd5e1; }
-  .plan:active { transform:scale(.995); }
-  .plan.is-sel, .plan:has(input:checked) { border-color:var(--mathyellow); box-shadow:0 0 0 1px var(--mathyellow), 0 8px 24px rgba(217,154,31,.14); }
-  .plan:has(input:focus-visible) { outline:2px solid var(--info); outline-offset:2px; }
-    .plan .body { flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:2px; }
-  .plan .top { display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
-  .plan .name { font-size:16px; font-weight:700; letter-spacing:-0.005em; line-height:1.3; min-width:0; }
-  .plan .price { flex:none; font-size:17px; font-weight:700; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; line-height:1.3; white-space:nowrap; }
-  .plan .price small { font-size:12.5px; font-weight:400; color:var(--gray-500); margin-left:1px; }
-  .plan .detail { font-size:13px; line-height:1.4; color:var(--gray-500); }
-  /* jaarkaart: onder de afschrijvingsregel het label 'Startaanbod schooljaar 2026/2027' (links, groen) en het jaartotaal
-     '€84 per schooljaar' (rechts, in de prijskolom onder €7,00/maand); past het niet op één regel (≤ ~400px), dan zakt het
-     totaal naar een eigen regel rechts — de prijzen blijven zo één kolom */
-  .plan .mid { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:2px 10px; margin-top:4px; }
-  .plan .mid .offer { margin-top:0; }
-  .plan .total { flex:none; margin-left:auto; font-size:12.5px; line-height:1.4; color:var(--gray-700); font-variant-numeric:tabular-nums; white-space:nowrap; }
-  .plan .detail b { color:var(--gray-700); font-weight:500; }
-  /* 'Meest gekozen' als klein label óp de bovenrand van de jaarkaart (links, bij de naam) — het klassieke kaart-signaal, compact */
-  .plan .tag { position:absolute; top:-11px; left:14px; padding:3px 9px; border-radius:999px; background:var(--mathyellow); color:var(--gray-950); font-size:11px; font-weight:700; line-height:1.4; letter-spacing:.01em; white-space:nowrap; box-shadow:0 1px 0 rgba(255,255,255,.8) inset; }
-  .plan.hl { margin-top:4px; }
-  .plan .offer { display:inline-flex; align-items:center; gap:6px; margin-top:4px; font-size:12.5px; font-weight:600; color:#047857; line-height:1.4; }
-  .plan .offer::before { content:""; flex:none; width:6px; height:6px; border-radius:999px; background:#34d399; }
-  .plan .radio { flex:none; width:22px; height:22px; border-radius:999px; border:1.5px solid #cbd5e1; background:#fff; display:flex; align-items:center; justify-content:center; transition:border-color .18s ease, background .18s ease; }
-  .plan .radio::after { content:""; width:10px; height:10px; border-radius:999px; background:var(--gray-950); transform:scale(0); transition:transform .18s cubic-bezier(.2,.7,.2,1); }
-  .plan.is-sel .radio, .plan:has(input:checked) .radio { border-color:var(--gray-950); }
-  .plan.is-sel .radio::after, .plan:has(input:checked) .radio::after { transform:scale(1); }
-
-  @media (max-width: 359px) { .choice-q { font-size:20px; } .plan { padding:12px 12px 12px 14px; gap:10px; } .plan .name { font-size:15px; } .plan .price { font-size:16px; }
-    .plan .top { flex-direction:column; align-items:flex-start; gap:0; } .plan .total { margin-left:0; } .plans { gap:10px; margin-top:16px; } }
-  /* één 'Alles van WisWiz inbegrepen' voor de drie samen */
-  .incl-details { margin-top:12px; }
-  .incl-details summary { list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;
-    font-size:14px; font-weight:500; color:var(--gray-700); padding:6px 0; -webkit-tap-highlight-color:transparent; }
+  main { max-width:480px; margin:0 auto; padding:28px 16px 64px; }
+  h1 { margin:0; text-align:center; font-size:24px; font-weight:800; line-height:1.25; }
+  .btn-primary { display:block; width:100%; background:#ecc862; color:#030712; font-weight:700; font-size:16px;
+    padding:14px 16px; border-radius:12px; border:0; text-align:center;
+    box-shadow:0 6px 18px rgba(217,154,31,.32); cursor:pointer; font-family:inherit; }
+  .btn-primary:hover { background:#e6bd4a; }
+  
+  .choice-q { text-align:center; font-size:16px; font-weight:700; color:var(--gray-700); margin:4px 0 0; }
+  .plans { display:flex; flex-direction:column; gap:24px; margin-top:32px; }
+  /* #31 ronde 4 (clean): 8px-ritme, hairlines, geen kaartschaduw, één trap: 14 / 22 / 34 */
+  .plan { position:relative; background:#fff; border:1px solid var(--gray-300); border-radius:16px;
+    padding:24px 20px 20px; text-align:center; }
+  .plan.hl { border-color:var(--mathyellow); padding-top:28px; }
+  .badge { position:absolute; top:-16px; left:50%; transform:translateX(-50%); min-width:160px;
+    background:var(--mathyellow); color:var(--gray-950); font-size:14px; font-weight:700; padding:8px 20px; border-radius:8px; }
+  .plan h2 { margin:0; font-size:22px; font-weight:700; letter-spacing:-0.01em; }
+  .plan .detail { margin:4px 0 0; font-size:14px; color:var(--gray-500); }
+  .plan .visual { margin:16px auto; height:80px; display:flex; align-items:center; justify-content:center; }
+  .plan .price { margin:0; font-size:34px; font-weight:700; line-height:1.1; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; }
+  .plan .price small { font-size:15px; font-weight:400; color:var(--gray-500); }
+  .plan .incl { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:16px;
+    font-size:14px; font-weight:500; color:var(--gray-700); }
+  .plan .incl .chk { display:inline-flex; width:16px; height:16px; border-radius:999px; background:#d1fae5;
+    color:#059669; align-items:center; justify-content:center; font-size:10px; }
+  .incl-details { margin-top:16px; }
+  .incl-details summary { list-style:none; cursor:pointer; margin-top:0; }
   .incl-details summary::-webkit-details-marker { display:none; }
-  .incl-details .chk { display:inline-flex; width:16px; height:16px; border-radius:999px; background:#d1fae5; color:#059669; align-items:center; justify-content:center; font-size:10px; }
-  .incl-details .chev { display:inline-block; color:#9ca3af; transition:transform .2s; margin-left:2px; }
+  .incl .chev { display:inline-block; color:#9ca3af; transition:transform .2s; margin-left:2px; }
   .incl-details[open] .chev { transform:rotate(180deg); }
-  .incl-list { margin:8px 0 0; padding:12px 14px; list-style:none; text-align:left; background:#fff; border:1px solid #e2e8f0; border-radius:12px; display:flex; flex-direction:column; gap:10px; }
+  .incl-list { margin:12px 0 0; padding:12px; list-style:none; text-align:left; border:1px solid var(--gray-100); border-radius:12px; display:flex; flex-direction:column; gap:10px; }
   .incl-list li { display:flex; flex-direction:column; font-size:13px; line-height:1.4; }
   .incl-list li b { color:var(--gray-950); }
   .incl-list li span { color:var(--gray-500); }
+  .plan .kies { display:block; margin-top:16px; width:100%; background:#ecc862; border:0;
+    border-radius:12px; padding:13px 16px; font-size:15px; font-weight:700; color:#030712;
+    box-shadow:0 6px 18px rgba(217,154,31,.28); }
+  .plan .kies:hover { background:#e6bd4a; }
 
-  .kies-wrap { margin-top:12px; }
-  .btn-primary { display:flex; align-items:center; justify-content:center; width:100%; background:#ecc862; color:#030712; font-weight:700; font-size:17px;
-    padding:16px; border-radius:12px; border:0; text-align:center; box-shadow:0 6px 18px rgba(217,154,31,.32); cursor:pointer; font-family:inherit;
-    transition:transform .15s ease, box-shadow .15s ease, background .15s ease; }
-  .btn-primary:hover { background:#e6bd4a; transform:translateY(-2px); box-shadow:0 10px 24px rgba(217,154,31,.32); }
-  .btn-primary:active { transform:translateY(0); }
-  .kies-sub { margin:10px 0 0; text-align:center; font-size:12.5px; line-height:1.45; color:var(--gray-500); }
-  .kies-sub b { color:var(--gray-700); font-weight:500; }
+
+  .badge { white-space:nowrap; }
+  /* #31 ronde 3+4: het startaanbod als stil, omlijnd label BIJ de prijs; één prijsverhaal */
+  .offer-tag { display:inline-block; margin:0 0 8px; font-size:13px; font-weight:600; color:#047857; border:1px solid #6ee7b7; border-radius:999px; padding:4px 12px; }
+  .offer-total { margin:4px 0 0; font-size:14px; color:var(--gray-700); font-variant-numeric:tabular-nums; }
+
 </style>
 <link rel="stylesheet" href="assets/contactbar.css" />  <link rel="manifest" href="manifest.json" />
 </head><body>
-<div class="mock-banner"><b>OEFENVERSIE</b> — dit is de iteratie-preview, er wordt niets opgeslagen of betaald</div>
 
 <main>
-  <h1 class="choice-q">Welk pakket past bij jou?</h1>
-  <form class="plans" id="plans" aria-label="Pakketkeuze">
-    <label class="plan hl is-sel" data-plan="yearly">
-      <input type="radio" name="plan" value="yearly" checked />
-      <span class="tag">Meest gekozen</span>
-      <span class="body">
-        <span class="top"><span class="name">Jaarabonnement</span><span class="price">€7,00<small>/maand</small></span></span>
-        <span class="detail">Jaarlijkse afschrijving na de proefweek</span>
-        <span class="mid"><span class="offer">Startaanbod schooljaar 2026/2027</span><span class="total">€84 per schooljaar</span></span>
-      </span>
-      <span class="radio" aria-hidden="true"></span>
-    </label>
-    <label class="plan" data-plan="monthly">
-      <input type="radio" name="plan" value="monthly" />
-      <span class="body">
-        <span class="top"><span class="name">Maandabonnement</span><span class="price">€11,00<small>/maand</small></span></span>
-        <span class="detail">Maandelijkse afschrijving na de proefweek</span>
-      </span>
-      <span class="radio" aria-hidden="true"></span>
-    </label>
-    <label class="plan" data-plan="lifetime">
-      <input type="radio" name="plan" value="lifetime" />
-      <span class="body">
-        <span class="top"><span class="name">De hele schooltijd</span><span class="price">€200<small> eenmalig</small></span></span>
-        <span class="detail">Eenmalig betalen na de proefweek</span>
-      </span>
-      <span class="radio" aria-hidden="true"></span>
-    </label>
-  </form>
-  <details class="incl-details"><summary><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
-  <div class="kies-wrap">
-    <a class="btn-primary" id="kies" href="gegevens.html?plan=yearly" data-cta="pakket-kies">Probeer 7 dagen gratis</a>
-    <p class="kies-sub" id="kies-sub">Na de proefweek start het jaarabonnement: <b>€84 per schooljaar</b>. Opzeggen kan altijd, ook tijdens de proefweek.</p>
+  <p class="choice-q">Welk pakket past bij jou?</p>
+  <div class="plans">
+    <div class="plan hl"><span class="badge">Meest gekozen</span>
+      <h2>Jaarabonnement</h2><p class="detail">Jaarlijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="82" cy="67" rx="78" ry="42" transform="rotate(-10 82 67)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="82" cy="67" r="27" fill="#facc15" stroke="#111827" stroke-width="3"/><circle cx="158" cy="52" r="15" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M154 43c4-2 9-1 10 2 1 2-1 4-4 4-3-1-5 1-4 4 1 2-1 4-4 3-4-2-5-7-3-10 1-1 2-2 5-3Z" fill="#86efac"/></svg></div>
+      <span class="offer-tag">Startaanbod schooljaar 2026/2027</span><p class="price offer-price">€7,00 <small>/maand</small></p><p class="offer-total">€84 per schooljaar</p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
+      <a class="kies" href="gegevens.html?plan=yearly">Probeer 7 dagen gratis</a>
+    </div>
+    <div class="plan">
+      <h2>Maandabonnement</h2><p class="detail">Maandelijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="66" rx="57" ry="37" transform="rotate(-18 100 66)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="100" cy="66" r="24" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M95 47c7-4 16-2 18 4 1 4-3 6-8 6-5-1-8 2-6 6 2 4-2 8-8 6-6-4-8-11-5-16 2-3 5-4 9-6Z" fill="#86efac"/><circle cx="149" cy="39" r="13" fill="#cbd5e1" stroke="#111827" stroke-width="3"/></svg></div>
+      <p class="price">€11,00 <small>/maand</small></p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
+      <a class="kies" href="gegevens.html?plan=monthly">Probeer 7 dagen gratis</a>
+    </div>
+    <div class="plan">
+      <h2>De hele schooltijd</h2><p class="detail">Eenmalig betalen na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="65" rx="26" ry="17" fill="#facc15" stroke="#111827" stroke-width="3" transform="rotate(-8 100 65)"/><path d="M108 65.6 112.9 74.3 108 82.1 95.7 87.7 78.3 88.1 60.4 81.2 47.7 67.2 45.5 48.4 56.9 29" stroke="#bfdbfe" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/><path d="M92 64.4 87.1 55.7 92 47.9 104.3 42.3 121.7 41.9 139.6 48.8 152.3 62.8 154.5 81.6 143.1 101" stroke="#fed7aa" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/></svg></div>
+      <p class="price">€200 <small>eenmalig</small></p>
+      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
+      <a class="kies" href="gegevens.html?plan=lifetime">Probeer 7 dagen gratis</a>
+    </div>
   </div>
 </main>
   <nav class="contactbar sluit-a bar-n bar-v2" aria-label="Contact met Philip">
@@ -150,17 +111,5 @@
     </div>
   </nav>
 <script src="assets/contactbar.js"></script>
-<script>
-(function(){
-  var form=document.getElementById('plans'), kies=document.getElementById('kies'), sub=document.getElementById('kies-sub');
-  // dezelfde zinnen als de gegevenspagina (fact per pakket)
-  var TXT={yearly:'Na de proefweek start het jaarabonnement: <b>€84 per schooljaar</b>. Opzeggen kan altijd, ook tijdens de proefweek.',
-           monthly:'Na de proefweek start het maandabonnement: <b>€11 per maand</b>. Opzeggen kan altijd, ook tijdens de proefweek.',
-           lifetime:'Na de proefweek betaal je <b>eenmalig €200</b> voor toegang tijdens de hele schooltijd. Tijdens de proefweek kun je nog stoppen.'};
-  function sync(){ var v=(form.querySelector('input:checked')||{}).value||'yearly';
-    form.querySelectorAll('.plan').forEach(function(l){ l.classList.toggle('is-sel', l.dataset.plan===v); });
-    kies.href='gegevens.html?plan='+v; sub.innerHTML=TXT[v]; }
-  form.addEventListener('change',sync); sync();
-})();
-</script><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
 </body></html>
