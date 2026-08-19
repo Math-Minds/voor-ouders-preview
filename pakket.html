@@ -45,19 +45,25 @@
   .plan .price { flex:none; font-size:17px; font-weight:700; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; line-height:1.3; white-space:nowrap; }
   .plan .price small { font-size:12.5px; font-weight:400; color:var(--gray-500); margin-left:1px; }
   .plan .detail { font-size:13px; line-height:1.4; color:var(--gray-500); }
+  /* jaarkaart: onder de afschrijvingsregel het label 'Startaanbod schooljaar 2026/2027' (links, groen) en het jaartotaal
+     '€84 per schooljaar' (rechts, in de prijskolom onder €7,00/maand); past het niet op één regel (≤ ~400px), dan zakt het
+     totaal naar een eigen regel rechts — de prijzen blijven zo één kolom */
+  .plan .mid { display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:2px 10px; margin-top:4px; }
+  .plan .mid .offer { margin-top:0; }
+  .plan .total { flex:none; margin-left:auto; font-size:12.5px; line-height:1.4; color:var(--gray-700); font-variant-numeric:tabular-nums; white-space:nowrap; }
   .plan .detail b { color:var(--gray-700); font-weight:500; }
   /* 'Meest gekozen' als klein label óp de bovenrand van de jaarkaart (links, bij de naam) — het klassieke kaart-signaal, compact */
   .plan .tag { position:absolute; top:-11px; left:14px; padding:3px 9px; border-radius:999px; background:var(--mathyellow); color:var(--gray-950); font-size:11px; font-weight:700; line-height:1.4; letter-spacing:.01em; white-space:nowrap; box-shadow:0 1px 0 rgba(255,255,255,.8) inset; }
   .plan.hl { margin-top:4px; }
-  .plan .offer { display:inline-flex; align-items:center; gap:5px; margin-top:4px; font-size:12.5px; font-weight:600; color:#047857; }
-  .plan .offer::before { content:""; width:6px; height:6px; border-radius:999px; background:#34d399; }
+  .plan .offer { display:inline-flex; align-items:center; gap:6px; margin-top:4px; font-size:12.5px; font-weight:600; color:#047857; line-height:1.4; }
+  .plan .offer::before { content:""; flex:none; width:6px; height:6px; border-radius:999px; background:#34d399; }
   .plan .radio { flex:none; width:22px; height:22px; border-radius:999px; border:1.5px solid #cbd5e1; background:#fff; display:flex; align-items:center; justify-content:center; transition:border-color .18s ease, background .18s ease; }
   .plan .radio::after { content:""; width:10px; height:10px; border-radius:999px; background:var(--gray-950); transform:scale(0); transition:transform .18s cubic-bezier(.2,.7,.2,1); }
   .plan.is-sel .radio, .plan:has(input:checked) .radio { border-color:var(--gray-950); }
   .plan.is-sel .radio::after, .plan:has(input:checked) .radio::after { transform:scale(1); }
 
   @media (max-width: 359px) { .choice-q { font-size:20px; } .plan { padding:12px 12px 12px 14px; gap:10px; } .plan .name { font-size:15px; } .plan .price { font-size:16px; }
-    .plan .top { flex-direction:column; align-items:flex-start; gap:0; } .plans { gap:10px; margin-top:16px; } }
+    .plan .top { flex-direction:column; align-items:flex-start; gap:0; } .plan .total { margin-left:0; } .plans { gap:10px; margin-top:16px; } }
   /* één 'Alles van WisWiz inbegrepen' voor de drie samen */
   .incl-details { margin-top:12px; }
   .incl-details summary { list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;
@@ -89,10 +95,11 @@
   <form class="plans" id="plans" aria-label="Pakketkeuze">
     <label class="plan hl is-sel" data-plan="yearly">
       <input type="radio" name="plan" value="yearly" checked />
+      <span class="tag">Meest gekozen</span>
       <span class="body">
-        <span class="top"><span class="name">Jaarabonnement</span><span class="tag">Meest gekozen</span><span class="price">€7,00<small>/maand</small></span></span>
+        <span class="top"><span class="name">Jaarabonnement</span><span class="price">€7,00<small>/maand</small></span></span>
         <span class="detail">Jaarlijkse afschrijving na de proefweek</span>
-        <span class="offer">Startaanbod schooljaar 2026/2027 · €84 per schooljaar</span>
+        <span class="mid"><span class="offer">Startaanbod schooljaar 2026/2027</span><span class="total">€84 per schooljaar</span></span>
       </span>
       <span class="radio" aria-hidden="true"></span>
     </label>
