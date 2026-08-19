@@ -27,6 +27,8 @@
   .stapel { outline: 1.5px dashed #94a3b8; outline-offset: 0; }
   body.schoon .stapel { outline: none; }
   .knip { cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .stapel, .stapel-canvas { touch-action: none; }   /* iOS: ook de canvas zelf niet laten scrollen onder een sleep */
+  .knip.is-sel { cursor: grabbing; }
   .knip img { -webkit-user-drag: none; pointer-events: none; }
   .knip.is-sel { outline: calc(2px * var(--inv, 1)) dashed #2f81f7; outline-offset: calc(3px * var(--inv, 1)); }
   .knip.is-sel .knip-label { outline: calc(1.5px * var(--inv, 1)) dotted #2f81f7; outline-offset: calc(-1.5px * var(--inv, 1)); cursor: move; }
@@ -84,6 +86,7 @@
     <button class="sec" onclick="kaderStrak()" title="kader strak om de stapel (ref = omhullende doos)">Kader</button>
     <button class="sec klein" id="b-schoon" onclick="schoon()" title="schoon beeld: zonder handvatten en kaders">👁</button>
     <button class="sec" id="b-live" onclick="resetLive()" title="terug naar de stand die nu live staat">Live</button>
+    <button class="sec" id="b-alles" onclick="allesInBeeld()" title="haal alle vijf kaarten terug in beeld">Alles</button>
     <span id="status"></span>
   </div>
   <textarea id="uit" spellcheck="false" placeholder="spec verschijnt hier na Kopieer spec — of plak hier een spec en tik Laad"></textarea>
@@ -91,21 +94,27 @@
 <script src="assets/stapel.js"></script>
 <script>
 (function(){
-  const KEY='wiswiz-stapel-spec-v2';
+  const KEY='wiswiz-stapel-spec-v3';              // v3 (19 aug): een bewaarde stand telt alleen als hij ALLE vijf kaarten heeft
   const LIVE=Stapel.readSpec();                    // de stand die nu in index.html staat
   const root=document.querySelector('.stapel'), canvas=root.querySelector('.stapel-canvas');
   let spec=JSON.parse(JSON.stringify(LIVE)), sel=null, undo=[];
+  const IDS=LIVE.items.map(i=>i.id);
+  const geldig=s=>s&&s.ref&&s.ref.w>0&&s.ref.h>0&&Array.isArray(s.items)&&IDS.every(id=>s.items.some(i=>i.id===id&&isFinite(i.x)&&isFinite(i.y)&&i.w>0));
   const opgeslagen=localStorage.getItem(KEY);
-  if(opgeslagen){ try{ const s=JSON.parse(opgeslagen); if(JSON.stringify(s)!==JSON.stringify(LIVE)){ spec=s; melding('Dit is je eigen bewaarde stand (nog niet live).'); } }catch(e){} }
+  if(opgeslagen){ try{ const s=JSON.parse(opgeslagen); if(geldig(s)&&JSON.stringify(s)!==JSON.stringify(LIVE)){ spec=s; melding('Dit is je eigen bewaarde stand (nog niet live).'); } }catch(e){} }
   const items=()=>spec.items, item=id=>items().find(i=>i.id===id), el=id=>canvas.querySelector('[data-knip="'+id+'"]');
   const NAMEN={parool:'Het Parool',fd:'FD',vos:'Vossius',wijs:'Wijs Bijles',wa:'Wiskunde Actief'};
   function melding(t){ document.getElementById('melding-t').textContent=t; document.getElementById('melding').classList.add('aan'); }
   function schaal(){ return canvas.getBoundingClientRect().width/spec.ref.w; }
+  /* een kaart mag buiten het kader steken, maar nooit onvindbaar raken: minstens 48 ref-px van de kaart blijft binnen het kader */
+  function klem(it){ const e=el(it.id), h=e?e.offsetHeight:100, M=48;
+    it.x=Math.round(Math.max(-it.w+M, Math.min(spec.ref.w-M, it.x))); it.y=Math.round(Math.max(-h+M, Math.min(spec.ref.h-M, it.y))); }
+  function allesInBeeld(){ snapshot(); items().forEach(klem); render(); status('alle '+items().length+' kaarten in beeld'); }
   function render(){
     Stapel.apply(root,spec);
     root.style.setProperty('--inv',1/schaal());
     canvas.querySelectorAll('.knip').forEach(k=>k.classList.toggle('is-sel',k.dataset.knip===sel));
-    const it=sel&&item(sel); document.getElementById('naam').textContent=it?NAMEN[it.id]||it.id:'— kies een kaart —';
+    const it=sel&&item(sel); document.getElementById('naam').textContent=it?NAMEN[it.id]||it.id:'— kies een kaart ('+items().length+') —';
     document.getElementById('rot').textContent=(it?it.rot||0:0)+'°';
     document.getElementById('b-undo').disabled=!undo.length;
     localStorage.setItem(KEY,JSON.stringify(spec));
@@ -131,26 +140,42 @@
   function snap(it,left,top){ const P=presets(it); for(const k in P){ const b=boxVanLabel(it,P[k]); if(Math.abs(b.left-left)<8&&Math.abs(b.top-top)<8) return {left:b.left,top:b.top,preset:k}; } return {left,top}; }
 
   /* pointer: één handler op de canvas — kaart slepen, label slepen, draaien */
+  /* ROBUUST SLEPEN (Philip 19 aug: 'superglitchy, beweegt de verkeerde kant op / verspringt' op de telefoon):
+     • de vingerpositie wordt ELKE move teruggerekend door de actuele schaal van de canvas (schermpx → ref-px) en de kaart krijgt
+       de beginpositie + die delta — dus 1-op-1, geen drift; de draai van de kaart speelt voor de positie geen rol (alleen het
+       label-slepen rekent de delta terug naar het kaartframe);
+     • move/up/cancel staan op WINDOW (niet alleen via pointer-capture): ook als Safari de capture laat vallen, loopt de sleep door;
+     • touchstart/touchmove op de canvas krijgen preventDefault (niet-passief): iOS mag de pagina NIET scrollen tijdens een sleep —
+       dat scrollen was precies wat een sleep 'de verkeerde kant op' liet gaan (de canvas schoof onder de stilstaande vinger weg);
+     • één sleep per pointer-id; een tweede vinger wordt genegeerd; klem() houdt elke kaart vindbaar. */
   let g=null;
-  canvas.addEventListener('pointerdown',e=>{
-    const k=e.target.closest('.knip'); if(!k){ return; }
+  const startDrag=e=>{
+    if(g) return; const k=e.target.closest('.knip'); if(!k){ return; }
+    if(e.pointerType==='mouse'&&e.button!==0) return;
     const id=k.dataset.knip, it=item(id); if(sel!==id){ sel=id; render(); }
-    const s=schaal(); g={id,it,s,sx:e.clientX,sy:e.clientY,moved:false,start:JSON.stringify(it)};
+    g={id,it,pid:e.pointerId,sx:e.clientX,sy:e.clientY,moved:false};
     if(e.target.closest('.gr-rot')){ const r=k.getBoundingClientRect(); g.type='rot'; g.cx=r.left+r.width/2; g.cy=r.top+r.height/2; g.sa=Math.atan2(e.clientY-g.cy,e.clientX-g.cx)*180/Math.PI; g.sr=it.rot||0; }
     else if(e.target.closest('.knip-label')){ g.type='label'; const b=labelBox(it); g.left=b.left; g.top=b.top; }
     else { g.type='move'; g.x=it.x; g.y=it.y; }
-    canvas.setPointerCapture(e.pointerId); e.preventDefault();
-  });
-  canvas.addEventListener('pointermove',e=>{ if(!g) return; const dx=(e.clientX-g.sx)/g.s, dy=(e.clientY-g.sy)/g.s;
+    try{ k.setPointerCapture(e.pointerId); }catch(_){}
+    e.preventDefault();
+  };
+  const moveDrag=e=>{ if(!g||e.pointerId!==g.pid) return; const s=schaal(); const dx=(e.clientX-g.sx)/s, dy=(e.clientY-g.sy)/s;
     if(!g.moved&&Math.hypot(e.clientX-g.sx,e.clientY-g.sy)<3) return; if(!g.moved){ g.moved=true; snapshot(); }
     const it=g.it;
-    if(g.type==='move'){ it.x=Math.round(g.x+dx); it.y=Math.round(g.y+dy); }
+    if(g.type==='move'){ it.x=Math.round(g.x+dx); it.y=Math.round(g.y+dy); klem(it); }
     else if(g.type==='rot'){ const a=Math.atan2(e.clientY-g.cy,e.clientX-g.cx)*180/Math.PI; it.rot=Math.round(g.sr+(a-g.sa)); if(it.rot>180)it.rot-=360; if(it.rot<-180)it.rot+=360; }
     else if(g.type==='label'){ const r=-(it.rot||0)*Math.PI/180; const lx=dx*Math.cos(r)-dy*Math.sin(r), ly=dx*Math.sin(r)+dy*Math.cos(r);
-      const sn=snap(it,g.left+lx,g.top+ly); it.label=labelVanBox(it,sn.left,sn.top); if(sn.preset) status('label: '+sn.preset); }
-    Stapel.apply(root,spec); document.getElementById('rot').textContent=(it.rot||0)+'°'; });
-  const einde=e=>{ if(!g) return; if(g.moved) render(); g=null; };
-  canvas.addEventListener('pointerup',einde); canvas.addEventListener('pointercancel',einde);
+      const sn=snap(it,g.left+lx,g.top+ly); it.label=labelVanBox(it,sn.left,sn.top); status(sn.preset?'label klikt vast: '+sn.preset:''); }
+    Stapel.apply(root,spec); document.getElementById('rot').textContent=(it.rot||0)+'°'; e.preventDefault(); };
+  const einde=e=>{ if(!g||(e&&e.pointerId!==undefined&&e.pointerId!==g.pid)) return; if(g.moved) render(); g=null; };
+  canvas.addEventListener('pointerdown',startDrag);
+  window.addEventListener('pointermove',moveDrag,{passive:false});
+  window.addEventListener('pointerup',einde); window.addEventListener('pointercancel',einde); window.addEventListener('blur',()=>einde());
+  /* iOS: scrollen/zoomen tegenhouden zodra een vinger op een kaart staat of een sleep loopt */
+  canvas.addEventListener('touchstart',e=>{ if(g||e.target.closest('.knip')) e.preventDefault(); },{passive:false});
+  canvas.addEventListener('touchmove',e=>{ if(g) e.preventDefault(); },{passive:false});
+  window.addEventListener('touchmove',e=>{ if(g) e.preventDefault(); },{passive:false});
   document.getElementById('veld').addEventListener('pointerdown',e=>{ if(!e.target.closest('.knip')&&sel){ sel=null; render(); } });
 
   /* paneel */
@@ -162,6 +187,7 @@
   window.laad=()=>{ try{ const s=JSON.parse(document.getElementById('uit').value); if(!s.ref||!s.items) throw 0; snapshot(); spec=s; render(); status('geladen'); }catch(e){ status('geen geldige spec in het tekstvak'); } };
   window.ongedaan=()=>{ if(!undo.length) return; spec=JSON.parse(undo.pop()); render(); status('ongedaan'); };
   window.resetLive=()=>{ snapshot(); spec=JSON.parse(JSON.stringify(LIVE)); document.getElementById('melding').classList.remove('aan'); render(); status('live-stand'); };
+  window.allesInBeeld=allesInBeeld;
   window.schoon=()=>{ document.body.classList.toggle('schoon'); document.getElementById('b-schoon').classList.toggle('aan',document.body.classList.contains('schoon')); };
   /* kader strak: ref = de omhullende doos van alle kaarten (gedraaid, incl. labels); alle x,y verschuiven mee */
   window.kaderStrak=()=>{ snapshot(); let minx=1e9,miny=1e9,maxx=-1e9,maxy=-1e9;

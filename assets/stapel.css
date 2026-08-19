@@ -20,7 +20,7 @@
    Eén stijl, één maat (39.7 hoog) op alle vijf. De PLEK komt uit de spec: als TABJE op de bovenrand (label.y = -36.2:
    bovenhoeken rond, ankers .lab-tab) of als STICKER ergens op/om de kaart (alle hoeken rond + een zacht randschaduwtje,
    .lab-sticker) — bijv. boven op de FD-kop. */
-.knip-label { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: .34em; height: 39.7px; padding: 0 .62em 0 .5em;
+.knip-label { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: .34em; height: 39.7px; padding: 0 .62em 0 .5em; width: max-content;   /* nooit krimpen tegen de kaartrand (anders drift het label-midden bij slepen, 19 aug) */
   background: #fff; font-family: Georgia, "Times New Roman", serif; font-weight: 800; font-size: 19.5px; line-height: 1; color: #0a0a0a;
   white-space: nowrap; letter-spacing: -0.01em; }
 .knip-label.lab-tab { border-radius: .28em .28em 0 0; }
