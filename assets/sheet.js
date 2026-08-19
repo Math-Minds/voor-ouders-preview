@@ -71,8 +71,9 @@
 
     // --- slepen (telefoon) + tik ---
     var dragging = false, y0 = 0, t0 = 0, lastY = 0, lastT = 0, startOpen = false, moved = false, tapOK = true, lastToggle = 0;
-    function travel() { // afstand tussen gedokt en open: de hoogte van het open blad (rij ingeklapt tot 10px) min de gedokte 64px en de safe-area
-      var H = sh.getBoundingClientRect().height - (startOpen ? 0 : Math.max(0, peek.offsetHeight - 10)); return Math.max(80, H - 64 - safeProbe.offsetHeight); }
+    function peekPx() { var v = parseFloat(getComputedStyle(sh).getPropertyValue('--peek')); return isFinite(v) ? v : 78; }
+    function travel() { // afstand tussen gedokt en open: de hoogte van het open blad (rij ingeklapt tot 8px) min de gedokte hoogte (--peek) en de safe-area
+      var H = sh.getBoundingClientRect().height - (startOpen ? 0 : Math.max(0, peek.offsetHeight - 8)); return Math.max(80, H - peekPx() - safeProbe.offsetHeight); }
     function rubber(d, max) { var s = 0.55, c = max * 0.35; return d > 0 ? c * (1 - Math.exp(-d * s / c)) : -c * (1 - Math.exp(d * s / c)); }
     function down(e) { if (e.target.closest && e.target.closest('a,button')) return; if (e.pointerType === 'mouse' && e.button !== 0) return;
       dragging = true; moved = false; startOpen = open; y0 = lastY = e.clientY; t0 = lastT = e.timeStamp;
