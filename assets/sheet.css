@@ -1,0 +1,104 @@
+/* ===== De contact-sheet (#32, Philip 19 aug: "de Apple-bar met echt hele elegante tekst erin, die dan pas komt als je
+   voorbij de hero bent, en ook in het pakket- en betaalscherm staat").
+
+   Eén element, drie standen:
+     • WEG      — onder de onderrand (op /voor-ouders zolang de opening in beeld is);
+     • GEDOKT   — een laag blad onderaan: grabber, Philips foto, twee regels, twee ronde acties (app / bel);
+     • OPEN     — het blad glijdt omhoog (iOS-sheetcurve cubic-bezier(.32,.72,0,1)), de pagina dimt: foto groot, één kop,
+                  één alinea, Bel Philip (zwart, met nummer) en App via WhatsApp.
+   Slepen volgt de vinger (rubber-band voorbij de randen), loslaten snapt op positie + snelheid. Tik op de rij = open/dicht;
+   de acties werken in elke stand. Materiaal: wit doorschijnend met blur en een haarlijn — het blad hoort bij de pagina,
+   het ligt er niet op. Op brede schermen (≥768px) is het geen balk over de volle breedte maar een zwevend blad rechtsonder.
+
+   De markup wordt door assets/sheet.js gebouwd (één bron voor /voor-ouders, pakket en betaal). ===== */
+
+.ws-dim { position: fixed; inset: 0; z-index: 898; background: rgba(3, 7, 18, .26); opacity: 0; pointer-events: none;
+  transition: opacity .45s cubic-bezier(.32,.72,0,1); }
+.ws-dim.is-on { opacity: 1; pointer-events: auto; }
+
+.ws-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 899;
+  --peek: 64px; --dy: 0px; --safe: env(safe-area-inset-bottom, 0px); --p: 0;
+  padding: 0 var(--pad, 20px) calc(12px + var(--safe));
+  background: rgba(255, 255, 255, .86);
+  -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8);
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 0 0 .5px rgba(15, 23, 42, .10), 0 -10px 36px rgba(15, 23, 42, .09);
+  touch-action: none; -webkit-tap-highlight-color: transparent;
+  /* WEG: onder de rand, inclusief de schaduw */
+  transform: translateY(calc(100% + 48px));
+  transition: transform .6s cubic-bezier(.32,.72,0,1), visibility 0s linear .6s; visibility: hidden; will-change: transform; }
+.ws-sheet.is-in { transform: translateY(calc(100% - var(--peek) - var(--safe) + var(--dy))); visibility: visible; transition-delay: 0s; }
+.ws-sheet.is-open { transform: translateY(var(--dy)); --p: 1; }
+.ws-sheet.is-drag { transition: none; }
+@media (prefers-reduced-motion: reduce) { .ws-sheet, .ws-dim, .ws-sheet * { transition: none !important; } }
+
+.ws-in { max-width: 520px; margin: 0 auto; }
+.ws-grab { display: block; width: 36px; height: 5px; border-radius: 3px; background: rgba(60, 60, 67, .28); margin: 6px auto 0; }
+
+/* --- de gedokte rij --- */
+.ws-peek { display: flex; align-items: center; gap: 12px; height: 53px; cursor: pointer; }
+.ws-peek img { flex: none; width: 36px; height: 36px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 2px #fff, 0 1px 4px rgba(15, 23, 42, .18); }
+.ws-lijn { min-width: 0; flex: 1 1 auto; line-height: 1.25; }
+.ws-naam { display: block; font-size: 15px; font-weight: 700; letter-spacing: -0.005em; color: var(--gray-950, #030712); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws-regel { display: block; margin-top: 2px; font-size: 13px; font-weight: 500; color: var(--gray-500, #6b7280); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws-acties { flex: none; display: flex; gap: 8px; }
+.ws-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 9999px;
+  background: #fff; box-shadow: 0 0 0 .5px rgba(15, 23, 42, .12), 0 1px 2px rgba(15, 23, 42, .06); transition: transform .15s ease, background .15s ease; }
+.ws-icon::after { content: ""; position: absolute; inset: -4px; border-radius: inherit; }  /* 48px tapzone */
+.ws-icon svg { width: 19px; height: 19px; }
+.ws-icon.ws-wa { background: #e7f8ee; } .ws-icon.ws-wa svg { fill: #1da851; }
+.ws-icon.ws-tel { background: #e8f1fb; } .ws-icon.ws-tel svg { fill: var(--info-dark, #1f6fb0); width: 17px; height: 17px; }
+.ws-icon:active { transform: scale(.94); }
+/* smalle telefoons: iets kleiner, zodat de twee regels niet afbreken; op de smalste (≤350px) alleen 'Philip' */
+@media (max-width: 389px) { .ws-peek { gap: 10px; } .ws-naam { font-size: 14px; } .ws-regel { font-size: 12.5px; } .ws-icon { width: 36px; height: 36px; } .ws-acties { gap: 6px; } }
+@media (max-width: 350px) { .ws-rol { display: none; } .ws-regel { font-size: 12px; } .ws-icon { width: 34px; height: 34px; } .ws-peek { gap: 9px; } }
+/* de rij vervaagt naarmate het blad opent (--p volgt de vinger tijdens slepen, animeert mee bij een tik) */
+.ws-peek img, .ws-lijn, .ws-acties { opacity: calc(1 - var(--p)); transition: opacity .35s ease; }
+.ws-sheet.is-drag .ws-peek img, .ws-sheet.is-drag .ws-lijn, .ws-sheet.is-drag .ws-acties { transition: none; }
+.ws-sheet.is-open .ws-acties { pointer-events: none; }
+.ws-peek { transition: height .6s cubic-bezier(.32,.72,0,1); }
+.ws-sheet.is-open .ws-peek { height: 10px; }
+.ws-sheet.is-drag .ws-peek { transition: none; }
+
+/* --- het open blad --- */
+.ws-body { padding-top: 8px; }
+.ws-body-in { position: relative; }
+.ws-sluit { position: absolute; top: 6px; right: -4px; width: 30px; height: 30px; border: 0; border-radius: 9999px; background: rgba(118, 118, 128, .14);
+  color: rgba(60, 60, 67, .7); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; -webkit-tap-highlight-color: transparent; }
+.ws-sluit::after { content: ""; position: absolute; inset: -8px; }
+.ws-sluit svg { width: 11px; height: 11px; }
+.ws-sluit:hover { background: rgba(118, 118, 128, .22); }
+.ws-over { display: flex; gap: 14px; align-items: center; padding-right: 36px; }
+.ws-over img { flex: none; width: 56px; height: 56px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 3px #fff, 0 2px 8px rgba(15, 23, 42, .16); }
+.ws-kop { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.012em; line-height: 1.2; color: var(--gray-950, #030712); text-wrap: balance; }
+.ws-sub { margin: 3px 0 0; font-size: 13.5px; font-weight: 500; color: var(--gray-500, #6b7280); }
+.ws-tekst { margin: 14px 0 0; font-size: 16px; line-height: 1.55; color: var(--gray-950, #030712); text-wrap: pretty; }
+.ws-knoppen { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.ws-btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 52px; padding: 12px 18px; border-radius: 14px;
+  font: inherit; font-size: 16.5px; font-weight: 700; letter-spacing: -0.005em; text-decoration: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: transform .15s ease, background .15s ease; }
+.ws-btn:active { transform: scale(.985); }
+.ws-btn svg { flex: none; width: 18px; height: 18px; }
+.ws-btn.ws-tel { background: var(--gray-950, #030712); color: #fff; box-shadow: 0 6px 18px rgba(3, 7, 18, .18); }
+.ws-btn.ws-tel svg { fill: #fff; width: 16px; height: 16px; }
+.ws-btn.ws-tel:hover { background: #111827; }
+.ws-btn .ws-nr { color: rgba(255, 255, 255, .72); font-weight: 500; font-variant-numeric: tabular-nums; }
+.ws-btn.ws-wa { background: #e7f8ee; color: #0f6e35; box-shadow: 0 0 0 .5px rgba(15, 110, 53, .18); }
+.ws-btn.ws-wa svg { fill: #1da851; }
+.ws-btn.ws-wa:hover { background: #d9f3e3; }
+.ws-voet { margin: 12px 0 0; text-align: center; font-size: 12.5px; color: var(--gray-500, #6b7280); }
+
+/* --- brede schermen: een zwevend blad rechtsonder (392px, rondom afgerond), niet een balk over de volle breedte.
+   Daar schuift het blad niet omhoog maar GROEIT het op zijn plek (onderkant vast, inhoud vouwt open: grid-rows 0fr → 1fr). --- */
+@media (min-width: 768px) {
+  .ws-sheet { left: auto; right: 24px; bottom: 24px; width: 392px; border-radius: 22px; padding: 0 20px 14px; --safe: 0px;
+    box-shadow: 0 0 0 .5px rgba(15, 23, 42, .10), 0 12px 40px rgba(15, 23, 42, .14);
+    transform: translateY(calc(100% + 72px)); }
+  .ws-sheet.is-in, .ws-sheet.is-open { transform: none; }
+  .ws-in { max-width: none; }
+  .ws-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s cubic-bezier(.32,.72,0,1), padding .55s cubic-bezier(.32,.72,0,1); padding-top: 0; }
+  .ws-body-in { overflow: hidden; min-height: 0; }
+  .ws-sheet.is-open .ws-body { grid-template-rows: 1fr; padding-top: 8px; }
+  .ws-sheet.is-open .ws-peek { height: 10px; }
+  .ws-dim { background: rgba(3, 7, 18, .18); }
+}
