@@ -1,7 +1,7 @@
 // Service worker voor de iteratie-preview: alles direct uit cache openen,
 // op de achtergrond verversen. Verzoeken met ?t= (de verversknop) gaan
 // altijd puur over het netwerk.
-const CACHE = "vop-v48";
+const CACHE = "vop-v49";
 const PRECACHE = [
   "./", "index.html", "pakket.html", "gegevens.html", "betaal.html",
   "gelukt.html", "knoppen.html", "assets/contactbar.css", "assets/contactbar.js",
@@ -26,9 +26,12 @@ self.addEventListener("fetch", (e) => {
   // de vorige versie uit de cache; een iteratie-preview mag nooit oud openen).
   // Cache is alleen nog het offline-vangnet. Assets blijven cache-eerst met
   // achtergrond-verversing (snel, en de deploys bumpen CACHE toch).
+  // nacht r15: ook de gedeelde bar-bestanden (assets/contactbar.css/.js) netwerk-eerst — anders opent een verse index.html
+  // één keer met de vorige bar-CSS uit de cache.
   const isHTML = e.request.mode === "navigate" ||
     (e.request.destination === "document") ||
-    url.pathname.endsWith(".html") || url.pathname.endsWith("/");
+    url.pathname.endsWith(".html") || url.pathname.endsWith("/") ||
+    url.pathname.endsWith(".css") || url.pathname.endsWith(".js");
   e.respondWith(
     caches.open(CACHE).then(async (c) => {
       if (isHTML) {
