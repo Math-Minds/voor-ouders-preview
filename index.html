@@ -233,6 +233,17 @@
     .vstart.vd::after { content: ""; position: absolute; left: 6px; right: 14px; bottom: 2px; height: 2px; border-radius: 1px; background: rgba(31,111,176,.45); transition: background .15s ease; }
     .vstart.vd:hover .vstart-text { color: #17578c; }
     .vstart.vd:hover::after { background: var(--info-dark); }
+    /* r-geel (Philip 19 aug: 'het startelement (play-icoon en underline) in de GELE LOGOKLEUR (mathyellow) i.p.v. bg-info-blauw —
+       ik mis het merkgeel op de pagina; elegant en leesbaar, één teksthierarchie, geen knop'): het play-blokje wordt DONKER
+       (gray-950) met een GEEL speelteken (#ecc862) — een geel vlak met wit teken is onleesbaar op de lichtblauwe bg; de onderlijn
+       wordt geel (iets dieper, #e5bd3e, zodat hij op het lichtblauw leesbaar blijft); de regel zelf in gray-950 (één stijl). */
+    .vstart.vy .vstart-mark { background: var(--gray-950); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
+    .vstart.vy .vstart-mark svg { fill: var(--mathyellow); }
+    .vstart.vy:hover .vstart-mark, .vstart.vy:active .vstart-mark { background: #111827; box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
+    .vstart.vy .vstart-text { color: var(--gray-950); }
+    .vstart.vy:hover .vstart-text { color: var(--gray-950); }
+    .vstart.vy::after { background: #e5bd3e; }
+    .vstart.vy:hover::after { background: #d9ac26; }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -324,6 +335,7 @@
       display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center;
     }
     .footer-inner img { height: 28px; width: auto; opacity: .9; }
+    @media (max-width: 767px) { .footer-inner img { height: 40px; } }   /* Philip 19 aug: het logo op telefoon wat prominenter (elegant, niet overdreven); desktop blijft 28 */
     .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; }
     .footer-links a { color: var(--gray-500); }
     .footer-links a:hover { color: var(--gray-950); }
@@ -375,7 +387,7 @@
   <main>
     <section class="hero">
       <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
-      <a class="vstart v1 vd" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
+      <a class="vstart v1 vd vy" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       <div class="hero-visual">
         <a class="herolink" id="videocard" href="assets/opening.mp4" data-cta="video" aria-label="WisWiz in 30 seconden (video)">
         <div class="blend" id="herovisual">

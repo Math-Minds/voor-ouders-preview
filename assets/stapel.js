@@ -5,7 +5,7 @@
              'c' (x = verschuiving van het label-midden t.o.v. het kaart-midden) of 'r' (x = afstand rechterrand kaart → rechterrand label);
              y = bovenkant label t.o.v. bovenkant kaart. y = TAB_Y (−36.2) = het tabje op de bovenrand (de oude vaste stand).
    De component leest de spec uit <script type="application/json" id="stapel-spec"> en zet ALLE maten als inline-stijl op de
-   kaarten; assets/stapel.css schaalt de canvas als één blok (scale = blokbreedte / ref.w). */
+   kaarten; de blokschaal (scale = blokbreedte / ref.w) wordt hier GEMETEN en als --stapel-scale gezet (assets/stapel.css). */
 (function () {
   var MATTE = 3.52, LABEL_H = 39.7;
   var TAB_Y = Math.round((MATTE - LABEL_H) * 10) / 10;   // -36.2
@@ -21,10 +21,23 @@
     return s;
   }
 
+  /* de blokschaal: --stapel-scale = breedte van .stapel / ref.w, gemeten en bijgehouden met een ResizeObserver (per root één keer).
+     Apple WebKit rekent tan(atan2(100cqi, …px)) fout (negatieve/minuscule schaal, gemeten 19 aug), dus de schaal komt uit JS. */
+  function schaal(root, spec) {
+    var w = root.getBoundingClientRect().width;
+    if (!(w > 0) || !(spec.ref.w > 0)) return;
+    root.style.setProperty('--stapel-scale', String(w / spec.ref.w));
+  }
   function apply(root, spec) {
     if (!root || !spec || !spec.ref || !spec.items) throw new Error('stapel: geen spec');
     root.style.setProperty('--ref-w', spec.ref.w);
     root.style.setProperty('--ref-h', spec.ref.h);
+    root.__stapelSpec = spec;
+    schaal(root, spec);
+    if (!root.__stapelRO) {
+      if (typeof ResizeObserver !== 'undefined') { root.__stapelRO = new ResizeObserver(function () { schaal(root, root.__stapelSpec); }); root.__stapelRO.observe(root); }
+      else { root.__stapelRO = true; addEventListener('resize', function () { schaal(root, root.__stapelSpec); }); }
+    }
     var canvas = root.querySelector('.stapel-canvas');
     spec.items.forEach(function (it) {
       var el = canvas.querySelector('[data-knip="' + it.id + '"]');
@@ -54,5 +67,5 @@
     return '{"ref":{"w":' + spec.ref.w + ',"h":' + spec.ref.h + '},"items":[\n' + lines.join(',\n') + '\n]}';
   }
 
-  window.Stapel = { MATTE: MATTE, LABEL_H: LABEL_H, TAB_Y: TAB_Y, labelStyle: labelStyle, apply: apply, readSpec: readSpec, format: format, r1: r1 };
+  window.Stapel = { MATTE: MATTE, LABEL_H: LABEL_H, TAB_Y: TAB_Y, labelStyle: labelStyle, apply: apply, schaal: schaal, readSpec: readSpec, format: format, r1: r1 };
 })();

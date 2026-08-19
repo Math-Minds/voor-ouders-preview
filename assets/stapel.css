@@ -9,9 +9,12 @@
 .proof .stapel-wrap { max-width: 576px; width: 100%; container-type: inline-size; }
 @media (max-width: 639px) { .proof .stapel-wrap { width: calc(100% + 24px); max-width: none; margin-left: -12px; margin-right: -12px; } }   /* telefoon: het blok loopt 12px in de paginamarge — grotere schaal */
 .stapel { position: relative; width: 100%; aspect-ratio: var(--ref-w) / var(--ref-h); }   /* --ref-w/--ref-h: uit de spec (stapel.js) */
-/* de canvas: ref.w × ref.h CSS-px, als één geheel geschaald naar de blokbreedte (tan(atan2(a,b)) = a/b als getal) */
+/* de canvas: ref.w × ref.h CSS-px, als één geheel geschaald naar de blokbreedte. De schaal (--stapel-scale = blokbreedte / ref.w)
+   wordt door assets/stapel.js GEMETEN en gezet (ResizeObserver) — NIET meer via tan(atan2(100cqi, …px)): Apple WebKit (Safari,
+   iOS én de Mac) rekent die uitdrukking fout en gaf een negatieve, minuscule schaal (gemeten 19 aug: -0.049 en 0.031) — alles
+   gespiegeld en ineengeschrompeld in de linkerbovenhoek, precies Philips 'gespiegeld slepen' + 'kaartjes missen'. */
 .stapel-canvas { position: absolute; left: 0; top: 0; width: calc(var(--ref-w) * 1px); height: calc(var(--ref-h) * 1px);
-  transform-origin: 0 0; transform: scale(tan(atan2(100cqi, calc(var(--ref-w) * 1px)))); }
+  transform-origin: 0 0; transform: scale(var(--stapel-scale, 1)); }
 .knip { position: absolute; margin: 0; padding: 3.52px; background: #fff; border-radius: 1.5px;
   filter: drop-shadow(0 10px 16px rgba(15,23,42,.13)) drop-shadow(0 1px 2px rgba(15,23,42,.10)); transform-origin: 50% 50%; }
 .knip .binnen { display: block; position: relative; overflow: hidden; border-radius: 1px; }
