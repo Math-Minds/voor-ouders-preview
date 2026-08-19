@@ -87,6 +87,7 @@
       history.replaceState({ pay: null }, '', base); history.pushState({ pay: want }, '', '?plan=' + want);
       openCard(wc, false, true);
     } else history.replaceState({ pay: null }, '', location.href);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open && !busy) history.back(); });
     window.addEventListener('popstate', function (e) {
       var st = e.state || {};
       if (st.pay) { var c = cards.filter(function (x) { return x.getAttribute('data-plan') === st.pay; })[0]; if (c && open !== c) openCard(c, true, true); }
@@ -111,7 +112,10 @@
 
   function applyState(card, toPay) {
     container.classList.toggle('is-pay', toPay);
-    cards.forEach(function (c) { c.classList.toggle('is-pay', toPay && c === card); c.classList.toggle('is-off', toPay && c !== card); });
+    cards.forEach(function (c) {
+      c.classList.toggle('is-pay', toPay && c === card); c.classList.toggle('is-off', toPay && c !== card);
+      if (toPay && c === card) { c.removeAttribute('role'); c.removeAttribute('tabindex'); } else { c.setAttribute('role', 'button'); c.setAttribute('tabindex', '0'); }
+    });
     document.body.classList.toggle('pay-open', toPay);
     open = toPay ? card : null;
   }
@@ -130,6 +134,9 @@
     var ghost = document.createElement('div'); ghost.className = 'ghost';
     var clone = card.cloneNode(true); clone.removeAttribute('id'); clone.classList.add('ghost-card');
     shared(clone).forEach(function (el) { el.style.visibility = 'hidden'; });
+    var srcIn = card.querySelectorAll('input'), cloneIn = clone.querySelectorAll('input');   // getypte waarden mee in de ghost
+    for (var k = 0; k < srcIn.length && k < cloneIn.length; k++) { cloneIn[k].value = srcIn[k].value; cloneIn[k].checked = srcIn[k].checked; }
+    clone.setAttribute('aria-hidden', 'true'); clone.removeAttribute('tabindex'); clone.removeAttribute('role');
     ghost.appendChild(clone);
     // 2. meet A (viewport)
     var A = { card: rect(card), sh: sh.map(rect), others: others.map(rect) };
