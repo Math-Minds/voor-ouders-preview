@@ -405,10 +405,12 @@
     .proof .layer.review + .layer.review { margin-top: 40px; }
     /* r8 (Philip): de moeder-review is nu de volledige tekst — zelfde losse stijl, iets ruimere regelafstand zodat de lange
        quote rustig leest; Mattia identiek ernaast. */
-    .proof .layer.review blockquote p { line-height: 1.6; }
-    .proof .layer.review.lang { max-width: 34rem; }
-    .proof .layer.review.lang blockquote p { font-size: 17px; line-height: 1.65; }
-    @media (min-width: 640px) { .proof .layer.review.lang blockquote p { font-size: 18px; } }
+    /* #32 Apple-bar-ronde (Philip 19 aug: "de Mattia-quote OOGT groter dan de moeder-quote; dat moet gelijk — EXACT dezelfde
+       font-size en stijl"): was moeder 17px/1.65 (lang) naast Mattia 18px/1.6 — nu BEIDE reviews in precies dezelfde zetstijl:
+       17px/1.65 op telefoon, 18px vanaf 640px, zelfde kolombreedte (34rem). */
+    .proof .layer.review { max-width: 34rem; }
+    .proof .layer.review blockquote p { font-size: 17px; line-height: 1.65; }
+    @media (min-width: 640px) { .proof .layer.review blockquote p { font-size: 18px; } }
   </style>
   <link rel="stylesheet" href="assets/sheet.css" />
   <link rel="preload" as="image" href="assets/hero-t2.webp" />
@@ -605,7 +607,7 @@
     window.addEventListener("resize", function(){ if(isOpen&&!busy){ frame.style.transition="none"; void frame.offsetWidth; frame.style.transition=""; } });
   })();
 </script>
-<script src="assets/sheet.js" data-trigger="hero" data-regel="Even bellen? Ik neem zelf op."></script>
+<script src="assets/sheet.js" data-trigger="hero"></script>
 <script>
 (function(){
   // r9: echte sticky knop. JS meet alleen WAAR de originele knop staat (documentcoördinaten) en legt de sticky kopie

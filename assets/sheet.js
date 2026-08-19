@@ -9,7 +9,7 @@
 (function () {
   var me = document.currentScript || (function () { var s = document.getElementsByTagName('script'); return s[s.length - 1]; })();
   var TRIGGER = (me && me.getAttribute('data-trigger')) || 'direct';
-  var REGEL = (me && me.getAttribute('data-regel')) || 'Even bellen? Ik neem zelf op.';
+  var REGEL = (me && me.getAttribute('data-regel')) || 'Heb je een vraag? Bel me gerust.';
   var TEL = 'tel:+31630231640';
   var WA = 'https://wa.me/31630231640?text=Hoi%20Philip%2C%20ik%20heb%20een%20vraag%20over%20WisWiz%20voor%20mijn%20kind.';
   var SVG_WA = '<svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>';
@@ -20,10 +20,10 @@
     '<div class="ws-dim" id="ws-dim" aria-hidden="true"></div>' +
     '<section class="ws-sheet" id="ws-sheet" aria-label="Contact met Philip">' +
       '<div class="ws-in">' +
-        '<span class="ws-grab" aria-hidden="true"></span>' +
+        '<span class="ws-grab" aria-hidden="true"><i></i><i></i></span>' +
         '<div class="ws-peek" id="ws-peek" role="button" tabindex="0" aria-expanded="false" aria-controls="ws-body" aria-label="Over Philip en contact">' +
           '<img src="assets/philip.png" alt="" width="36" height="36" />' +
-          '<span class="ws-lijn"><span class="ws-naam">Philip<span class="ws-rol"> · oprichter van WisWiz</span></span><span class="ws-regel">' + REGEL + '</span></span>' +
+          '<span class="ws-lijn"><span class="ws-naam">Hoi! Ik ben Philip</span><span class="ws-regel">' + REGEL + '</span></span>' +
           '<span class="ws-acties">' +
             '<a class="ws-icon ws-wa" href="' + WA + '" target="_blank" rel="noopener" data-cta="whatsapp" aria-label="WhatsApp Philip">' + SVG_WA + '</a>' +
             '<a class="ws-icon ws-tel" href="' + TEL + '" data-cta="bel-bar" aria-label="Bel Philip, 06 30 23 16 40">' + SVG_TEL + '</a>' +
@@ -33,9 +33,9 @@
           '<button class="ws-sluit" type="button" id="ws-sluit" aria-label="Sluiten">' + SVG_X + '</button>' +
           '<div class="ws-over">' +
             '<img src="assets/philip.png" alt="Philip" width="56" height="56" />' +
-            '<h2 class="ws-kop">Liever eerst even bellen?</h2>' +
+            '<h2 class="ws-kop">Hoi! Ik ben Philip, een van de ontwikkelaars van WisWiz.</h2>' +
           '</div>' +
-          '<p class="ws-tekst">Dat snap ik. Ik ben Philip, oprichter van WisWiz, en ik neem zelf op. Vertel me waar jouw kind tegenaan loopt, dan kijken we samen of WisWiz past.</p>' +
+          '<p class="ws-tekst">In WisWiz stoppen we alles wat we in jaren bijles geven hebben geleerd. Heb je nog vragen? Bel me gerust.</p>' +
           '<div class="ws-knoppen">' +
             '<a class="ws-btn ws-tel" href="' + TEL + '" data-cta="bel-sheet">' + SVG_TEL + 'Bel Philip <span class="ws-nr">06&nbsp;30&nbsp;23&nbsp;16&nbsp;40</span></a>' +
             '<a class="ws-btn ws-wa" href="' + WA + '" target="_blank" rel="noopener" data-cta="whatsapp-sheet">' + SVG_WA + 'App via WhatsApp</a>' +
@@ -70,7 +70,7 @@
     } else { setTimeout(function () { setIn(true); }, 380); }
 
     // --- slepen (telefoon) + tik ---
-    var dragging = false, y0 = 0, t0 = 0, lastY = 0, lastT = 0, startOpen = false, moved = false, tapOK = true;
+    var dragging = false, y0 = 0, t0 = 0, lastY = 0, lastT = 0, startOpen = false, moved = false, tapOK = true, lastToggle = 0;
     function travel() { // afstand tussen gedokt en open: de hoogte van het open blad (rij ingeklapt tot 10px) min de gedokte 64px en de safe-area
       var H = sh.getBoundingClientRect().height - (startOpen ? 0 : Math.max(0, peek.offsetHeight - 10)); return Math.max(80, H - 64 - safeProbe.offsetHeight); }
     function rubber(d, max) { var s = 0.55, c = max * 0.35; return d > 0 ? c * (1 - Math.exp(-d * s / c)) : -c * (1 - Math.exp(d * s / c)); }
@@ -86,10 +86,12 @@
       sh.style.setProperty('--p', p.toFixed(3)); dim.style.opacity = p; if (!startOpen) dim.style.pointerEvents = -dy > 8 ? 'auto' : 'none'; }
     function up(e) { if (!dragging) return; dragging = false; sh.classList.remove('is-drag');
       var d = e.clientY - y0, v = (e.clientY - lastY) / Math.max(1, e.timeStamp - lastT), T = travel();
-      if (!moved || desk.matches) { if (tapOK) setOpen(!startOpen); return; }
+      if (!moved || desk.matches) { if (tapOK) { setOpen(!startOpen); lastToggle = e.timeStamp; } return; }
       var target = startOpen ? !(d > T * 0.33 || v > 0.5) : (-d > T * 0.33 || v < -0.5);
       setOpen(target); }
     sh.addEventListener('pointerdown', down); sh.addEventListener('pointermove', move); sh.addEventListener('pointerup', up); sh.addEventListener('pointercancel', up);
+    peek.addEventListener('click', function (e) { // tik/klik opent altijd — ook als de pointer-reeks niet (volledig) aankwam; niet dubbel na de pointer-tik hierboven
+      if (e.target.closest && e.target.closest('a')) return; if (moved || e.timeStamp - lastToggle < 600) return; setOpen(!open); lastToggle = e.timeStamp; });
     peek.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } });
     dim.addEventListener('click', function () { setOpen(false); });
     sluit.addEventListener('click', function () { setOpen(false); });
