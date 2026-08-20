@@ -97,7 +97,7 @@
       main { padding-top: var(--opening-top); }
       .hero { min-height: calc(100svh - 88px - var(--opening-top) - env(safe-area-inset-bottom, 0px));  /* 20 aug: onderaan 88px dock-zone (58 knop + 12 rand + lucht) — de dock staat er vanaf laden */
         /* nacht r13: grid i.p.v. flex, zodat de beeldrij (1fr) een DEFINIETE hoogte heeft en het beeldvenster erop kan meten (cqh) */
-        display: grid; grid-template-rows: auto auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }   /* 5 rijen: logo (telefoon), kop, subregel, beeldblok (startelement + beeld), CTA (CTA is <768 verborgen en telt dan niet als grid-item) */
+        display: grid; grid-template-rows: auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }   /* 4 rijen: logo (telefoon), kop, beeldblok (startelement + beeld), CTA (<768 verborgen, telt dan niet als grid-item) */
       /* Philip 19 aug: het WisWiz-logo op telefoon duidelijk prominenter bovenaan de hero (alleen ≤767px; elegant, niet overdreven): 48px hoog, gecentreerd, 14px lucht onder */
       .hero-logo { display: block; height: 48px; width: auto; margin: 0 auto 14px; }
       /* het beeld krijgt alle restruimte en staat daarin een fractie BOVEN het midden (optisch centrum);
@@ -438,10 +438,6 @@
     <section class="hero">
       <img class="hero-logo" src="assets/wiswizlogo.png" alt="WisWiz" width="300" height="150" />
       <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
-      <!-- 20 aug avond, order 6+7 (Philips vertrekpunt: 'De wiskundebijles die jouw kind helpt, zonder in een keer alles
-           voor te zeggen'): de winnaar van de kandidatenronde — behoudt zijn drie nuances (jouw kind / helpt / niet in
-           één keer alles). Kandidaten + jury in de note op #32. -->
-      <p class="lead">De wiskundebijles die jouw kind vooruit helpt, één stap tegelijk — nooit het hele antwoord ineens.</p>
       <div class="hero-visual">
         <!-- 20 aug (Philip): het startelement staat nu NET BOVEN de hero-image (in het beeldblok, dus kop → element → beeld → CTA);
              het beeldvenster rekent zijn hoogte nu met de element-ruimte mee (100cqh − 62px). -->
