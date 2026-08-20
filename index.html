@@ -65,7 +65,10 @@
       opacity: 0; transform: translateY(14px); pointer-events: none;
       transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1), bottom .35s cubic-bezier(.32,.72,0,1); }
     #ctadock.is-on { opacity: 1; transform: none; pointer-events: auto; }
-    #ctadock .btn-primary { width: 100%; max-width: 384px; margin: 0; box-shadow: 0 8px 24px rgba(62,196,135,.38), 0 2px 6px rgba(15,23,42,.12); }
+    /* 20 aug nacht (Philip: 'de onderkant van de safari-pagina moet see-through blijven'): geen gekleurde gloed meer
+       de onderrand/safe-area in — neutrale, korte schaduw; onder de knop is de onderrand puur de paginakleur, zodat
+       Safari's balk gewoon doorschijnend over de achtergrond blurt. */
+    #ctadock .btn-primary { width: 100%; max-width: 384px; margin: 0; box-shadow: 0 2px 10px rgba(15,23,42,.16); }
     @media (min-width: 768px) { #ctadock { display: none; } }   /* desktop: bovenkant vrij, geen sticky (bar staat daar rechtsonder) */
     @media (prefers-reduced-motion: reduce) { #ctadock { transition: none; } }
     /* #43 r3: precies ÉÉN element draagt de gedeelde-element-naam van de vliegende CTA (twee tegelijk = transitie

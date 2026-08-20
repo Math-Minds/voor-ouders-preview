@@ -61,7 +61,7 @@
     padding: 0 20px; display: flex; justify-content: center; transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1); }
   #pakketdock a { display: block; width: 100%; max-width: 384px; background: var(--success); color: #fff; text-align: center;
     font-weight: 700; font-size: 16px; padding: 15px 16px; border-radius: 12px; text-decoration: none;
-    box-shadow: 0 8px 24px rgba(62,196,135,.38), 0 2px 6px rgba(15,23,42,.12); -webkit-tap-highlight-color: transparent; }
+    box-shadow: 0 2px 10px rgba(15,23,42,.16); -webkit-tap-highlight-color: transparent; }   /* 20 aug nacht: geen groene gloed de safe-area in — Safari-onderkant blijft see-through */
   #pakketdock a:active { transform: scale(.985); }
   /* 20 aug avond order 8 (Philip: 'de valideer betaalmethode moet dan diezelfde knop weer onderaan zijn, zo wordt het
      super continu'): de dock verdwijnt NIET meer in de betaalstappen — hij is de ene doorlopende knop onderaan door de
@@ -234,18 +234,21 @@
   @media (max-width: 767px) {
     .choice-q { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: var(--gray-950); }
     .plans { gap: 12px; margin-top: 20px; }
-    .plan > .kies, .plan:not(.is-pay) > .detail, .plan:not(.is-pay) > .incl-details { display: none; }
+    .plan > .kies, .plan:not(.is-pay) > .detail { display: none; }
     /* supercompacte kaart (Brilliant): planeet links, naam + prijs rechts — de taal van de betaalkaart-kop */
-    .plan:not(.is-pay):not(.is-off) { display: grid; grid-template-columns: 44px minmax(0,1fr); grid-template-areas: "b b" "v t" "v p" "v o";
+    .plan:not(.is-pay):not(.is-off) { display: grid; grid-template-columns: 84px minmax(0,1fr); grid-template-areas: "b b" "v t" "v p" "v o" "i i";
       column-gap: 12px; align-items: center; text-align: left; padding: 16px; border-color: var(--gray-100); }   /* :not(.is-off): de weggemorphte kaarten blijven display:none (#43) */
     .plan.hl:not(.is-pay) { padding-top: 0; }
     .plan:not(.is-pay) > .visual { grid-area: v; height: auto; margin: 0; }
-    .plan:not(.is-pay) > .visual svg { width: 44px; height: 29px; display: block; }
+    .plan:not(.is-pay) > .visual svg { width: 84px; height: 55px; display: block; }   /* 20 aug nacht (Philip): 'planeet iconen veel groter' */
     .plan:not(.is-pay) > h2 { grid-area: t; margin: 0; width: auto; align-self: end; font-size: 17px; line-height: 1.25; }
     .plan:not(.is-pay) > .price { grid-area: p; margin: 2px 0 0; width: auto; align-self: start; font-size: 14px; font-weight: 400; color: var(--gray-500); line-height: 1.35; }
     .plan:not(.is-pay) > .price .amt { font-size: 15px; font-weight: 700; color: var(--gray-950); }
     .plan:not(.is-pay) > .price small { font-size: 14px; font-weight: 400; color: var(--gray-500); }
     .plan:not(.is-pay) > .offer-total { grid-area: o; margin: 1px 0 0; font-size: 12.5px; color: var(--gray-500); }
+    /* 20 aug nacht (Philip): 'alles van wiswiz inbegrepen moet wel in ieder kaartje blijven staan en openklapbaar blijven' */
+    .plan:not(.is-pay) > .incl-details { grid-area: i; margin-top: 10px; }
+    .plan:not(.is-pay) > .incl-details .incl { margin-top: 0; }
     /* het startaanbod: stil caps-label als kopband op de jaarkaart (geen schreeuwende gele pill) */
     .plan:not(.is-pay) > .badge { grid-area: b; position: static; transform: none; min-width: 0; width: calc(100% + 32px);
       margin: 0 -16px 14px; padding: 8px 12px; border-radius: 15px 15px 0 0;
@@ -255,15 +258,10 @@
     .plan.is-sel:not(.is-pay)::after { content: ""; position: absolute; top: -12px; right: 14px; width: 26px; height: 26px;
       border-radius: 9999px; background: #fff url("assets/wiswiz-s.png") center/15px 15px no-repeat;
       box-shadow: 0 0 0 1px var(--success); }
-    /* 'Alles van WisWiz inbegrepen' één keer, stil, onder de kaarten — geen kaart-in-kaart */
-    .incl-alone { display: block; margin: 4px auto 0; }
-    .incl-alone .incl { margin-top: 12px; font-size: 14px; color: var(--gray-500); font-weight: 400; }
-    body:has(.plan.is-pay) .incl-alone, body:has(.plans.busy) .incl-alone { display: none; }
     /* de vliegende CTA van de landing landt op de sticky knop */
     .plan[data-plan="yearly"] > .kies { view-transition-name: none; }
     #pakketdock a { view-transition-name: cta; }
   }
-  @media (min-width: 768px) { .incl-alone { display: none; } }   /* desktop: de lijst zit per kaart, knop per kaart, tik = morph */
   @media (max-width: 767px) { body { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); } }   /* ruimte voor de sticky keuzeknop */
 </style>
 <link rel="manifest" href="manifest.json" />
@@ -301,8 +299,6 @@
       <a class="kies po" href="gegevens.html?plan=lifetime">Probeer 7 dagen gratis</a>
     </article>
   </div>
-  <!-- 20 aug avond (Brilliant-vertaling): 'Alles van WisWiz inbegrepen' één keer los onder de kaarten (alleen telefoon; per kaart staat hij daar verborgen) -->
-  <details class="incl-details incl-alone"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><span class="fico" style="background:#f43f5e"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 0 1 2.652 2.652L9.75 16.902 5 18l1.098-4.75L16.862 4.487ZM4 21h16"/></svg></span><span class="ftxt"><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></span></li><li><span class="fico" style="background:#ecc862"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></span><span class="ftxt"><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></span></li><li><span class="fico" style="background:#3e8ed0"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></span></li><li><span class="fico" style="background:#db9a1f"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h8m-8 4h5m8-2a8 8 0 0 1-8 8H7l-4 2 1.6-4.2A8 8 0 1 1 21 12Z"/></svg></span><span class="ftxt"><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></span></li><li><span class="fico" style="background:#00328a"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span><span class="ftxt"><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></span></li><li><span class="fico" style="background:#db2777"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.1 9a3 3 0 1 1 5.34 1.86c-.9.75-1.44 1.24-1.44 2.14v.25M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></span><span class="ftxt"><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></span></li><li><span class="fico" style="background:#10b981"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Oefentoets</b><span>Check of je de stof beheerst.</span></span></li></ul></details>
   <!-- 20 aug avond: de sticky bevestigingsknop van de selecteer-dan-druk-keuze (alleen telefoon; buiten #plans, dus buiten de morph) -->
   <div id="pakketdock"><a href="gegevens.html?plan=yearly" data-cta="kies-sticky">Probeer 7 dagen gratis</a></div>
 </main>
