@@ -237,18 +237,16 @@
     .vstart.vd::after { content: ""; position: absolute; left: 6px; right: 14px; bottom: 2px; height: 2px; border-radius: 1px; background: rgba(31,111,176,.45); transition: background .15s ease; }
     .vstart.vd:hover .vstart-text { color: #17578c; }
     .vstart.vd:hover::after { background: var(--info-dark); }
-    /* 20 aug vierde order (Philip, VARIANT 3 om te vergelijken): het bovenblok — hero-kop + startelement — in het
-       WisWiz-ORANJE (--mathorange #db9a1f, de donkere logokleur). Eerdere standen: donkere inkt = b479bd9,
-       info-blauw = 0e41461. Contrast #db9a1f op de lichtblauwe bg ≈ 2,5:1 — onder de WCAG-grens voor de grote
-       vette kop (3:1); als variant live gezet zoals gevraagd, aan Philip gemeld. */
-    .hero h1 { color: var(--mathorange); }
-    .vstart.vink .vstart-mark { background: var(--mathorange); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(197,138,25,.35); }
+    /* 20 aug DEFINITIEF (Philips keuze): hero-kop én startelement (tekst + play-blokje + underline) in de donkere
+       H1-inkt gray-950 #030712 — de oranje- en info-blauw-varianten vervallen. (h1 heeft de kleur al via body;
+       geen aparte h1-regel meer nodig.) Wit speelteken op het donkere blokje. */
+    .vstart.vink .vstart-mark { background: var(--gray-950); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
     .vstart.vink .vstart-mark svg { fill: #fff; }
-    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: #c58a19; }
-    .vstart.vink .vstart-text { color: var(--mathorange); }
-    .vstart.vink:hover .vstart-text { color: #c58a19; }
-    .vstart.vink::after { background: var(--mathorange); }
-    .vstart.vink:hover::after { background: #c58a19; }
+    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: #111827; }
+    .vstart.vink .vstart-text { color: var(--gray-950); }
+    .vstart.vink:hover .vstart-text { color: var(--gray-950); }
+    .vstart.vink::after { background: var(--gray-950); }
+    .vstart.vink:hover::after { background: var(--gray-950); }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
