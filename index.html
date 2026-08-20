@@ -44,25 +44,30 @@
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; height: auto; display: block; }
 
-    body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+    body { padding-bottom: calc(var(--ws-bar, 100px) + 82px); }   /* 20 aug: ruimte voor contact-bar + bottom-dock-CTA (barhoogte bevat de safe-area al) */
     /* r9 (Philip 18 aug: "hij moet gewoon op zn plek sliden en dan daar blijven"): geen inschuif-animatie meer.
        De knop is nu ECHT position:sticky — hij scrolt gewoon mee met de pagina, en zodra hij de bovenrand raakt (8px +
        safe-area) blijft hij daar staan; scroll je terug, dan gaat hij op dezelfde rand weer mee naar beneden. Eén beweging
        heen, één terug, door de browser zelf gepositioneerd (geen JS-vertraging, geen sprong, geen dubbele beweging).
-       Techniek: de zichtbare knop is een sticky kopie (#stickycta, 0px hoog, eerste kind van body) met de knop absoluut op
-       de plek van de originele knop (JS meet --cta-top/--cta-left/--cta-w bij load/resize/fonts); de originele knop in de
-       hero blijft als onzichtbare plaatshouder staan (ruimte, geen sprong). De bar-achtergrond (#stickybar) is los en
+       Techniek (sinds 20 aug bottom-dock): #ctadock is een fixed kopie onderin; de originele knop in de hero blijft
+       gewoon staan (geen plaatshouder-trucs meer nodig — de dock verschijnt pas als de originele boven de viewport
+       uit is). De oude top-sticky (#stickycta/#stickybar) is verwijderd en
        fadet alleen zacht in/uit als de knop gedokt staat. */
-    .stickycta { display: none; position: sticky; top: calc(8px + env(safe-area-inset-top, 0px) - var(--cta-top, 0px)); height: 0; z-index: 900; }
-    body.js-dock .stickycta { display: block; }
-    body.js-dock .cta-group .btn-primary[data-cta="checkout"] { visibility: hidden; }   /* plaatshouder: de sticky kopie ligt er exact op */
-    .stickycta .btn-primary { position: absolute; top: var(--cta-top, 0px); left: var(--cta-left, 0px); width: var(--cta-w, 100%); margin: 0; }
-    .stickybar { position: fixed; top: 0; left: 0; right: 0; z-index: 899; padding: calc(8px + env(safe-area-inset-top, 0px)) 0 8px; pointer-events: none;
-      background: rgba(240,249,255,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid #dbeafe;
-      opacity: 0; transition: opacity .2s ease; }
-    .stickybar::after { content: ""; display: block; height: var(--cta-h, 57.5px); }
-    .stickybar.is-on { opacity: 1; }
-    @media (prefers-reduced-motion: reduce) { .stickybar { transition: none; } }
+    /* 20 aug (Philip: 'keer de sticky-richting om — de CTA blijft ONDERAAN sticky, de bovenkant wordt vrij voor een
+       later contact-element'): de top-sticky (kopie die aan de bovenrand vastklikte + stickybar-achtergrond) is WEG.
+       Ervoor in de plaats: #ctadock — een vaste knop onderin (alleen <768px) die verschijnt zodra de originele knop
+       boven de viewport uit is gescrold. Stapelt netjes BOVEN de contact-bar: zodra de bar in beeld is (body.ws-bar-in,
+       gezet door assets/sheet.js) staat de dock op var(--ws-bar) + 8px; zonder bar op 12px + safe-area. De opening
+       (CTA boven de vouw bij het laden) is ongemoeid — de dock is daar onzichtbaar (originele knop nog in beeld). */
+    #ctadock { position: fixed; left: 0; right: 0; z-index: 900; padding: 0 var(--pad); display: flex; justify-content: center;
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      opacity: 0; transform: translateY(14px); pointer-events: none;
+      transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1), bottom .35s cubic-bezier(.32,.72,0,1); }
+    body.ws-bar-in #ctadock { bottom: calc(var(--ws-bar, 100px) + 8px); }   /* de barhoogte bevat de safe-area al */
+    #ctadock.is-on { opacity: 1; transform: none; pointer-events: auto; }
+    #ctadock .btn-primary { width: 100%; max-width: 384px; margin: 0; box-shadow: 0 8px 24px rgba(62,196,135,.38), 0 2px 6px rgba(15,23,42,.12); }
+    @media (min-width: 768px) { #ctadock { display: none; } }   /* desktop: bovenkant vrij, geen sticky (bar staat daar rechtsonder) */
+    @media (prefers-reduced-motion: reduce) { #ctadock { transition: none; } }
     /* --- r11 (Philip 19 aug, tweede versie: GEEN logo-header — "de kop bovenaan, dan de video-knop eronder, dan de
        hero-opstelling en daaronder de Start-proefweek-button — als opening/viewport voor alle devices"): de opening is
        één gecentreerde verticale stapel op ALLE formaten (de desktop-twee-kolommen-rij is weg). Volgorde: kop →
@@ -396,9 +401,8 @@
   <!-- r11 (Philip 19 aug, tweede versie): de opening is één verticale stapel — kop, video-knop, hero-beeld, CTA.
        Conversie bij scrollen blijft de sticky CTA; contact is de Apple-slide contact-sheet (#32, assets/sheet.js, data-trigger=hero):
        WEG zolang de opening in beeld is, glijdt in zodra je voorbij de hero bent. -->
-  <div class="stickybar" id="stickybar" aria-hidden="true"></div>
-  <div class="stickycta" id="stickycta">
-    <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
+  <div id="ctadock">
+    <a class="btn btn-primary" href="pakket.html" data-cta="checkout-sticky">Start een proefweek voor jouw kind</a>
   </div>
 
   <main>
@@ -598,26 +602,17 @@
 <script src="assets/sheet.js" data-trigger="hero"></script>
 <script>
 (function(){
-  // r9: echte sticky knop. JS meet alleen WAAR de originele knop staat (documentcoördinaten) en legt de sticky kopie
-  // daar exact op; het vastklikken aan de bovenrand doet de browser zelf (position:sticky, top = 8px+safe-area - --cta-top).
-  // Op scroll checkt JS enkel of de knop gedokt staat, voor de bar-achtergrond (fade) en het data-cta-label.
-  var cta=document.querySelector('.cta-group .btn-primary[data-cta="checkout"]'), box=document.getElementById('stickycta'), bar=document.getElementById('stickybar');
-  if(!cta||!box||!bar) return;
-  var sbtn=box.querySelector('a'), on=false, raf=0;
-  function dockTop(){ return parseFloat(getComputedStyle(bar).paddingTop)||8; }
-  function check(){ raf=0; var d=sbtn.getBoundingClientRect().top<=dockTop()+0.5; if(d===on) return; on=d;
-    bar.classList.toggle('is-on',d); sbtn.setAttribute('data-cta',d?'checkout-sticky':'checkout'); }
+  // 20 aug bottom-dock: de dock verschijnt zodra de ORIGINELE knop boven de viewport uit is (bottom < 0), met 8px
+  // hysterese tegen flikkeren op de grens. De verticale plek (boven de contact-bar of op 12px) regelt de CSS via
+  // body.ws-bar-in + --ws-bar; hier alleen het aan/uit.
+  var cta=document.querySelector('.cta-group .btn-primary[data-cta="checkout"]'), dock=document.getElementById('ctadock');
+  if(!cta||!dock) return;
+  var on=false, raf=0;
+  function check(){ raf=0; var b=cta.getBoundingClientRect().bottom; var d=on ? b<8 : b<-8; if(d===on) return; on=d; dock.classList.toggle('is-on',d); }
   function ask(){ if(!raf) raf=requestAnimationFrame(check); }
-  function measure(){ // meet in één stelsel (viewport): originele knop t.o.v. de NATUURLIJKE plek van de sticky doos (even static, geen paint ertussen)
-    document.body.classList.add('js-dock'); box.style.position='static'; var bt=box.getBoundingClientRect(); box.style.position='';
-    var r=cta.getBoundingClientRect();
-    box.style.setProperty('--cta-top',(r.top-bt.top)+'px'); box.style.setProperty('--cta-left',(r.left-bt.left)+'px');
-    box.style.setProperty('--cta-w',r.width+'px'); bar.style.setProperty('--cta-h',r.height+'px'); ask(); }
-  measure();
   document.addEventListener('scroll',ask,{passive:true,capture:true});
-  window.addEventListener('resize',measure); window.addEventListener('orientationchange',measure); window.addEventListener('load',measure);
-  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(measure);
-  if('ResizeObserver' in window){ new ResizeObserver(function(){ measure(); }).observe(document.body); }
+  window.addEventListener('resize',ask); window.addEventListener('orientationchange',ask); window.addEventListener('load',ask);
+  check();
 })();
 </script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>

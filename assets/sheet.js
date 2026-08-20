@@ -32,7 +32,8 @@
     while (wrap.firstChild) document.body.appendChild(wrap.firstChild);
     var sh = document.getElementById('ws-sheet');
     var shown = false;
-    function setIn(v) { if (shown === v) return; shown = v; sh.classList.toggle('is-in', v); try { sh.inert = !v; } catch (_) {} sh.setAttribute('aria-hidden', v ? 'false' : 'true'); }
+    function setIn(v) { if (shown === v) return; shown = v; sh.classList.toggle('is-in', v); document.body.classList.toggle('ws-bar-in', v);   /* 20 aug: de pagina (bottom-dock-CTA) stapelt hierop */
+      try { sh.inert = !v; } catch (_) {} sh.setAttribute('aria-hidden', v ? 'false' : 'true'); }
 
     // --- verschijnen ---
     if (TRIGGER === 'hero') {
