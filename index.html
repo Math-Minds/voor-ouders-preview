@@ -326,7 +326,8 @@
        telefoon, 18px vanaf 640px, gray-950) — was 15px medium. Alleen de typografie; LINKS uitgelijnd blijft (zijn eis 18 aug),
        kolom 32rem + tekst-inzet 22px (r7c) blijven. h3 een maat mee omhoog (19/20px) zodat de kop boven de grotere body blijft
        staan; de link niet meer vet (500) — vet sprong eruit in de lichte review-letter. */
-    .about h3 { margin: 40px 0 10px; font-size: 13px; font-weight: 500; line-height: 1.4; color: var(--gray-500); }
+    .about h3 { margin: 40px 0 10px; font-size: 15px; font-weight: 700; line-height: 1.4; letter-spacing: -0.005em; color: var(--gray-950); }   /* volgt de review-attributie-stijl (20 aug: headers dominanter) */
+    @media (min-width: 640px) { .about h3 { font-size: 16px; } }
     .about p { margin: 0; font-size: 17px; line-height: 1.65; font-weight: 400; color: var(--gray-950); text-wrap: pretty; }
     .about p + p { margin-top: 14px; }
     .about p a { color: var(--info); font-weight: 500; }
@@ -378,7 +379,11 @@
        font-size en stijl"): was moeder 17px/1.65 (lang) naast Mattia 18px/1.6 — nu BEIDE reviews in precies dezelfde zetstijl:
        17px/1.65 op telefoon, 18px vanaf 640px, zelfde kolombreedte (34rem). */
     .proof .layer.review { max-width: 34rem; }
-    .proof .layer.review figcaption { margin: 0 0 10px; }   /* 20 aug (Philip): attributie als header BOVEN de quote */
+    /* 20 aug (Philip, tweede ronde op de headers): de attributie is de PROMINENTSTE regel — steviger en donkerder dan de
+       quote (15px/700, inkt), de quote eronder net ondergeschikt (gray-800). Eerst de naam, dan lees je de quote. */
+    .proof .layer.review figcaption { margin: 0 0 10px; font-size: 15px; font-weight: 700; letter-spacing: -0.005em; color: var(--gray-950); }
+    @media (min-width: 640px) { .proof .layer.review figcaption { font-size: 16px; } }
+    .proof .layer.review blockquote p { color: #1f2937; }
     .proof .layer.review blockquote p { font-size: 17px; line-height: 1.65; }
     @media (min-width: 640px) { .proof .layer.review blockquote p { font-size: 18px; } }
   </style>
