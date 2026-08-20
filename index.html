@@ -237,16 +237,19 @@
     .vstart.vd::after { content: ""; position: absolute; left: 6px; right: 14px; bottom: 2px; height: 2px; border-radius: 1px; background: rgba(31,111,176,.45); transition: background .15s ease; }
     .vstart.vd:hover .vstart-text { color: #17578c; }
     .vstart.vd:hover::after { background: var(--info-dark); }
-    /* 20 aug tweede order (Philip): het startelement — tekst + play-icoon + underline — in EXACT de H1-inktkleur
-       (gray-950 #030712, de kleur van 'Betaalbare wiskundebijles die altijd klaarstaat'); het info-blauw is eruit.
-       Eén hiërarchie, geen knop. (Klasse vink overschrijft de .v1/.vd-kleuren hieronder.) */
-    .vstart.vink .vstart-mark { background: var(--gray-950); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
+    /* 20 aug derde order (Philip, VARIANT om te vergelijken): de hele bovenkant — de hero-kop ÉN het startelement
+       (tekst + play-blokje + underline) — samen in de INFO-kleur #3e8ed0. De vorige stand (alles in de H1-inkt
+       gray-950) was commit b479bd9; terugzetten is die klasse-set + h1-kleur terugdraaien.
+       Meting: #3e8ed0 op de lichtblauwe bg is ~3,3:1 — genoeg voor de grote vette kop (WCAG large ≥3:1), maar de
+       17px-regel van het startelement zit daar formeel onder; aan Philip gemeld. */
+    .hero h1 { color: var(--info); }
+    .vstart.vink .vstart-mark { background: var(--info); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(31,111,176,.28); }
     .vstart.vink .vstart-mark svg { fill: #fff; }
-    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: #111827; }
-    .vstart.vink .vstart-text { color: var(--gray-950); }
-    .vstart.vink:hover .vstart-text { color: var(--gray-950); }
-    .vstart.vink::after { background: var(--gray-950); }
-    .vstart.vink:hover::after { background: var(--gray-950); }
+    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: var(--info-dark); }
+    .vstart.vink .vstart-text { color: var(--info); }
+    .vstart.vink:hover .vstart-text { color: var(--info-dark); }
+    .vstart.vink::after { background: var(--info); }
+    .vstart.vink:hover::after { background: var(--info-dark); }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
