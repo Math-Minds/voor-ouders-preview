@@ -303,18 +303,23 @@
        op 43px begint (kaart-padding); (2) op desktop 42rem = 672px breed, breder dan de reviews (32rem) en de knopkolom (24rem);
        Fix (Philips verduidelijking: LINKS uitgelijnd BLIJFT, alleen marge/breedte): dezelfde kolom als de reviews (32rem) en
        dezelfde tekst-inzet (22px = de review-tekstrand) — de site-marge, één ritme; h2 gecentreerd, tekst links zoals het was. */
-    .about { margin: 80px auto 0; max-width: 32rem; padding: 0 22px; text-align: left; }
+    /* 20 aug (Philip: "geef Onze missie/About VOLLEDIG dezelfde typografie EN layout als de reviews — font, groottes/
+       hierarchie, kleuren, regelafstand, uitlijning en opmaak identiek"): de sectie staat nu in het review-systeem —
+       zelfde kolom (34rem), GECENTREERD zoals de quotes (de eerdere links-uitlijning van r13 vervalt op zijn woord),
+       lopende tekst exact de quote-zetstijl (17px/1.65 → 18px vanaf 640px, regular, gray-950) en de kopjes in de
+       attributie-stijl van de reviews (13px/500, gray-500 — zoals 'Moeder van een brugklasleerling'). */
+    .about { margin: 80px auto 0; max-width: 34rem; padding: 0 22px; text-align: center; }
     .about h2 { text-align: center; margin-bottom: 20px; }
     /* r13 (Philip 19 aug: "Geef de About-us-tekst hetzelfde font als de reviews, maar houd het left aligned."): de lopende
        tekst staat nu in EXACT de zetstijl van de moeder-/Mattia-review (.proof .layer.review.lang: Ubuntu 400, 17px/1.65 op
        telefoon, 18px vanaf 640px, gray-950) — was 15px medium. Alleen de typografie; LINKS uitgelijnd blijft (zijn eis 18 aug),
        kolom 32rem + tekst-inzet 22px (r7c) blijven. h3 een maat mee omhoog (19/20px) zodat de kop boven de grotere body blijft
        staan; de link niet meer vet (500) — vet sprong eruit in de lichte review-letter. */
-    .about h3 { margin: 26px 0 8px; font-size: 19px; font-weight: 700; line-height: 1.3; }
+    .about h3 { margin: 40px 0 10px; font-size: 13px; font-weight: 500; line-height: 1.4; color: var(--gray-500); }
     .about p { margin: 0; font-size: 17px; line-height: 1.65; font-weight: 400; color: var(--gray-950); text-wrap: pretty; }
     .about p + p { margin-top: 14px; }
     .about p a { color: var(--info); font-weight: 500; }
-    @media (min-width: 640px) { .about h3 { font-size: 20px; } .about p { font-size: 18px; } }
+    @media (min-width: 640px) { .about p { font-size: 18px; } }
     .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: calc(100% + 44px); margin: 28px -22px 0; }
     .team a { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fff; border-radius: 12px; padding: 12px 6px; border: 1px solid var(--gray-100); }
     .team img { width: 56px; height: 56px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 2px var(--info); }

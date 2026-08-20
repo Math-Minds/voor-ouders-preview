@@ -30,15 +30,17 @@
 .ws-in { max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 12px; min-height: 36px; }
 .ws-foto { flex: none; width: 36px; height: 36px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 .5px var(--hair); }
 .ws-regel { flex: 1 1 auto; min-width: 0; margin: 0; font-size: 14.5px; font-weight: 400; line-height: 1.4; letter-spacing: -0.01em; color: var(--label); text-wrap: pretty; }
-.ws-acties { flex: none; display: flex; flex-direction: column; gap: 6px; }
-.ws-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 9999px;
+/* 20 aug (Philip): de twee acties duidelijker als knoppen en makkelijker drukbaar — 40px cirkels (waren 32), iets vollere
+   tint + een fijne rand in de eigen kleur, grotere glyphs; het echte tapvlak is 48×47px (::after), ruim boven de 44px-richtlijn. */
+.ws-acties { flex: none; display: flex; flex-direction: column; gap: 7px; }
+.ws-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 9999px;
   transition: transform .15s ease, background .15s ease; }
-.ws-icon::after { content: ""; position: absolute; inset: -3px -8px; border-radius: inherit; }  /* ruimere tapzone, zonder overlap */
-.ws-icon svg { width: 16px; height: 16px; }
-.ws-icon.ws-wa { background: rgba(37, 211, 102, .14); } .ws-icon.ws-wa svg { fill: #1da851; }
-.ws-icon.ws-tel { background: rgba(0, 122, 255, .11); } .ws-icon.ws-tel svg { fill: #0a72d6; width: 14px; height: 14px; }
+.ws-icon::after { content: ""; position: absolute; inset: -3.5px -4px; border-radius: inherit; }  /* tapzone 48×47, zonder onderlinge overlap */
+.ws-icon svg { width: 19px; height: 19px; }
+.ws-icon.ws-wa { background: rgba(37, 211, 102, .2); box-shadow: inset 0 0 0 1px rgba(29, 168, 81, .35); } .ws-icon.ws-wa svg { fill: #128c45; }
+.ws-icon.ws-tel { background: rgba(0, 122, 255, .16); box-shadow: inset 0 0 0 1px rgba(10, 114, 214, .32); } .ws-icon.ws-tel svg { fill: #0a72d6; width: 17px; height: 17px; }
 .ws-icon:active { transform: scale(.92); }
-@media (max-width: 350px) { .ws-in { gap: 10px; } .ws-regel { font-size: 14px; } .ws-foto { width: 34px; height: 34px; } }
+@media (max-width: 350px) { .ws-in { gap: 10px; } .ws-regel { font-size: 14px; } .ws-foto { width: 34px; height: 34px; } .ws-icon { width: 36px; height: 36px; } }
 
 /* --- brede schermen: een zwevend blad rechtsonder (380px, rondom afgerond), niet een strook over de volle breedte. --- */
 @media (min-width: 768px) {
