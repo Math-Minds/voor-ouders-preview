@@ -308,7 +308,10 @@
        zelfde kolom (34rem), GECENTREERD zoals de quotes (de eerdere links-uitlijning van r13 vervalt op zijn woord),
        lopende tekst exact de quote-zetstijl (17px/1.65 → 18px vanaf 640px, regular, gray-950) en de kopjes in de
        attributie-stijl van de reviews (13px/500, gray-500 — zoals 'Moeder van een brugklasleerling'). */
-    .about { margin: 80px auto 0; max-width: 34rem; padding: 0 22px; text-align: center; }
+    /* 20 aug (Philip, voice: 'about us heeft andere marge dan de reviews, dat moet helemaal consistent zijn'): de eigen
+       22px-padding is eruit — de sectie staat nu exact in de review-kolom (34rem, alleen de paginamarge), gemeten:
+       tekst-x en -breedte gelijk aan de review-alinea's (20/350 op 390px). */
+    .about { margin: 80px auto 0; max-width: 34rem; padding: 0; text-align: center; }
     .about h2 { text-align: center; margin-bottom: 20px; }
     /* r13 (Philip 19 aug: "Geef de About-us-tekst hetzelfde font als de reviews, maar houd het left aligned."): de lopende
        tekst staat nu in EXACT de zetstijl van de moeder-/Mattia-review (.proof .layer.review.lang: Ubuntu 400, 17px/1.65 op
@@ -469,8 +472,8 @@
     </section>
 
     <section class="about" id="about">
-      <h2>Onze missie</h2>
-      <h3>Persoonlijke begeleiding voor iedereen, overal ter wereld</h3>
+      <!-- 20 aug (Philip, voice): 'Persoonlijke begeleiding voor iedereen, overal ter wereld' is de kop, 'Onze missie' is weg -->
+      <h2>Persoonlijke begeleiding voor iedereen, overal ter wereld</h2>
       <p>Talent komt tot bloei onder persoonlijke begeleiding. Zo had Alexander de Grote les van Aristoteles, die op zijn beurt leerling was van Plato. In de klas is daar helaas te weinig ruimte voor. Met innovatieve technologie willen we daarom deze persoonlijke begeleiding mogelijk maken voor iedereen ter wereld. We beginnen met wiskunde: het vak waar leerlingen het vaakst vastlopen; een toren van opbouwende kennis die omvalt zodra een stevig fundament ontbreekt.</p>
       <h3>Over ons</h3>
       <p>WisWiz is opgericht door Philip en Louis, wiskundestudenten aan de TU Delft met jarenlange bijleservaring. We liepen steeds meer tegen de limiet aan dat we met individuele bijlessen te weinig mensen konden helpen. Samen met Hendrik, afgestudeerd statisticus en software ontwikkelaar, zijn we daarom de WisWiz app gaan bouwen. Met deze groep werken we iedere dag om zoveel mogelijk leerlingen te helpen.</p>
