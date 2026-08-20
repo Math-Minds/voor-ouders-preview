@@ -95,7 +95,7 @@
     @media (max-width: 1023px) {
       :root { --opening-top: clamp(18px, 3.5svh, 34px); }   /* bovenmarge groeit licht mee met de schermhoogte */
       main { padding-top: var(--opening-top); }
-      .hero { min-height: calc(100svh - 24px - var(--opening-top) - env(safe-area-inset-bottom, 0px));  /* #32 Apple-bar: geen bar in de opening meer (64px → 24px lucht onder de CTA) */
+      .hero { min-height: calc(100svh - 88px - var(--opening-top) - env(safe-area-inset-bottom, 0px));  /* 20 aug: onderaan 88px dock-zone (58 knop + 12 rand + lucht) — de dock staat er vanaf laden */
         /* nacht r13: grid i.p.v. flex, zodat de beeldrij (1fr) een DEFINIETE hoogte heeft en het beeldvenster erop kan meten (cqh) */
         display: grid; grid-template-rows: auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }   /* 4 rijen: logo (telefoon), kop, beeldblok (startelement + beeld), CTA */
       /* Philip 19 aug: het WisWiz-logo op telefoon duidelijk prominenter bovenaan de hero (alleen ≤767px; elegant, niet overdreven): 48px hoog, gecentreerd, 14px lucht onder */
@@ -174,6 +174,10 @@
     .btn-call svg { width: 16px; height: 16px; fill: var(--info); }
     .subline { margin: 6px 0 0; text-align: center; font-size: 12px; color: var(--gray-500); }
     .cta-group { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+    /* 20 aug avond (Philip: 'start een proefweek moet vanaf het begin af aan al onderaan sticky zijn'): op telefoon is de
+       DOCK de enige CTA en staat hij er vanaf paginalading; de originele knop in de opening is daar verborgen (anders
+       twee knoppen boven elkaar aan de onderrand). Desktop onveranderd (dock bestaat daar niet). */
+    @media (max-width: 767px) { .hero .actions { display: none; } }
 
     .videolink {
       display: flex; align-items: center; justify-content: flex-start; gap: 12px;
@@ -246,16 +250,16 @@
     .vstart.vd::after { content: ""; position: absolute; left: 6px; right: 14px; bottom: 2px; height: 2px; border-radius: 1px; background: rgba(31,111,176,.45); transition: background .15s ease; }
     .vstart.vd:hover .vstart-text { color: #17578c; }
     .vstart.vd:hover::after { background: var(--info-dark); }
-    /* 20 aug DEFINITIEF (Philips keuze): hero-kop én startelement (tekst + play-blokje + underline) in de donkere
-       H1-inkt gray-950 #030712 — de oranje- en info-blauw-varianten vervallen. (h1 heeft de kleur al via body;
-       geen aparte h1-regel meer nodig.) Wit speelteken op het donkere blokje. */
-    .vstart.vink .vstart-mark { background: var(--gray-950); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
+    /* 20 aug avond (Philip via #38: 'maak de wiswiz in 30 seconden en de icon en de underline weer info color'; de kop
+       blijft zwart per zijn keuze van 11:03): het startelement terug in de klassieke info-look — blokje --info met wit
+       speelteken, tekst --info-dark, underline zacht blauw. */
+    .vstart.vink .vstart-mark { background: var(--info); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(31,111,176,.28); }
     .vstart.vink .vstart-mark svg { fill: #fff; }
-    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: #111827; }
-    .vstart.vink .vstart-text { color: var(--gray-950); }
-    .vstart.vink:hover .vstart-text { color: var(--gray-950); }
-    .vstart.vink::after { background: var(--gray-950); }
-    .vstart.vink:hover::after { background: var(--gray-950); }
+    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: var(--info-dark); }
+    .vstart.vink .vstart-text { color: var(--info-dark); }
+    .vstart.vink:hover .vstart-text { color: #17578c; }
+    .vstart.vink::after { background: rgba(31,111,176,.45); }
+    .vstart.vink:hover::after { background: var(--info-dark); }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -628,17 +632,14 @@
 <script src="assets/sheet.js" data-trigger="hero"></script>
 <script>
 (function(){
-  // 20 aug bottom-dock: de dock verschijnt zodra de ORIGINELE knop boven de viewport uit is (bottom < 0), met 8px
-  // hysterese tegen flikkeren op de grens. De verticale plek (boven de contact-bar of op 12px) regelt de CSS via
-  // body.ws-bar-in + --ws-bar; hier alleen het aan/uit.
-  var cta=document.querySelector('.cta-group .btn-primary[data-cta="checkout"]'), dock=document.getElementById('ctadock');
-  if(!cta||!dock) return;
-  var on=false, raf=0;
-  function check(){ raf=0; var b=cta.getBoundingClientRect().bottom; var d=on ? b<8 : b<-8; if(d===on) return; on=d; dock.classList.toggle('is-on',d); }
-  function ask(){ if(!raf) raf=requestAnimationFrame(check); }
-  document.addEventListener('scroll',ask,{passive:true,capture:true});
-  window.addEventListener('resize',ask); window.addEventListener('orientationchange',ask); window.addEventListener('load',ask);
-  check();
+  // 20 aug avond (Philip): de dock staat er vanaf paginalading — geen scroll-toggle meer. Alleen op telefoon (<768px);
+  // op desktop bestaat de dock niet en draagt de originele hero-CTA de view-transition-naam (#43-regel op :has(.is-on)).
+  var dock=document.getElementById('ctadock');
+  if(!dock) return;
+  var mq=window.matchMedia('(max-width: 767px)');
+  function zet(){ if(mq.matches){ requestAnimationFrame(function(){ dock.classList.add('is-on'); }); } else { dock.classList.remove('is-on'); } }
+  if(mq.addEventListener) mq.addEventListener('change',zet); else mq.addListener(zet);
+  zet();
 })();
 </script>
 <script>
