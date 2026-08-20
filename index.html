@@ -102,7 +102,7 @@
         /* nacht r13: grid i.p.v. flex, zodat de beeldrij (1fr) een DEFINIETE hoogte heeft en het beeldvenster erop kan meten (cqh) */
         display: grid; grid-template-rows: auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }   /* 4 rijen: logo (telefoon), kop, beeldblok (startelement + beeld), CTA (<768 verborgen, telt dan niet als grid-item) */
       /* Philip 19 aug: het WisWiz-logo op telefoon duidelijk prominenter bovenaan de hero (alleen ≤767px; elegant, niet overdreven): 48px hoog, gecentreerd, 14px lucht onder */
-      .hero-logo { display: block; height: 48px; width: auto; margin: 0 auto 14px; }
+      .hero-logo { display: block; height: 58px; width: auto; margin: 0 auto 14px; }   /* 20 aug nacht (Philip): logo bovenaan nóg wat groter (48→58) */
       /* het beeld krijgt alle restruimte en staat daarin een fractie BOVEN het midden (optisch centrum);
          op telefoon loopt het beeld van rand tot rand (de edgefade laat het in de achtergrond overlopen) */
       /* nacht r13 (Philip 19 aug: 'de layout van de hero met alle elementen voor verschillende telefoonmaten' — supernice op ELKE
@@ -131,7 +131,7 @@
     /* r11: op smalle telefoons (<390px) net kleiner, zodat de kop twee regels blijft en de opening in één viewport past.
        nacht r13: de kop schaalt vloeiend met de telefoonbreedte en blijft op ELKE breedte precies twee regels (gemeten: 'Betaalbare
        wiskundebijles' is de maatregel — 21.8px op 320, 24.7 op 360, 25.8 op 375, 26.9 op 390, 29.8 op 430), gebalanceerd. */
-    @media (max-width: 767px) { h1 { font-size: clamp(21px, calc(7.2vw - 1.2px), 30px); } }
+    @media (max-width: 767px) { h1 { font-size: clamp(19px, calc(6.6vw - 1.2px), 27px); } }   /* 20 aug nacht (Philip): de kop juist een maat kleiner */
     @media (min-width: 768px) { h1 { font-size: 36px; } }
     h1 .line2 { display: block; margin-top: 8px; }
     .wis { color: var(--mathorange); } .wiz { color: var(--mathyellow); }
