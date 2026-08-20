@@ -237,19 +237,8 @@
     .vstart.vd::after { content: ""; position: absolute; left: 6px; right: 14px; bottom: 2px; height: 2px; border-radius: 1px; background: rgba(31,111,176,.45); transition: background .15s ease; }
     .vstart.vd:hover .vstart-text { color: #17578c; }
     .vstart.vd:hover::after { background: var(--info-dark); }
-    /* r-geel (Philip 19 aug: 'het startelement (play-icoon en underline) in de GELE LOGOKLEUR (mathyellow) i.p.v. bg-info-blauw —
-       ik mis het merkgeel op de pagina; elegant en leesbaar, één teksthierarchie, geen knop'): het play-blokje wordt DONKER
-       (gray-950) met een GEEL speelteken (#ecc862) — een geel vlak met wit teken is onleesbaar op de lichtblauwe bg; de onderlijn
-       wordt geel (iets dieper, #e5bd3e, zodat hij op het lichtblauw leesbaar blijft); de regel zelf in gray-950 (één stijl). */
-    .vstart.vy .vstart-mark { background: var(--gray-950); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
-    .vstart.vy .vstart-mark svg { fill: var(--mathyellow); }
-    .vstart.vy:hover .vstart-mark, .vstart.vy:active .vstart-mark { background: #111827; box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
-    /* Philips verduidelijking (19 aug): OOK de tekst in de logokleur — leesbaar via de donkere goud-tint uit het logo (mathorange
-       #db9a1f), underline in dezelfde tint; het gele accent (#ecc862) op het icoon. Eén kleurfamilie, één hiërarchie, geen knop. */
-    .vstart.vy .vstart-text { color: var(--mathorange); }
-    .vstart.vy:hover .vstart-text { color: #c58a19; }
-    .vstart.vy::after { background: var(--mathorange); opacity: .85; }
-    .vstart.vy:hover::after { background: #c58a19; opacity: 1; }
+    /* 20 aug (Philip): het startelement is terug HELEMAAL in de site-token info-blauw (tekst + icoon + underline, de
+       .v1/.vd-stijl hieronder was dat al) — de gele/goud-variant van 19 aug (klasse vy) is verwijderd. */
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -394,7 +383,7 @@
     <section class="hero">
       <img class="hero-logo" src="assets/wiswizlogo.png" alt="WisWiz" width="300" height="150" />
       <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
-      <a class="vstart v1 vd vy" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
+      <a class="vstart v1 vd" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       <div class="hero-visual">
         <a class="herolink" id="videocard" href="assets/opening.mp4" data-cta="video" aria-label="WisWiz in 30 seconden (video)">
         <div class="blend" id="herovisual">
