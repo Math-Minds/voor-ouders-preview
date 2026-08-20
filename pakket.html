@@ -12,10 +12,10 @@
      zichtbaar vanaf het laden, want op de pakketkeuze is contact op het beslismoment het meest waard. */
   :root { --mathyellow:#ecc862; --mathorange:#db9a1f; --info:#3e8ed0; --info-dark:#1f6fb0;
     --achtergrond:#f0f9ff; --gray-950:#030712; --gray-700:#374151; --gray-500:#6b7280;
-    --gray-300:#d1d5db; --gray-100:#f3f4f6; --pad:20px; }
+    --gray-300:#d1d5db; --gray-100:#f3f4f6; --pad:20px; --success:#3ec487; }
   * { box-sizing:border-box; } html,body { margin:0; padding:0; }
   body { font-family:"Ubuntu",system-ui,sans-serif; background:var(--achtergrond); color:var(--gray-950);
-    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; padding-bottom: 28px; /* 20 aug: geen contact-bar meer op deze pagina (Philips quote-regel staat boven de keuze) */ }
+    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; padding-bottom: 28px; /* mobiel: dock-ruimte hieronder */ }
   a { color:inherit; text-decoration:none; } img { max-width:100%; height:auto; }
   main { max-width:480px; margin:0 auto; padding:28px 16px 64px; }
   h1 { margin:0; text-align:center; font-size:24px; font-weight:800; line-height:1.25; }
@@ -57,6 +57,15 @@
   .incl-list li b { color:var(--gray-950); }
   .incl-list li span { color:var(--gray-500); }
   .plan[data-plan="yearly"] > .kies { view-transition-name: cta; }
+  #pakketdock { position: fixed; left: 0; right: 0; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 900;
+    padding: 0 20px; display: flex; justify-content: center; transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1); }
+  #pakketdock a { display: block; width: 100%; max-width: 384px; background: var(--success); color: #fff; text-align: center;
+    font-weight: 700; font-size: 16px; padding: 15px 16px; border-radius: 12px; text-decoration: none;
+    box-shadow: 0 8px 24px rgba(62,196,135,.38), 0 2px 6px rgba(15,23,42,.12); -webkit-tap-highlight-color: transparent; }
+  #pakketdock a:active { transform: scale(.985); }
+  body:has(.plan.is-pay) #pakketdock, body:has(.plans.busy) #pakketdock { opacity: 0; transform: translateY(14px); pointer-events: none; }
+  @media (min-width: 768px) { #pakketdock { display: none; } }
+  @media (prefers-reduced-motion: reduce) { #pakketdock { transition: none; } }
   .plan .kies { display:block; margin-top:16px; width:100%; background:#3ec487; border:0;   /* 19 aug: conversie-CTA in het site-groen, witte tekst */
     border-radius:12px; padding:13px 16px; font-size:15px; font-weight:700; color:#fff;
     box-shadow:0 6px 18px rgba(62,196,135,.32); }
@@ -202,6 +211,56 @@
   html.vt-weg body { opacity:0; transition:opacity .2s ease; }
   html.vt-aan body { animation: vtf-in .28s ease both; }
   @keyframes vtf-in { from { opacity:0; } }
+
+  /* ================= 20 aug avond — MOBIEL REDESIGN pakketkeuze (Philips order 5: 'super ugly — denk goed na waar dat
+     door komt; steve jobs kwaliteit', met zijn Brilliant-screenshot als referentie voor order 4).
+
+     DIAGNOSE waarom het lelijk was (expliciet, zoals gevraagd):
+     1. HALVE TOESTANDEN: de per-kaart-knoppen werden door een CSS-volgordefout niet verborgen en versplinterden als
+        smalle groene slivers in het kaartgrid — kapot beeld. (Dit blok staat daarom aan het EIND van de stylesheet.)
+     2. TE VEEL ACCENTEN: gele band + groene ring + groene knoppen + oranje chip + blauw/groene contactknoppen — vijf
+        kleuren vochten om aandacht. Jobs-lat: ÉÉN accent (groen = selectie/actie); het geel wordt een stil caps-label.
+     3. GEEN RITME: paddings 18/16/24, gaps 14/24, banden met eigen marges — nu alles op een 4/8/12/16-ritme.
+     4. DRIE INFORMATIELAGEN op de jaarkaart (band + maandprijs + jaarprijs) in schreeuwende maten — nu één rustige
+        prijsregel (bedrag vet, context licht) met de jaarprijs als stille subregel.
+     5. LIJNTJES OVERAL (kaartrand + ring + chipschaduw + uitklaprand): kaarten krijgen één haarlijn (gray-100),
+        selectie is één 1px-groene rand, verder niets.
+     6. DE KOP oogde als formulierlabel (16px grijs): nu een echte, rustige paginatitel in de inkt.
+     ================= */
+  @media (max-width: 767px) {
+    .choice-q { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: var(--gray-950); }
+    .plans { gap: 12px; margin-top: 20px; }
+    .plan > .kies, .plan:not(.is-pay) > .detail, .plan:not(.is-pay) > .incl-details { display: none; }
+    /* supercompacte kaart (Brilliant): planeet links, naam + prijs rechts — de taal van de betaalkaart-kop */
+    .plan:not(.is-pay):not(.is-off) { display: grid; grid-template-columns: 44px minmax(0,1fr); grid-template-areas: "b b" "v t" "v p" "v o";
+      column-gap: 12px; align-items: center; text-align: left; padding: 16px; border-color: var(--gray-100); }   /* :not(.is-off): de weggemorphte kaarten blijven display:none (#43) */
+    .plan.hl:not(.is-pay) { padding-top: 0; }
+    .plan:not(.is-pay) > .visual { grid-area: v; height: auto; margin: 0; }
+    .plan:not(.is-pay) > .visual svg { width: 44px; height: 29px; display: block; }
+    .plan:not(.is-pay) > h2 { grid-area: t; margin: 0; width: auto; align-self: end; font-size: 17px; line-height: 1.25; }
+    .plan:not(.is-pay) > .price { grid-area: p; margin: 2px 0 0; width: auto; align-self: start; font-size: 14px; font-weight: 400; color: var(--gray-500); line-height: 1.35; }
+    .plan:not(.is-pay) > .price .amt { font-size: 15px; font-weight: 700; color: var(--gray-950); }
+    .plan:not(.is-pay) > .price small { font-size: 14px; font-weight: 400; color: var(--gray-500); }
+    .plan:not(.is-pay) > .offer-total { grid-area: o; margin: 1px 0 0; font-size: 12.5px; color: var(--gray-500); }
+    /* het startaanbod: stil caps-label als kopband op de jaarkaart (geen schreeuwende gele pill) */
+    .plan:not(.is-pay) > .badge { grid-area: b; position: static; transform: none; min-width: 0; width: calc(100% + 32px);
+      margin: 0 -16px 14px; padding: 8px 12px; border-radius: 15px 15px 0 0;
+      background: rgba(236, 200, 98, .18); color: #8a6410; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    /* selectie: één 1px-groene rand + het S-merkje als kleine chip op de rand (Brilliant), verder niets */
+    .plan.is-sel:not(.is-pay) { border-color: var(--success); box-shadow: 0 0 0 1px var(--success); }
+    .plan.is-sel:not(.is-pay)::after { content: ""; position: absolute; top: -12px; right: 14px; width: 26px; height: 26px;
+      border-radius: 9999px; background: #fff url("assets/wiswiz-s.png") center/15px 15px no-repeat;
+      box-shadow: 0 0 0 1px var(--success); }
+    /* 'Alles van WisWiz inbegrepen' één keer, stil, onder de kaarten — geen kaart-in-kaart */
+    .incl-alone { display: block; margin: 4px auto 0; }
+    .incl-alone .incl { margin-top: 12px; font-size: 14px; color: var(--gray-500); font-weight: 400; }
+    body:has(.plan.is-pay) .incl-alone, body:has(.plans.busy) .incl-alone { display: none; }
+    /* de vliegende CTA van de landing landt op de sticky knop */
+    .plan[data-plan="yearly"] > .kies { view-transition-name: none; }
+    #pakketdock a { view-transition-name: cta; }
+  }
+  @media (min-width: 768px) { .incl-alone { display: none; } }   /* desktop: de lijst zit per kaart, knop per kaart, tik = morph */
+  @media (max-width: 767px) { body { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); } }   /* ruimte voor de sticky keuzeknop */
 </style>
 <link rel="manifest" href="manifest.json" />
 </head><body>
@@ -238,8 +297,40 @@
       <a class="kies po" href="gegevens.html?plan=lifetime">Probeer 7 dagen gratis</a>
     </article>
   </div>
+  <!-- 20 aug avond (Brilliant-vertaling): 'Alles van WisWiz inbegrepen' één keer los onder de kaarten (alleen telefoon; per kaart staat hij daar verborgen) -->
+  <details class="incl-details incl-alone"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><span class="fico" style="background:#f43f5e"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 0 1 2.652 2.652L9.75 16.902 5 18l1.098-4.75L16.862 4.487ZM4 21h16"/></svg></span><span class="ftxt"><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></span></li><li><span class="fico" style="background:#ecc862"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></span><span class="ftxt"><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></span></li><li><span class="fico" style="background:#3e8ed0"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></span></li><li><span class="fico" style="background:#db9a1f"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h8m-8 4h5m8-2a8 8 0 0 1-8 8H7l-4 2 1.6-4.2A8 8 0 1 1 21 12Z"/></svg></span><span class="ftxt"><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></span></li><li><span class="fico" style="background:#00328a"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span><span class="ftxt"><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></span></li><li><span class="fico" style="background:#db2777"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.1 9a3 3 0 1 1 5.34 1.86c-.9.75-1.44 1.24-1.44 2.14v.25M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></span><span class="ftxt"><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></span></li><li><span class="fico" style="background:#10b981"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Oefentoets</b><span>Check of je de stof beheerst.</span></span></li></ul></details>
+  <!-- 20 aug avond: de sticky bevestigingsknop van de selecteer-dan-druk-keuze (alleen telefoon; buiten #plans, dus buiten de morph) -->
+  <div id="pakketdock"><a href="gegevens.html?plan=yearly" data-cta="kies-sticky">Probeer 7 dagen gratis</a></div>
 </main>
 <script src="assets/morph.js"></script>
+<script>
+/* 20 aug avond (Philip): selecteer-dan-druk op telefoon. Een kaart-tik SELECTEERT (capture-fase, vóór de morph-handler
+   van #43); de sticky knop bevestigt en geeft de tik door aan de morph (window.__pakketBevestig laat hem passeren).
+   Desktop onaangeraakt: daar morft een kaart-tik direct, zoals #43 hem bouwde. */
+(function () {
+  var plans = document.getElementById('plans'), dock = document.getElementById('pakketdock');
+  if (!plans || !dock) return;
+  var btn = dock.querySelector('a'), mq = window.matchMedia('(max-width: 767px)');
+  function kies(card) {
+    [].forEach.call(plans.querySelectorAll('.plan'), function (c) { c.classList.toggle('is-sel', c === card); c.setAttribute('aria-pressed', c === card ? 'true' : 'false'); });
+    btn.setAttribute('href', 'gegevens.html?plan=' + card.getAttribute('data-plan'));
+  }
+  kies(plans.querySelector('.plan[data-plan="yearly"]'));   /* Jaarabonnement standaard geselecteerd */
+  plans.addEventListener('click', function (e) {
+    if (!mq.matches || window.__pakketBevestig) return;      /* desktop of bevestigingsdruk: doorlaten naar de morph */
+    var card = e.target.closest('.plan'); if (!card || card.classList.contains('is-pay')) return;
+    if (plans.querySelector('.plan.is-pay')) return;
+    if (e.target.closest('.incl-details, .pay, .pay2, .close')) return;
+    e.preventDefault(); e.stopPropagation();                 /* capture: de morph-handler op de kaart vuurt niet */
+    kies(card);
+  }, true);
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    var c = plans.querySelector('.plan.is-sel'); if (!c || plans.querySelector('.plan.is-pay')) return;
+    window.__pakketBevestig = true; try { c.click(); } finally { window.__pakketBevestig = false; }
+  });
+})();
+</script>
 <script>
 /* #43 r3: terug-richting herkennen (fade i.p.v. slide) + fallback voor browsers zonder View Transitions. */
 addEventListener('pageswap', function (e) { if (e.viewTransition) { e.viewTransition.finished.catch(function () {}); e.viewTransition.ready.catch(function () {}); } });   /* teardown/skip-rejects van de oude pagina stil */
