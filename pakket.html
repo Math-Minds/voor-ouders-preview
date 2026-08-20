@@ -233,25 +233,18 @@
      ================= */
   @media (max-width: 767px) {
     .choice-q { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: var(--gray-950); }
-    .plans { gap: 12px; margin-top: 20px; }
-    .plan > .kies, .plan:not(.is-pay) > .detail { display: none; }
-    /* supercompacte kaart (Brilliant): planeet links, naam + prijs rechts — de taal van de betaalkaart-kop */
-    .plan:not(.is-pay):not(.is-off) { display: grid; grid-template-columns: 84px minmax(0,1fr); grid-template-areas: "b b" "v t" "v p" "v o" "i i";
-      column-gap: 12px; align-items: center; text-align: left; padding: 16px; border-color: var(--gray-100); }   /* :not(.is-off): de weggemorphte kaarten blijven display:none (#43) */
+    /* 20 aug nacht, correctie (Philip: 'de individuele kaartjes weer de layout van eerst — planeet groot gecentreerd,
+       de oude teksthiërarchieën; we winnen al heel veel doordat de knop weg is'): het supercompacte kaartgrid is eruit —
+       de kaarten gebruiken weer hun oorspronkelijke gecentreerde opbouw (grote planeet, naam 22, prijs 34, subregels,
+       openklapbare inbegrepen-lijst per kaart). Wat blijft: geen knop per kaart (selecteer-dan-druk), de startaanbod-
+       kopband, de selectie-rand + S-chip, het sheet en de sticky knop. */
+    .plans { gap: 16px; margin-top: 20px; }
+    .plan > .kies { display: none; }
+    .plan:not(.is-pay):not(.is-off) { border-color: var(--gray-300); }
     .plan.hl:not(.is-pay) { padding-top: 0; }
-    .plan:not(.is-pay) > .visual { grid-area: v; height: auto; margin: 0; }
-    .plan:not(.is-pay) > .visual svg { width: 84px; height: 55px; display: block; }   /* 20 aug nacht (Philip): 'planeet iconen veel groter' */
-    .plan:not(.is-pay) > h2 { grid-area: t; margin: 0; width: auto; align-self: end; font-size: 17px; line-height: 1.25; }
-    .plan:not(.is-pay) > .price { grid-area: p; margin: 2px 0 0; width: auto; align-self: start; font-size: 14px; font-weight: 400; color: var(--gray-500); line-height: 1.35; }
-    .plan:not(.is-pay) > .price .amt { font-size: 15px; font-weight: 700; color: var(--gray-950); }
-    .plan:not(.is-pay) > .price small { font-size: 14px; font-weight: 400; color: var(--gray-500); }
-    .plan:not(.is-pay) > .offer-total { grid-area: o; margin: 1px 0 0; font-size: 12.5px; color: var(--gray-500); }
-    /* 20 aug nacht (Philip): 'alles van wiswiz inbegrepen moet wel in ieder kaartje blijven staan en openklapbaar blijven' */
-    .plan:not(.is-pay) > .incl-details { grid-area: i; margin-top: 10px; }
-    .plan:not(.is-pay) > .incl-details .incl { margin-top: 0; }
-    /* het startaanbod: stil caps-label als kopband op de jaarkaart (geen schreeuwende gele pill) */
-    .plan:not(.is-pay) > .badge { grid-area: b; position: static; transform: none; min-width: 0; width: calc(100% + 32px);
-      margin: 0 -16px 14px; padding: 8px 12px; border-radius: 15px 15px 0 0;
+    /* het startaanbod als stil caps-kopband op de jaarkaart (behouden op Philips woord) */
+    .plan:not(.is-pay) > .badge { position: static; transform: none; min-width: 0; display: block; width: calc(100% + 40px);
+      margin: 0 -20px 18px; padding: 8px 12px; border-radius: 15px 15px 0 0;
       background: rgba(236, 200, 98, .18); color: #8a6410; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
     /* selectie: één 1px-groene rand + het S-merkje als kleine chip op de rand (Brilliant), verder niets */
     .plan.is-sel:not(.is-pay) { border-color: var(--success); box-shadow: 0 0 0 1px var(--success); }
