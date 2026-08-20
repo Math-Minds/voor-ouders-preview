@@ -58,20 +58,6 @@
   .incl-list li b { color:var(--gray-950); }
   .incl-list li span { color:var(--gray-500); }
   .plan[data-plan="yearly"] > .kies { view-transition-name: cta; }
-  body.ws-bar-in #pakketdock { bottom: calc(var(--ws-bar, 100px) + 8px); }   /* 21 aug: de bottombar is terug op de pakketpagina's — de sticky knop stapelt erboven (barhoogte bevat de safe-area al) */
-  #pakketdock { position: fixed; left: 0; right: 0; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); z-index: 900;
-    padding: 0 20px; display: flex; justify-content: center; transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1); }
-  #pakketdock a { display: block; width: 100%; max-width: 384px; background: var(--success); color: #fff; text-align: center;
-    font-weight: 700; font-size: 16px; padding: 15px 16px; border-radius: 12px; text-decoration: none;
-    box-shadow: 0 2px 10px rgba(15,23,42,.16); -webkit-tap-highlight-color: transparent; }   /* 20 aug nacht: geen groene gloed de safe-area in — Safari-onderkant blijft see-through */
-  #pakketdock a:active { transform: scale(.985); }
-  /* 20 aug avond order 8 (Philip: 'de valideer betaalmethode moet dan diezelfde knop weer onderaan zijn, zo wordt het
-     super continu'): de dock verdwijnt NIET meer in de betaalstappen — hij is de ene doorlopende knop onderaan door de
-     hele reis (landing → pakket → verifieer → bank); alleen zijn tekst wisselt per stap. De knoppen ÍN de kaart zijn op
-     telefoon verborgen (de dock klikt ze programmatisch aan). */
-  @media (max-width: 767px) { .plan.is-pay .pay .go, .plan.is-pay .pay2 .go2 { display: none; } }
-  @media (min-width: 768px) { #pakketdock { display: none; } }
-  @media (prefers-reduced-motion: reduce) { #pakketdock { transition: none; } }
   .plan .kies { display:block; margin-top:16px; width:100%; background:#3ec487; border:0;   /* 19 aug: conversie-CTA in het site-groen, witte tekst */
     border-radius:12px; padding:13px 16px; font-size:15px; font-weight:700; color:#fff;
     box-shadow:0 6px 18px rgba(62,196,135,.32); }
@@ -83,17 +69,13 @@
      quote 15px in gray-700, en de acties als STILLE knoppen: 32px, neutraal grijs vlak (iOS-fill), alleen de glyphs in
      kleur; geen tint-vlakken of ringen meer. Gejureerd tegen een wit haarlijn-pilletje om beide knoppen (kaarttaal):
      dat werd opnieuw een los widgetje. Tapzone blijft 44px (inset -6). */
-  /* 20 aug avond (Philip: 'maak mijn hoofd onderdeel van de tekst, niet los — anders wrapt de tekst niet verder; en fix
-     betere uitlijning met de whatsapp- en telefoonknop'): de foto FLOAT nu in de tekst (de quote wrapt eromheen en
-     gebruikt de volle blokbreedte), en de attributie + de twee stille knoppen staan samen op één nette voetregel
-     (attributie links, knoppen rechts — zelfde rechteras als de tekst). */
-  .ph-quote.pq1 { display:block; margin:2px auto 24px; max-width:30rem; text-align:left; }
-  .ph-quote.pq1 .ph-foto { float:left; width:40px; height:40px; border-radius:9999px; object-fit:cover; box-shadow:0 0 0 .5px rgba(0,0,0,.08); margin:2px 10px 2px 0; }
-  .ph-quote.pq1 blockquote { margin:0; padding:0; }
-  .ph-quote.pq1 blockquote p { margin:0; font-size:15px; line-height:1.5; font-weight:400; color:var(--gray-700); text-wrap:pretty; }
-  .ph-quote.pq1 .ph-voet { display:flex; align-items:center; gap:10px; margin-top:6px; }
-  .ph-quote.pq1 figcaption { flex:1 1 auto; min-width:0; font-size:12.5px; font-weight:500; color:var(--gray-500); }
-  .ph-quote.pq1 .ph-acties { flex:none; display:flex; gap:8px; }
+  /* 21 aug: Philips tekstje bovenaan op de achtergrond — foto float ín de tekst (zijn eerdere order), de nieuwe zin,
+     en de twee stille knoppen rechts op de voetregel (zelfde rechteras als de tekst). Geen kaart, geen balk. */
+  .ph-quote { display:block; margin:2px auto 22px; max-width:30rem; text-align:left; }
+  .ph-quote .ph-foto { float:left; width:40px; height:40px; border-radius:9999px; object-fit:cover; box-shadow:0 0 0 .5px rgba(0,0,0,.08); margin:2px 10px 2px 0; }
+  .ph-quote .ph-zin { margin:0; font-size:15px; line-height:1.5; font-weight:400; color:var(--gray-700); text-wrap:pretty; }
+  .ph-quote .ph-voet { display:flex; justify-content:flex-end; margin-top:6px; }
+  .ph-quote .ph-acties { display:flex; gap:8px; }
   .ph-icon { position:relative; display:inline-flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:9999px;
     background:rgba(120,120,128,.1); transition:transform .15s ease, background .15s ease; -webkit-tap-highlight-color:transparent; }
   .ph-icon::after { content:""; position:absolute; inset:-6px; border-radius:inherit; }
@@ -218,76 +200,25 @@
   html.vt-aan body { animation: vtf-in .28s ease both; }
   @keyframes vtf-in { from { opacity:0; } }
 
-  /* ================= 20 aug avond — MOBIEL REDESIGN pakketkeuze (Philips order 5: 'super ugly — denk goed na waar dat
-     door komt; steve jobs kwaliteit', met zijn Brilliant-screenshot als referentie voor order 4).
-
-     DIAGNOSE waarom het lelijk was (expliciet, zoals gevraagd):
-     1. HALVE TOESTANDEN: de per-kaart-knoppen werden door een CSS-volgordefout niet verborgen en versplinterden als
-        smalle groene slivers in het kaartgrid — kapot beeld. (Dit blok staat daarom aan het EIND van de stylesheet.)
-     2. TE VEEL ACCENTEN: gele band + groene ring + groene knoppen + oranje chip + blauw/groene contactknoppen — vijf
-        kleuren vochten om aandacht. Jobs-lat: ÉÉN accent (groen = selectie/actie); het geel wordt een stil caps-label.
-     3. GEEN RITME: paddings 18/16/24, gaps 14/24, banden met eigen marges — nu alles op een 4/8/12/16-ritme.
-     4. DRIE INFORMATIELAGEN op de jaarkaart (band + maandprijs + jaarprijs) in schreeuwende maten — nu één rustige
-        prijsregel (bedrag vet, context licht) met de jaarprijs als stille subregel.
-     5. LIJNTJES OVERAL (kaartrand + ring + chipschaduw + uitklaprand): kaarten krijgen één haarlijn (gray-100),
-        selectie is één 1px-groene rand, verder niets.
-     6. DE KOP oogde als formulierlabel (16px grijs): nu een echte, rustige paginatitel in de inkt.
-     ================= */
+  /* ================= 21 aug — KOERSWIJZIGING (Philip: 'terug naar dat probeer 7 dagen gratis gewoon in ieder kaartje
+     stond, met het nieuwe tekstje bovenaan direct in de bg-achtergrond'): de pre-sheet-versie is de basis — de knop
+     staat weer per kaart, tik-op-kaart = #43's morph en de kaart-stappen hebben hun eigen knoppen; geen sticky dock,
+     geen bar en geen wit sheet op deze pagina; de kop en Philips tekstje staan direct op de achtergrond. Gebleven uit
+     de tussenrondes (recentste orders, botsen niet): startaanbod-badge, planeet 140, prijs 27, iconen in de lijst. */
   @media (max-width: 767px) {
     .choice-q { font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: var(--gray-950); }
-    /* 20 aug nacht, correctie (Philip: 'de individuele kaartjes weer de layout van eerst — planeet groot gecentreerd,
-       de oude teksthiërarchieën; we winnen al heel veel doordat de knop weg is'): het supercompacte kaartgrid is eruit —
-       de kaarten gebruiken weer hun oorspronkelijke gecentreerde opbouw (grote planeet, naam 22, prijs 34, subregels,
-       openklapbare inbegrepen-lijst per kaart). Wat blijft: geen knop per kaart (selecteer-dan-druk), de startaanbod-
-       kopband, de selectie-rand + S-chip, het sheet en de sticky knop. */
-    .plans { gap: 16px; margin-top: 20px; }
-    .plan > .kies { display: none; }
-    .plan:not(.is-pay):not(.is-off) { border-color: var(--gray-300); }
-    .plan.hl:not(.is-pay) { padding-top: 0; }
-    /* het startaanbod als stil caps-kopband op de jaarkaart (behouden op Philips woord) */
-    .plan:not(.is-pay) > .badge { position: static; transform: none; min-width: 0; display: block; width: calc(100% + 40px);
-      margin: 0 -20px 18px; padding: 8px 12px; border-radius: 15px 15px 0 0;
-      background: rgba(236, 200, 98, .18); color: #8a6410; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
-    /* selectie: één 1px-groene rand + het S-merkje als kleine chip op de rand (Brilliant), verder niets */
-    .plan.is-sel:not(.is-pay) { border-color: var(--success); box-shadow: 0 0 0 1px var(--success); }
-    .plan.is-sel:not(.is-pay)::after { content: ""; position: absolute; top: -12px; right: 14px; width: 26px; height: 26px;
-      border-radius: 9999px; background: #fff url("assets/wiswiz-s.png") center/15px 15px no-repeat;
-      box-shadow: 0 0 0 1px var(--success); }
-    /* de vliegende CTA van de landing landt op de sticky knop */
-    .plan[data-plan="yearly"] > .kies { view-transition-name: none; }
-    #pakketdock a { view-transition-name: cta; }
-    /* --- 20 aug nacht (Philips sheet-idee: 'al die pakketkeuzes in een wit kaartje dat van onder komt waar Probeer 7
-       dagen gratis overheen komt — dan wordt het continu met het scherm erna'): op telefoon is <main> één WIT SHEET dat
-       bij het laden van onderen komt (iOS-curve), met de gedimde paginakleur erachter en ronde bovenhoeken; de sticky
-       knop ligt over de onderrand van het sheet. De keuze, de gegevens-stap en de bankstap gebeuren allemaal ÍN dit
-       sheet (#43's morph wisselt de inhoud), en de betaalkaart is hier RANDLOOS — hij versmelt met het sheet, zodat de
-       overgang letterlijk één doorlopend wit vlak is. --- */
-    body { background: var(--achtergrond); }   /* 21 aug: geen contact-element meer boven het sheet (de bar zit onderaan) — de strook erboven is gewoon de site-achtergrond */
-    .ph-quote.pq1 { display: none; }   /* het trust-blokje ÍN het sheet vervalt op telefoon (specifieker dan de pq1-blokregel) — Philips element leeft boven het sheet */
-    main { position: relative; z-index: 1; background: #fff; border-radius: 22px 22px 0 0; margin-top: 18px; min-height: 100svh; max-width: none;   /* 100svh: ook als een stap de pagina omhoog scrolt (bank) vult het sheet de onderkant */
-      padding: 18px var(--pad) calc(var(--ws-bar, 100px) + 76px);   /* onderin: de bar + de gestapelde sticky knop */
-      box-shadow: 0 -10px 34px rgba(15, 23, 42, .10);
-      animation: sheet-in .5s cubic-bezier(.32,.72,0,1) both; }
-    @keyframes sheet-in { from { transform: translateY(28px); opacity: .0; } to { transform: none; opacity: 1; } }
-    @media (prefers-reduced-motion: reduce) { main { animation: none; } }
-    .plan:not(.is-pay):not(.is-off) { border-color: var(--gray-300); }   /* op het witte sheet iets duidelijker rand (één tint) */
-    .plan.is-sel:not(.is-pay) { border-color: var(--success); }
-    .plan.is-pay { border-color: transparent; }   /* de betaalstap versmelt randloos met het sheet: één doorlopend vlak */
   }
-  @media (max-width: 767px) { body { padding-bottom: 0; } }   /* de dock-ruimte zit ín het sheet (main padding-bottom); body-padding zou als gedimde strook ónder het sheet uitsteken */
 </style>
-<link rel="stylesheet" href="assets/sheet.css" />  <link rel="manifest" href="manifest.json" />
+<link rel="manifest" href="manifest.json" />
 </head><body>
 
 <main>
   <!-- 20 aug (Philip): geen contact-bar op deze pagina; in plaats daarvan zijn korte regel BOVEN de keuze, direct op de
        achtergrond in de review-quote-stijl. Staat BUITEN #plans, dus de morph (#43) raakt hem niet: hij blijft staan
        tijdens en na het morphen naar de betaalkaart. -->
-  <!-- 20 aug (Philip, met screenshot): 'kale tekst — beter designen met mijn foto, de quote en de twee actie-knoppen'.
-       Trust-blokje V1 (rij): foto links, quote + attributie, WhatsApp/bel rechts in exact de contact-bar-knopstijl.
-       Gejureerd tegen V2 (gecentreerd, foto boven, knoppen eronder): V2 duwde de eerste kaart onder de vouw. Staat BUITEN
-       #plans, dus de #43-morph raakt hem niet. -->
-  <figure class="ph-quote pq1"><img class="ph-foto" src="assets/philip.png" alt="" width="40" height="40" /><blockquote><p>&#8220;Twijfel je welk pakket past? Bel me gerust, ik denk met je mee.&#8221;</p></blockquote><div class="ph-voet"><figcaption>Philip, medeoprichter van WisWiz</figcaption><span class="ph-acties"><a class="ph-icon ph-wa" href="https://wa.me/31630231640?text=Hoi%20Philip%2C%20ik%20heb%20een%20vraag%20over%20de%20WisWiz-pakketten." target="_blank" rel="noopener" data-cta="whatsapp-pakket" aria-label="WhatsApp Philip"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg></a><a class="ph-icon ph-tel" href="tel:+31630231640" data-cta="bel-pakket" aria-label="Bel Philip, 06 30 23 16 40"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></a></span></div></figure>
+  <!-- 21 aug (Philip): zijn NIEUWE tekstje bovenaan, direct op de bg-achtergrond (geen wit vlak, geen bar op deze pagina):
+       foto ín de tekst (float), de zin, en de twee stille knoppen rechts op de voetregel. -->
+  <figure class="ph-quote pq1"><img class="ph-foto" src="assets/philip.png" alt="" width="40" height="40" /><p class="ph-zin">Hoi! Ik ben Philip, als je nog vragen hebt kan je me altijd bellen of appen.</p><div class="ph-voet"><span class="ph-acties"><a class="ph-icon ph-wa" href="https://wa.me/31630231640?text=Hoi%20Philip%2C%20ik%20heb%20een%20vraag%20over%20de%20WisWiz-pakketten." target="_blank" rel="noopener" data-cta="whatsapp-pakket" aria-label="WhatsApp Philip"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg></a><a class="ph-icon ph-tel" href="tel:+31630231640" data-cta="bel-pakket" aria-label="Bel Philip, 06 30 23 16 40"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></a></span></div></figure>
   <div class="qwrap"><button type="button" class="page-back" id="page-back" data-pagenav data-pagenav-href="./" aria-label="Terug naar de vorige pagina"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 3.5 6 8l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></button><p class="choice-q">Welk pakket past bij jou?</p><h1 class="pay-q">Start de proefweek voor je kind</h1></div>
   <div class="plans" id="plans">
     <!-- 20 aug (Philip, volledig bericht): 'Meest gekozen' weg; het STARTAANBOD is nu de badge bovenaan de jaarkaart en
@@ -312,53 +243,7 @@
     </article>
   </div>
 </main>
-<!-- 21 aug: de sticky knop staat op BODY-niveau — binnen <main> maakte de sheet-entrance-animatie (transform, fill both)
-     main tot containing block en plakte de 'fixed' knop aan het sheet i.p.v. aan de viewport (gemeten: knop buiten beeld). -->
-<div id="pakketdock"><a href="gegevens.html?plan=yearly" data-cta="kies-sticky">Probeer 7 dagen gratis</a></div>
-<script src="assets/sheet.js" data-trigger="direct"></script>
 <script src="assets/morph.js"></script>
-<script>
-/* 20 aug avond (Philip): selecteer-dan-druk op telefoon. Een kaart-tik SELECTEERT (capture-fase, vóór de morph-handler
-   van #43); de sticky knop bevestigt en geeft de tik door aan de morph (window.__pakketBevestig laat hem passeren).
-   Desktop onaangeraakt: daar morft een kaart-tik direct, zoals #43 hem bouwde. */
-(function () {
-  var plans = document.getElementById('plans'), dock = document.getElementById('pakketdock');
-  if (!plans || !dock) return;
-  var btn = dock.querySelector('a'), mq = window.matchMedia('(max-width: 767px)');
-  function kies(card) {
-    [].forEach.call(plans.querySelectorAll('.plan'), function (c) { c.classList.toggle('is-sel', c === card); c.setAttribute('aria-pressed', c === card ? 'true' : 'false'); });
-    btn.setAttribute('href', 'gegevens.html?plan=' + card.getAttribute('data-plan'));
-  }
-  kies(plans.querySelector('.plan[data-plan="yearly"]'));   /* Jaarabonnement standaard geselecteerd */
-  plans.addEventListener('click', function (e) {
-    if (!mq.matches || window.__pakketBevestig) return;      /* desktop of bevestigingsdruk: doorlaten naar de morph */
-    var card = e.target.closest('.plan'); if (!card || card.classList.contains('is-pay')) return;
-    if (plans.querySelector('.plan.is-pay')) return;
-    if (e.target.closest('.incl-details, .pay, .pay2, .close')) return;
-    e.preventDefault(); e.stopPropagation();                 /* capture: de morph-handler op de kaart vuurt niet */
-    kies(card);
-  }, true);
-  /* order 8: één doorlopende knop — de tekst en het gedrag volgen de stap (lijst → gegevens → bank) */
-  function stand() {
-    var payCard = plans.querySelector('.plan.is-pay');
-    btn.textContent = !payCard ? 'Probeer 7 dagen gratis'
-      : payCard.classList.contains('is-betaal') ? 'Naar je bank' : 'Verifieer je betaalmethode';
-  }
-  if (window.MutationObserver) new MutationObserver(stand).observe(plans, { attributes: true, subtree: true, attributeFilter: ['class'] });
-  stand();
-  btn.addEventListener('click', function (e) {
-    e.preventDefault();
-    var payCard = plans.querySelector('.plan.is-pay');
-    if (payCard) {
-      var doel = payCard.classList.contains('is-betaal') ? payCard.querySelector('.pay2 .go2') : payCard.querySelector('.pay .go');
-      if (doel) doel.click();
-      return;
-    }
-    var c = plans.querySelector('.plan.is-sel'); if (!c) return;
-    window.__pakketBevestig = true; try { c.click(); } finally { window.__pakketBevestig = false; }
-  });
-})();
-</script>
 <script>
 /* #43 r3: terug-richting herkennen (fade i.p.v. slide) + fallback voor browsers zonder View Transitions. */
 addEventListener('pageswap', function (e) { if (e.viewTransition) { e.viewTransition.finished.catch(function () {}); e.viewTransition.ready.catch(function () {}); } });   /* teardown/skip-rejects van de oude pagina stil */
