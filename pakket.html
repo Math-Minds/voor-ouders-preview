@@ -63,7 +63,11 @@
     font-weight: 700; font-size: 16px; padding: 15px 16px; border-radius: 12px; text-decoration: none;
     box-shadow: 0 8px 24px rgba(62,196,135,.38), 0 2px 6px rgba(15,23,42,.12); -webkit-tap-highlight-color: transparent; }
   #pakketdock a:active { transform: scale(.985); }
-  body:has(.plan.is-pay) #pakketdock, body:has(.plans.busy) #pakketdock { opacity: 0; transform: translateY(14px); pointer-events: none; }
+  /* 20 aug avond order 8 (Philip: 'de valideer betaalmethode moet dan diezelfde knop weer onderaan zijn, zo wordt het
+     super continu'): de dock verdwijnt NIET meer in de betaalstappen — hij is de ene doorlopende knop onderaan door de
+     hele reis (landing → pakket → verifieer → bank); alleen zijn tekst wisselt per stap. De knoppen ÍN de kaart zijn op
+     telefoon verborgen (de dock klikt ze programmatisch aan). */
+  @media (max-width: 767px) { .plan.is-pay .pay .go, .plan.is-pay .pay2 .go2 { display: none; } }
   @media (min-width: 768px) { #pakketdock { display: none; } }
   @media (prefers-reduced-motion: reduce) { #pakketdock { transition: none; } }
   .plan .kies { display:block; margin-top:16px; width:100%; background:#3ec487; border:0;   /* 19 aug: conversie-CTA in het site-groen, witte tekst */
@@ -324,9 +328,23 @@
     e.preventDefault(); e.stopPropagation();                 /* capture: de morph-handler op de kaart vuurt niet */
     kies(card);
   }, true);
+  /* order 8: één doorlopende knop — de tekst en het gedrag volgen de stap (lijst → gegevens → bank) */
+  function stand() {
+    var payCard = plans.querySelector('.plan.is-pay');
+    btn.textContent = !payCard ? 'Probeer 7 dagen gratis'
+      : payCard.classList.contains('is-betaal') ? 'Naar je bank' : 'Verifieer je betaalmethode';
+  }
+  if (window.MutationObserver) new MutationObserver(stand).observe(plans, { attributes: true, subtree: true, attributeFilter: ['class'] });
+  stand();
   btn.addEventListener('click', function (e) {
     e.preventDefault();
-    var c = plans.querySelector('.plan.is-sel'); if (!c || plans.querySelector('.plan.is-pay')) return;
+    var payCard = plans.querySelector('.plan.is-pay');
+    if (payCard) {
+      var doel = payCard.classList.contains('is-betaal') ? payCard.querySelector('.pay2 .go2') : payCard.querySelector('.pay .go');
+      if (doel) doel.click();
+      return;
+    }
+    var c = plans.querySelector('.plan.is-sel'); if (!c) return;
     window.__pakketBevestig = true; try { c.click(); } finally { window.__pakketBevestig = false; }
   });
 })();
