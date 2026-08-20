@@ -44,7 +44,7 @@
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; height: auto; display: block; }
 
-    body { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)); }   /* 20 aug avond: geen contact-bar meer op de landing (Philip: 'de philip bar pas als op start een proefweek is gedrukt') — alleen de dock-zone */
+    body { padding-bottom: calc(var(--ws-bar, 100px) + 82px); }   /* 21 aug: de contact-bar is terug op de homepage (Philip: 'ik vond het eerder op de homepage er best oke uitzien — kan dat niet gewoon daar') + dock-zone */
     /* r9 (Philip 18 aug: "hij moet gewoon op zn plek sliden en dan daar blijven"): geen inschuif-animatie meer.
        De knop is nu ECHT position:sticky — hij scrolt gewoon mee met de pagina, en zodra hij de bovenrand raakt (8px +
        safe-area) blijft hij daar staan; scroll je terug, dan gaat hij op dezelfde rand weer mee naar beneden. Eén beweging
@@ -64,6 +64,7 @@
       bottom: calc(12px + env(safe-area-inset-bottom, 0px));
       opacity: 0; transform: translateY(14px); pointer-events: none;
       transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1), bottom .35s cubic-bezier(.32,.72,0,1); }
+    body.ws-bar-in #ctadock { bottom: calc(var(--ws-bar, 100px) + 8px); }   /* voorbij de hero stapelt de dock boven de bar (barhoogte bevat de safe-area al) */
     #ctadock.is-on { opacity: 1; transform: none; pointer-events: auto; }
     /* 20 aug nacht (Philip: 'de onderkant van de safari-pagina moet see-through blijven'): geen gekleurde gloed meer
        de onderrand/safe-area in — neutrale, korte schaduw; onder de knop is de onderrand puur de paginakleur, zodat
@@ -427,6 +428,7 @@
   @keyframes vtf-in { from { opacity:0; } }
   </style>
   <link rel="stylesheet" href="assets/stapel.css" />
+  <link rel="stylesheet" href="assets/sheet.css" />
   <link rel="preload" as="image" href="assets/hero-t2.webp" />
   <link rel="manifest" href="manifest.json" />
 </head>
@@ -664,6 +666,7 @@ addEventListener('pagereveal', function () {
   addEventListener('pageshow', function (ev) { if (ev.persisted) document.documentElement.classList.remove('vt-weg'); });
 })();
 </script>
+<script src="assets/sheet.js" data-trigger="hero"></script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
 </body>
 </html>

@@ -261,21 +261,24 @@
        sheet (#43's morph wisselt de inhoud), en de betaalkaart is hier RANDLOOS — hij versmelt met het sheet, zodat de
        overgang letterlijk één doorlopend wit vlak is. --- */
     body { background: #5b6b7a; }   /* de gedimde 'achtergrond erachter' (de site-achtergrond met dim gemengd) */
-    /* Philips contact-element boven het sheet: foto inline in de tekst (float, zoals zijn eerdere order), witte tekst op
-       de dim, en twee heldere frosted knoppen — duidelijk drukbaar (38px + tapzone). Fixed: het sheet scrollt eroverheen. */
-    #sheetkop { position: fixed; top: 0; left: 0; right: 0; z-index: 0; display: flex !important; align-items: flex-start; gap: 12px;
-      padding: 16px var(--pad) 0; }
-    #sheetkop .sk-foto { display: none; }
+    /* 21 aug (Philip: 'ik vond het eerder op de homepage er best oke uitzien' — dezelfde uitvoering ook hier): boven het
+       sheet staat zijn element als LOS WIT KAARTJE op de dim, in exact de stijl van de homepage-bar — wit materiaal met
+       blur en haarlijn, foto 36, zijn zin in de inkt, en de twee getinte 40px-knoppen. Fixed; het sheet scrollt eroverheen. */
+    #sheetkop { position: fixed; top: 10px; left: 12px; right: 12px; z-index: 0; display: flex !important; align-items: center; gap: 12px;
+      padding: 12px 14px; border-radius: 20px;
+      background: rgba(255,255,255,.9); -webkit-backdrop-filter: blur(40px) saturate(1.6); backdrop-filter: blur(40px) saturate(1.6);
+      box-shadow: inset 0 .5px 0 rgba(255,255,255,.9), 0 0 0 .5px rgba(0,0,0,.08), 0 8px 28px rgba(3,7,18,.18); }
+    #sheetkop .sk-foto { display: block; flex: none; width: 36px; height: 36px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 .5px rgba(0,0,0,.08); }
     #sheetkop .sk-kern { flex: 1 1 auto; min-width: 0; }
-    #sheetkop .sk-kern p { margin: 0; font-size: 14px; line-height: 1.45; color: rgba(255,255,255,.94); text-wrap: pretty; }
-    #sheetkop .sk-kern p::before { content: ""; float: left; width: 34px; height: 34px; margin: 1px 10px 2px 0; border-radius: 9999px;
-      background: url("assets/philip.png") center/cover; box-shadow: 0 0 0 1.5px rgba(255,255,255,.65); }
-    #sheetkop .sk-acties { flex: none; display: flex; flex-direction: column; gap: 8px; }
+    #sheetkop .sk-kern p { margin: 0; font-size: 13.5px; line-height: 1.45; font-weight: 400; letter-spacing: -0.005em; color: var(--gray-950); text-wrap: pretty; }
+    #sheetkop .sk-kern p::before { content: none; }
+    #sheetkop .sk-acties { flex: none; display: flex; flex-direction: column; gap: 6px; }
     #sheetkop .sk-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px;
-      border-radius: 9999px; background: rgba(255,255,255,.94); box-shadow: 0 1px 4px rgba(3,7,18,.25); transition: transform .15s ease; -webkit-tap-highlight-color: transparent; }
-    #sheetkop .sk-icon::after { content: ""; position: absolute; inset: -5px; border-radius: inherit; }
+      border-radius: 9999px; transition: transform .15s ease; -webkit-tap-highlight-color: transparent; }
+    #sheetkop .sk-icon::after { content: ""; position: absolute; inset: -4px; border-radius: inherit; }
     #sheetkop .sk-icon svg { width: 18px; height: 18px; }
-    #sheetkop .sk-wa svg { fill: #1da851; } #sheetkop .sk-tel svg { fill: #0a72d6; width: 16px; height: 16px; }
+    #sheetkop .sk-wa { background: rgba(37,211,102,.2); box-shadow: inset 0 0 0 1px rgba(29,168,81,.35); } #sheetkop .sk-wa svg { fill: #128c45; }
+    #sheetkop .sk-tel { background: rgba(0,122,255,.16); box-shadow: inset 0 0 0 1px rgba(10,114,214,.32); } #sheetkop .sk-tel svg { fill: #0a72d6; width: 16px; height: 16px; }
     #sheetkop .sk-icon:active { transform: scale(.92); }
     .ph-quote.pq1 { display: none; }   /* het trust-blokje ÍN het sheet vervalt op telefoon (specifieker dan de pq1-blokregel) — Philips element leeft boven het sheet */
     main { position: relative; z-index: 1; background: #fff; border-radius: 22px 22px 0 0; margin-top: 122px; min-height: 100svh; max-width: none;   /* 100svh: ook als een stap de pagina omhoog scrolt (bank) vult het sheet de onderkant */
