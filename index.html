@@ -68,6 +68,10 @@
     #ctadock .btn-primary { width: 100%; max-width: 384px; margin: 0; box-shadow: 0 8px 24px rgba(62,196,135,.38), 0 2px 6px rgba(15,23,42,.12); }
     @media (min-width: 768px) { #ctadock { display: none; } }   /* desktop: bovenkant vrij, geen sticky (bar staat daar rechtsonder) */
     @media (prefers-reduced-motion: reduce) { #ctadock { transition: none; } }
+    /* #43 r3: precies ÉÉN element draagt de gedeelde-element-naam van de vliegende CTA (twee tegelijk = transitie
+       afgebroken): staat de bottom-dock aan, dan de dock-knop; anders de originele hero-CTA. */
+    body:not(:has(#ctadock.is-on)) .hero .cta-group .btn-primary { view-transition-name: cta; }
+    #ctadock.is-on .btn-primary { view-transition-name: cta; }
     /* --- r11 (Philip 19 aug, tweede versie: GEEN logo-header — "de kop bovenaan, dan de video-knop eronder, dan de
        hero-opstelling en daaronder de Start-proefweek-button — als opening/viewport voor alle devices"): de opening is
        één gecentreerde verticale stapel op ALLE formaten (de desktop-twee-kolommen-rij is weg). Volgorde: kop →
@@ -391,6 +395,28 @@
     .proof .layer.review blockquote p { color: #1f2937; }
     .proof .layer.review blockquote p { font-size: 17px; line-height: 1.65; }
     @media (min-width: 640px) { .proof .layer.review blockquote p { font-size: 18px; } }
+
+  /* ===== #43 r3: vloeiende paginawissel (View Transitions, cross-document) — één overgangs-taal met de kaart-morph:
+     zelfde iOS-curve, rustige crossfade, binnenkomende pagina 12px omhoog; bij terug-navigatie geen slide (alleen fade).
+     De groene CTA is het gedeelde element: hij vliegt van /voor-ouders naar de Probeer-knop op de jaarkaart, en terug.
+     Browsers zonder ondersteuning krijgen de nette fade-fallback (scriptje onderaan de pagina). ===== */
+  /* het team-blok (width:100%+44px) maakte de pagina 2px breder dan de viewport: de mobiele layout-viewport rekte mee
+     (392 vs 390 op pakket) en een paginawissel met twee verschillende snapshot-maten wordt door de browser AFGEBROKEN.
+     clip op de root voorkomt de horizontale overflow (en de 2px zijwaartse pan die de pagina stiekem had). */
+  html, body { overflow-x: clip; }
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: vt-uit var(--vt-dur, .38s) cubic-bezier(.32,.72,0,1) both; }
+  ::view-transition-new(root) { animation: vt-in var(--vt-dur, .38s) cubic-bezier(.32,.72,0,1) both; }
+  html.vt-terug::view-transition-new(root) { animation-name: vt-in-fade; }
+  @keyframes vt-uit { to { opacity:0; } }
+  @keyframes vt-in { from { opacity:0; transform:translateY(12px); } }
+  @keyframes vt-in-fade { from { opacity:0; } }
+  ::view-transition-group(cta) { animation-duration: var(--vt-dur, .38s); animation-timing-function: cubic-bezier(.32,.72,0,1); }
+  ::view-transition-old(cta), ::view-transition-new(cta) { height:100%; width:100%; object-fit:fill; }
+  @media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root), ::view-transition-group(cta) { animation:none !important; } }
+  html.vt-weg body { opacity:0; transition:opacity .2s ease; }
+  html.vt-aan body { animation: vtf-in .28s ease both; }
+  @keyframes vtf-in { from { opacity:0; } }
   </style>
   <link rel="stylesheet" href="assets/sheet.css" />
   <link rel="stylesheet" href="assets/stapel.css" />
@@ -402,7 +428,7 @@
        Conversie bij scrollen blijft de sticky CTA; contact is de Apple-slide contact-sheet (#32, assets/sheet.js, data-trigger=hero):
        WEG zolang de opening in beeld is, glijdt in zodra je voorbij de hero bent. -->
   <div id="ctadock">
-    <a class="btn btn-primary" href="pakket.html" data-cta="checkout-sticky">Start een proefweek voor jouw kind</a>
+    <a class="btn btn-primary" href="pakket.html" data-cta="checkout-sticky" data-pagenav>Start een proefweek voor jouw kind</a>
   </div>
 
   <main>
@@ -423,7 +449,7 @@
       <div class="actions">
         <div class="cta-stack">
           <div class="cta-group">
-            <a class="btn btn-primary" href="pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
+            <a class="btn btn-primary" href="pakket.html" data-cta="checkout" data-pagenav>Start een proefweek voor jouw kind</a>
           </div>
         </div>
         <!-- Philip-tekst + belknop: verhuisd naar de social-proof-sectie (wrk-34), Philips order 17 aug -->
@@ -613,6 +639,27 @@
   document.addEventListener('scroll',ask,{passive:true,capture:true});
   window.addEventListener('resize',ask); window.addEventListener('orientationchange',ask); window.addEventListener('load',ask);
   check();
+})();
+</script>
+<script>
+/* #43 r3: terug-richting herkennen (fade i.p.v. slide) + fallback voor browsers zonder View Transitions. */
+addEventListener('pageswap', function (e) { if (e.viewTransition) { e.viewTransition.finished.catch(function () {}); e.viewTransition.ready.catch(function () {}); } });   /* teardown/skip-rejects van de oude pagina stil */
+addEventListener('pagereveal', function () {
+  try { if (navigation.activation && navigation.activation.navigationType === 'traverse') document.documentElement.classList.add('vt-terug'); else document.documentElement.classList.remove('vt-terug'); } catch (_) {}
+});
+(function () {
+  if (document.startViewTransition) return;   // echte View Transitions: niets te doen
+  var rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('[data-pagenav]');
+    if (!a || rm) return;
+    var href = a.getAttribute('data-pagenav-href') || a.href;
+    e.preventDefault();
+    document.documentElement.classList.add('vt-weg');
+    setTimeout(function () { location.href = href; }, 190);
+  });
+  if (!rm) document.documentElement.classList.add('vt-aan');
+  addEventListener('pageshow', function (ev) { if (ev.persisted) document.documentElement.classList.remove('vt-weg'); });
 })();
 </script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>

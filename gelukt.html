@@ -32,6 +32,14 @@
   .aftertext { margin-top:20px; text-align:center; font-size:14px; color:var(--gray-500); }
   .subtitle { margin:10px 0 0; text-align:center; font-size:14px; color:var(--gray-700); }
 
+
+  /* ===== #43 r3: gelukt doet mee in de doorlopende paginawissel (zelfde overgangs-taal als index/pakket) ===== */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: vt-uit .38s cubic-bezier(.32,.72,0,1) both; }
+  ::view-transition-new(root) { animation: vt-in .38s cubic-bezier(.32,.72,0,1) both; }
+  @keyframes vt-uit { to { opacity:0; } }
+  @keyframes vt-in { from { opacity:0; transform:translateY(12px) } }
+  @media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root) { animation:none !important; } }
 </style>  <link rel="manifest" href="manifest.json" />
 </head><body>
 
@@ -49,5 +57,6 @@
     <p>De camera-app van de telefoon van je kind opent de link direct.</p>
   </div>
   <p class="aftertext">We hebben de link ook naar je e-mailadres gestuurd. Claimt je kind de link niet binnen een dag, dan herinneren we je per mail.</p>
-</main><script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
+</main><script>addEventListener('pageswap', function (e) { if (e.viewTransition) { e.viewTransition.finished.catch(function () {}); e.viewTransition.ready.catch(function () {}); } });</script>
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
 </body></html>
