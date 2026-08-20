@@ -88,7 +88,7 @@
       main { padding-top: var(--opening-top); }
       .hero { min-height: calc(100svh - 24px - var(--opening-top) - env(safe-area-inset-bottom, 0px));  /* #32 Apple-bar: geen bar in de opening meer (64px → 24px lucht onder de CTA) */
         /* nacht r13: grid i.p.v. flex, zodat de beeldrij (1fr) een DEFINIETE hoogte heeft en het beeldvenster erop kan meten (cqh) */
-        display: grid; grid-template-rows: auto auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }   /* 5 rijen: logo (telefoon), kop, startelement, beeld, CTA */
+        display: grid; grid-template-rows: auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }   /* 4 rijen: logo (telefoon), kop, beeldblok (startelement + beeld), CTA */
       /* Philip 19 aug: het WisWiz-logo op telefoon duidelijk prominenter bovenaan de hero (alleen ≤767px; elegant, niet overdreven): 48px hoog, gecentreerd, 14px lucht onder */
       .hero-logo { display: block; height: 48px; width: auto; margin: 0 auto 14px; }
       /* het beeld krijgt alle restruimte en staat daarin een fractie BOVEN het midden (optisch centrum);
@@ -104,8 +104,8 @@
          uit het venster groeit. */
       .hero-visual { min-height: 0; align-self: stretch; container-type: size; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-bottom: 4svh;
         width: calc(100% + var(--pad) * 2); max-width: none; }
-      .hero-visual .blend { --cap: var(--hero-cap, 0.8); flex: 0 0 auto;
-        width: min(100cqw, calc(100cqh * 16 / 9)); height: min(100cqh, calc(100cqw * var(--cap))); margin: 0 auto; overflow: hidden; }
+      .hero-visual .blend { --cap: var(--hero-cap, 0.8); flex: 0 0 auto; --vrij: calc(100cqh - 62px);   /* 62px = startelement + marge in hetzelfde venster */
+        width: min(100cqw, calc(var(--vrij) * 16 / 9)); height: min(var(--vrij), calc(100cqw * var(--cap))); margin: 0 auto; overflow: hidden; }
       .hero-visual .blend img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
       .actions { padding-bottom: 12px; }
     }
@@ -237,19 +237,18 @@
     .vstart.vd::after { content: ""; position: absolute; left: 6px; right: 14px; bottom: 2px; height: 2px; border-radius: 1px; background: rgba(31,111,176,.45); transition: background .15s ease; }
     .vstart.vd:hover .vstart-text { color: #17578c; }
     .vstart.vd:hover::after { background: var(--info-dark); }
-    /* 20 aug derde order (Philip, VARIANT om te vergelijken): de hele bovenkant — de hero-kop ÉN het startelement
-       (tekst + play-blokje + underline) — samen in de INFO-kleur #3e8ed0. De vorige stand (alles in de H1-inkt
-       gray-950) was commit b479bd9; terugzetten is die klasse-set + h1-kleur terugdraaien.
-       Meting: #3e8ed0 op de lichtblauwe bg is ~3,3:1 — genoeg voor de grote vette kop (WCAG large ≥3:1), maar de
-       17px-regel van het startelement zit daar formeel onder; aan Philip gemeld. */
-    .hero h1 { color: var(--info); }
-    .vstart.vink .vstart-mark { background: var(--info); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(31,111,176,.28); }
+    /* 20 aug vierde order (Philip, VARIANT 3 om te vergelijken): het bovenblok — hero-kop + startelement — in het
+       WisWiz-ORANJE (--mathorange #db9a1f, de donkere logokleur). Eerdere standen: donkere inkt = b479bd9,
+       info-blauw = 0e41461. Contrast #db9a1f op de lichtblauwe bg ≈ 2,5:1 — onder de WCAG-grens voor de grote
+       vette kop (3:1); als variant live gezet zoals gevraagd, aan Philip gemeld. */
+    .hero h1 { color: var(--mathorange); }
+    .vstart.vink .vstart-mark { background: var(--mathorange); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(197,138,25,.35); }
     .vstart.vink .vstart-mark svg { fill: #fff; }
-    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: var(--info-dark); }
-    .vstart.vink .vstart-text { color: var(--info); }
-    .vstart.vink:hover .vstart-text { color: var(--info-dark); }
-    .vstart.vink::after { background: var(--info); }
-    .vstart.vink:hover::after { background: var(--info-dark); }
+    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: #c58a19; }
+    .vstart.vink .vstart-text { color: var(--mathorange); }
+    .vstart.vink:hover .vstart-text { color: #c58a19; }
+    .vstart.vink::after { background: var(--mathorange); }
+    .vstart.vink:hover::after { background: #c58a19; }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -381,6 +380,7 @@
        font-size en stijl"): was moeder 17px/1.65 (lang) naast Mattia 18px/1.6 — nu BEIDE reviews in precies dezelfde zetstijl:
        17px/1.65 op telefoon, 18px vanaf 640px, zelfde kolombreedte (34rem). */
     .proof .layer.review { max-width: 34rem; }
+    .proof .layer.review figcaption { margin: 0 0 10px; }   /* 20 aug (Philip): attributie als header BOVEN de quote */
     .proof .layer.review blockquote p { font-size: 17px; line-height: 1.65; }
     @media (min-width: 640px) { .proof .layer.review blockquote p { font-size: 18px; } }
   </style>
@@ -402,8 +402,10 @@
     <section class="hero">
       <img class="hero-logo" src="assets/wiswizlogo.png" alt="WisWiz" width="300" height="150" />
       <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
-      <a class="vstart v1 vd vink" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       <div class="hero-visual">
+        <!-- 20 aug (Philip): het startelement staat nu NET BOVEN de hero-image (in het beeldblok, dus kop → element → beeld → CTA);
+             het beeldvenster rekent zijn hoogte nu met de element-ruimte mee (100cqh − 62px). -->
+        <a class="vstart v1 vd vink" href="assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
         <a class="herolink" id="videocard" href="assets/opening.mp4" data-cta="video" aria-label="WisWiz in 30 seconden (video)">
         <div class="blend" id="herovisual">
         <img src="assets/hero-t2.webp" alt="Een wiskundeboek, een telefoon met WisWiz en een schrift met een vastgelopen uitwerking" width="3200" height="1800" />
@@ -423,14 +425,15 @@
 
     <section class="proof" id="proof">
       <!-- r7 (Philip 18 aug): het Philip-blok is uit de sectie — de bottom bar is voortaan het Philip/contact-element -->
+      <!-- 20 aug (Philip): de attributie staat nu als HEADER BOVEN elke review, de quote eronder (was bijschrift onder) -->
       <figure class="layer review lang">
+        <figcaption>Moeder van een brugklasleerling</figcaption>
         <!-- r8 (Philip 18 aug): de VOLLEDIGE originele review, verbatim (was ingekort) — in dezelfde losse quote-stijl, met lucht -->
         <blockquote><p>&#8220;Mijn dochter is dit jaar voor het eerst naar de middelbare gegaan en al snel had ze wat hulp nodig bij wiskunde dus toen ik hoorde van WisWiz was ik heel enthousiast. Je krijgt bij elke opgave een goeie uitleg en kan zelfs vragen stellen. We gebruiken het meestal samen. Ik lees het en leg het aan haar uit. Op die manier kan ik haar veel beter helpen. Maar ze kan het ook in haar eentje gebruiken als ze wil. Als we deze app niet hadden gehad had ze waarschijnlijk wel op bijles gezeten. Echt een aanrader voor ouders en kinderen.&#8221;</p></blockquote>
-        <figcaption>Moeder van een brugklasleerling</figcaption>
       </figure>
       <figure class="layer review">
-        <blockquote><p>&#8220;Ik zit zelf in de 6e klas en vroeg me af wanneer jullie H15 zullen vrijgeven, ik heb namelijk echt heel veel aan WisWiz gehad voor hoofdstuk 14.&#8221;</p></blockquote>
         <figcaption>Mattia, 6 VWO</figcaption>
+        <blockquote><p>&#8220;Ik zit zelf in de 6e klas en vroeg me af wanneer jullie H15 zullen vrijgeven, ik heb namelijk echt heel veel aan WisWiz gehad voor hoofdstuk 14.&#8221;</p></blockquote>
       </figure>
       <!-- Institutionele waardering (#32 r7, Philips woord 18 aug): VIJF kaarten in de originele kranten-stijl (dunne rand, label vast op de bovenrand) — Het Parool, het FD, het Vossius Gymnasium,
            Stichting Wijs Bijles en Stichting Wiskunde Actief — op één elegante stapel, met vijf identieke labels. Domein #34. -->
