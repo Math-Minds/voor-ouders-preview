@@ -113,7 +113,7 @@
   @media (max-width:359px) { .plan.is-pay { grid-template-columns:52px minmax(0,1fr); column-gap:12px; } .plan.is-pay > .visual > svg { width:52px; height:34px; } .plan.is-pay > h2 { font-size:17px; } }
   .plan.is-pay > .price { grid-area:p; font-size:15px; font-weight:500; color:var(--gray-700); margin:2px 0 0; align-self:start; }
   .plan.is-pay > .price small { font-size:15px; font-weight:500; color:var(--gray-700); }
-  .plan.is-pay > .pay { grid-area:pay; }
+  .plan.is-pay > .pay, .plan.is-pay > .pay2 { grid-area:pay; }
   /* de betaalinhoud (= gegevens.html, in de kaart) */
   .pay { margin-top:20px; padding-top:18px; border-top:1px solid var(--gray-100); }
   .pay .facts { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
@@ -140,6 +140,32 @@
   .qwrap { display:grid; } .qwrap > * { grid-area:1 / 1; }   /* vraag en kop over elkaar, beide in de flow (geen lay-outsprong bij de wissel) */
   .pay-q { text-align:center; font-size:16px; font-weight:700; color:var(--gray-700); margin:4px 0 0; line-height:1.5; }
   .pay-q, body.pay-open .choice-q { opacity:0; visibility:hidden; } body.pay-open .pay-q { opacity:1; visibility:visible; }
+  /* ===== stap 2 in de kaart: de betaalstap (#43 r2, Philip 20 aug: 'tussen de proefweekknop en dit scherm een
+     elegantere transitie die ook leidt tot een systeem waarmee je makkelijk terug kan gaan') — de Verifieer-knop doet
+     geen paginasprong meer naar betaal.html: de kaartinhoud glijdt door naar de bankstap (zelfde kaart, zelfde kop),
+     en de knop rechtsboven is het ENE terug-systeem: × op de gegevensstap (terug naar de pakketten), ← op de bankstap
+     (terug naar je gegevens); Escape en de telefoon-terugknop doen hetzelfde, altijd één stap terug. */
+  .plan.is-pay:not(.is-betaal) > .pay2 { display:none; }
+  .plan.is-pay.is-betaal > .pay { display:none; }
+  .pay2 { margin-top:20px; padding-top:18px; border-top:1px solid var(--gray-100); text-align:center; }
+  .pay2 .bideal { height:40px; width:auto; margin:6px auto 0; display:block; }
+  .pay2 .amount { font-size:30px; font-weight:800; margin:10px 0 2px; font-variant-numeric:tabular-nums; }
+  .pay2 .bdesc { margin:0; font-size:13px; color:var(--gray-500); }
+  .pay2 .banks { margin-top:18px; text-align:left; }
+  .pay2 .banks label { font-size:14px; font-weight:500; color:var(--gray-700); }
+  .pay2 select { width:100%; margin-top:6px; padding:12px; font-size:16px; border:1px solid var(--gray-300); border-radius:10px; background:#fff; font-family:inherit; }
+  .pay2 select:focus { outline:2px solid var(--info); outline-offset:-1px; }
+  .pay2 .go2 { margin-top:18px; }
+  .pay2 .mock-note { margin:14px 0 0; font-size:12px; color:var(--gray-500); }
+  /* het ene terug-knopje: × (gegevensstap) wordt ← (bankstap), zelfde plek, zachte wissel */
+  .plan .close svg { position:absolute; transition:opacity .18s ease, transform .18s ease; }
+  .plan .close .ic-back { opacity:0; transform:rotate(45deg) scale(.7); }
+  .plan.is-betaal .close .ic-x { opacity:0; transform:rotate(-45deg) scale(.7); }
+  .plan.is-betaal .close .ic-back { opacity:1; transform:none; }
+  /* tijdens de stap-overgang: de kaart knipt de glijdende inhoud, hoogte animeert mee */
+  .plan.stepping { overflow:hidden; }
+  .step-ghost { position:absolute; pointer-events:none; z-index:6; }
+  .step-ghost > .pay, .step-ghost > .pay2 { margin-top:0 !important; display:block !important; }
   /* tijdens de morph: de kaart knipt overlopende nieuwe inhoud aan de onderrand (rond), maar laat het label erboven vrij */
   .plan.morphing { clip-path:inset(-32px -2px 0 -2px round 0 0 16px 16px); }
   .ghost { position:absolute; top:-26px; left:-1px; right:-1px; padding-top:25px; overflow:hidden; pointer-events:none; z-index:5; box-sizing:border-box; }

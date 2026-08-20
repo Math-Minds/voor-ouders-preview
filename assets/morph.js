@@ -15,7 +15,11 @@
      andere, de andere kaarten komen terug, de scroll van vóór de tik wordt hersteld.
    • Alleen transform/opacity op de shared elementen en de kaarten; de ene hoogte-animatie zit op de gekozen kaart
      (één element, ~100 nodes). Curve: een expo-achtige uitloop; reduced-motion → direct omschakelen.
-   • Het betaalpad blijft functioneel gelijk: de knop gaat naar betaal.html?plan=… zoals gegevens.html deed. */
+   • Stap 2 (r2, Philip 20 aug): de Verifieer-knop springt niet meer naar betaal.html — de kaartinhoud GLIJDT door naar
+     de bankstap (zelfde kaart, kop blijft; inhoud schuift 28px opzij met crossfade, hoogte animeert mee). Eén
+     terug-systeem over het hele pad: de knop rechtsboven (×=terug naar de pakketten, ←=terug naar je gegevens),
+     Escape en de browser-terugknop — allemaal één stap terug via history (list → ?plan= → ?plan=&stap=betaal).
+     'Naar je bank' blijft een echte navigatie (dat is de banksprong; mock: gelukt.html). */
 (function () {
   'use strict';
   var DUR = 720;                                  // ms — de hele morph
@@ -61,10 +65,31 @@
       card.appendChild(pay);
       var close = document.createElement('button'); close.type = 'button'; close.className = 'close py';
       close.setAttribute('aria-label', 'Terug naar de pakketten');
-      close.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+      close.innerHTML =
+        '<svg class="ic-x" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>' +
+        '<svg class="ic-back" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 3.5 6 8l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
       card.appendChild(close);
 
-      pay.querySelector('.go').addEventListener('click', function () { location.href = 'betaal.html?plan=' + id; });
+      // stap 2: de bankstap (uit betaal.html), in dezelfde kaart
+      var pay2 = document.createElement('div'); pay2.className = 'pay2 py';
+      pay2.innerHTML =
+        '<img class="bideal" src="assets/ideal.png" alt="iDEAL" />' +
+        '<div class="amount">€ 0,01</div>' +
+        '<p class="bdesc">WisWiz proefweek · verificatie van je betaalmethode</p>' +
+        '<div class="banks"><label for="bank-' + id + '">Kies je bank</label>' +
+        '<select id="bank-' + id + '"><option>ING</option><option>Rabobank</option><option>ABN AMRO</option>' +
+        '<option>ASN Bank</option><option>bunq</option><option>SNS</option>' +
+        '<option>Regiobank</option><option>Knab</option><option>Revolut</option></select></div>' +
+        '<button type="button" class="btn-primary go2">Naar je bank</button>' +
+        '<p class="mock-note">Dit is een nagebootste betaalstap. Er is geen bankkoppeling en er wordt niets afgeschreven.</p>';
+      card.appendChild(pay2);
+
+      pay.querySelector('.go').addEventListener('click', function () {
+        if (busy || open !== card) return;
+        history.pushState({ pay: id, betaal: true }, '', '?plan=' + id + '&stap=betaal');
+        step(card, true, !REDUCED);
+      });
+      pay2.querySelector('.go2').addEventListener('click', function () { location.href = 'gelukt.html?plan=' + id; });
       close.addEventListener('click', function () { if (open) history.back(); });
       // de hele kaart is het tikvlak (behalve de uitklap, de link en de betaalinhoud)
       card.addEventListener('click', function (e) {
@@ -79,21 +104,40 @@
       });
     });
 
-    // deep link / herladen: ?plan=… opent direct, zonder animatie
-    var want = new URLSearchParams(location.search).get('plan');
+    // deep link / herladen: ?plan=… (+ &stap=betaal) opent direct, zonder animatie
+    var q0 = new URLSearchParams(location.search);
+    var want = q0.get('plan'), wantBetaal = q0.get('stap') === 'betaal';
     var wc = want && cards.filter(function (c) { return c.getAttribute('data-plan') === want; })[0];
-    if (wc) {   // de lijst als vorige stap in de geschiedenis, zodat × / terug naar de pakketten gaat en niet de site uit
+    if (wc) {   // de hele weg als geschiedenis (lijst → gegevens → bank), zodat terug stap voor stap teruggaat en niet de site uit
       var base = location.pathname + location.hash;
-      history.replaceState({ pay: null }, '', base); history.pushState({ pay: want }, '', '?plan=' + want);
+      history.replaceState({ pay: null }, '', base);
+      history.pushState({ pay: want }, '', '?plan=' + want);
+      if (wantBetaal) history.pushState({ pay: want, betaal: true }, '', '?plan=' + want + '&stap=betaal');
       openCard(wc, false, true);
+      if (wantBetaal) step(wc, true, false);
     } else history.replaceState({ pay: null }, '', location.href);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open && !busy) history.back(); });
     window.addEventListener('popstate', function (e) {
       var st = e.state || {};
-      if (st.pay) { var c = cards.filter(function (x) { return x.getAttribute('data-plan') === st.pay; })[0]; if (c && open !== c) openCard(c, true, true); }
-      else if (open) closeCard(true);
+      if (busy) { queued = st; return; }   // landt zodra de lopende overgang klaar is (snelle dubbele terug-tik)
+      routeTo(st);
     });
   }
+
+  var queued = null;
+  function routeTo(st) {
+    var c = st && st.pay ? cards.filter(function (x) { return x.getAttribute('data-plan') === st.pay; })[0] : null;
+    if (c && open === c) {
+      var atBetaal = c.classList.contains('is-betaal');
+      if (!!st.betaal !== atBetaal) step(c, !!st.betaal, !REDUCED);   // vooruit/terug tussen gegevens- en bankstap
+    } else if (c && !open) {
+      openCard(c, true, true);
+      if (st.betaal) step(c, true, false);   // rechtstreeks de bankstap in (history vooruit): de morph landt daar
+    } else if (!c && open) {
+      closeCard(true);   // terug naar de lijst — ook vanaf de bankstap (de morph vertrekt uit wat zichtbaar is)
+    }
+  }
+  function drain() { if (queued !== null && !busy) { var q = queued; queued = null; routeTo(q); } }
 
   function openCard(card, animate, noPush) {
     if (busy || open) return;
@@ -112,6 +156,7 @@
 
   function applyState(card, toPay) {
     container.classList.toggle('is-pay', toPay);
+    if (!toPay) cards.forEach(function (c) { c.classList.remove('is-betaal'); });   // dicht = altijd terug op de gegevensstap
     cards.forEach(function (c) {
       c.classList.toggle('is-pay', toPay && c === card); c.classList.toggle('is-off', toPay && c !== card);
       if (toPay && c === card) { c.removeAttribute('role'); c.removeAttribute('tabindex'); } else { c.setAttribute('role', 'button'); c.setAttribute('tabindex', '0'); }
@@ -223,7 +268,76 @@
       if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
       card.classList.remove('morphing'); container.classList.remove('busy');
       busy = false;
+      drain();
     }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- stap 2: gegevens <-> bank binnen de open kaart ---------- */
+  var DUR2 = 460;   // korter dan de kaart-morph: dit is een stap BINNEN de kaart, geen gedaanteverwisseling
+  function step(card, toBetaal, animate) {
+    if (card.classList.contains('is-betaal') === toBetaal) return;
+    if (!animate) { card.classList.toggle('is-betaal', toBetaal); return; }
+    busy = true;
+    var out = card.querySelector(toBetaal ? ':scope > .pay' : ':scope > .pay2');
+    var inc = card.querySelector(toBetaal ? ':scope > .pay2' : ':scope > .pay');
+    var hA = card.offsetHeight;
+    var cr = card.getBoundingClientRect(), orr = out.getBoundingClientRect();   // fractioneel, anders staat de kloon een subpixel naast het origineel
+    var top = orr.top - cr.top - card.clientTop, left = orr.left - cr.left - card.clientLeft, w = orr.width;
+    // kloon van de vertrekkende inhoud, met de getypte waarden erin
+    var wrap = document.createElement('div'); wrap.className = 'step-ghost';
+    wrap.style.top = top + 'px'; wrap.style.left = left + 'px'; wrap.style.width = w + 'px';
+    var clone = out.cloneNode(true);
+    var si = out.querySelectorAll('input, select'), ci = clone.querySelectorAll('input, select');
+    for (var k = 0; k < si.length && k < ci.length; k++) { ci[k].value = si[k].value; if (ci[k].checked !== undefined) ci[k].checked = si[k].checked; }
+    wrap.appendChild(clone);
+    // het iDEAL-logo is het shared element tussen de twee stappen (chip in 'Hoe wil je betalen?' <-> groot logo bij
+    // de bank): een vliegende kopie glijdt van de ene plek/maat naar de andere, de echte twee zijn even onzichtbaar
+    var imgOut = out.querySelector('img'), ra = imgOut && imgOut.getBoundingClientRect();
+    // wissel de stap, meet de eindhoogte, en zet de vertrekkende kloon erover
+    card.classList.toggle('is-betaal', toBetaal);
+    var hB = card.offsetHeight;
+    var imgIn = inc.querySelector('img'), rb = imgIn && imgIn.getBoundingClientRect();
+    var fly = null;
+    if (imgOut && imgIn && ra && rb && ra.height && rb.height) {
+      fly = document.createElement('img'); fly.src = imgOut.src; fly.alt = '';
+      fly.style.cssText = 'position:absolute;pointer-events:none;z-index:8;transform-origin:0 0;' +
+        'top:' + (rb.top - cr.top - card.clientTop) + 'px;left:' + (rb.left - cr.left - card.clientLeft) + 'px;' +
+        'width:' + rb.width + 'px;height:' + rb.height + 'px;';
+      var cw = wrap.querySelector('img'); if (cw) cw.style.visibility = 'hidden';
+      imgIn.style.visibility = 'hidden';
+      card.appendChild(fly);
+      fly.__d = { dx: ra.left - rb.left, dy: ra.top - rb.top, s: ra.height / rb.height };
+    }
+    card.appendChild(wrap);
+    card.classList.add('stepping');
+    card.style.height = hA + 'px'; card.style.willChange = 'height';
+    inc.style.opacity = '0';
+    var dir = toBetaal ? 1 : -1;   // vooruit: oud naar links, nieuw van rechts; terug gespiegeld
+    var t0 = null;
+    function frame(now) {
+      if (t0 === null) t0 = now;
+      var u = Math.min(1, (now - t0) / (window.MORPH_DUR2 || DUR2)), e = EASE(u);
+      card.style.height = (hA + (hB - hA) * e) + 'px';
+      wrap.style.opacity = 1 - FADE(Math.min(1, u / 0.5));
+      wrap.style.transform = 'translateX(' + (-28 * dir * e) + 'px)';
+      inc.style.opacity = FADE(Math.max(0, (u - 0.22) / 0.78));
+      inc.style.transform = 'translateX(' + (28 * dir * (1 - e)) + 'px)';
+      if (fly) { var fs = fly.__d.s + (1 - fly.__d.s) * e;
+        fly.style.transform = 'translate(' + (fly.__d.dx * (1 - e)) + 'px,' + (fly.__d.dy * (1 - e)) + 'px) scale(' + fs + ')'; }
+      window.__stepU = u;
+      if (u < 1) requestAnimationFrame(frame); else finish();
+    }
+    function finish() {
+      card.removeChild(wrap);
+      if (fly) { card.removeChild(fly); imgIn.style.visibility = ''; }
+      card.classList.remove('stepping');
+      card.style.height = ''; card.style.willChange = '';
+      inc.style.opacity = ''; inc.style.transform = '';
+      busy = false;
+      drain();
+    }
+    inc.style.transform = 'translateX(' + (28 * dir) + 'px)';   // startstand synchroon
     requestAnimationFrame(frame);
   }
 
