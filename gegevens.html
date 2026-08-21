@@ -59,7 +59,7 @@
     <div class="orow"><span id="trial-label">Proefweek</span><b>€ 0,01 eenmalig</b></div>
     <div class="orow"><span>WisWiz abonnement na de proefweek</span><b id="plan-price">€84,00 /jaar</b></div>
     <div class="sep"></div>
-    <label class="f" for="email">Jouw e-mailadres <span style="color:#ef4444">*</span></label>
+    <h3 style="margin:0 0 2px; font-size:15px; font-weight:700;">Naar welk e-mailadres moeten we de activatielink sturen?</h3>
     <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="naam@voorbeeld.nl" />
     <div class="terms"><input id="terms" type="checkbox" /><label for="terms">Ik ga akkoord met de <a href="https://wiswiz.nl/algemene_voorwaarden" style="text-decoration:underline">algemene voorwaarden</a></label></div>
     <div class="actions"><button class="btn-primary" onclick="verder()">Verifieer je betaalmethode</button></div>
@@ -78,6 +78,9 @@
   const end = new Date(Date.now() + 7*864e5);
   document.getElementById("trial-label").textContent = "Proefweek tot " + end.toLocaleDateString("nl-NL", {day:"numeric", month:"long"});
   function verder() { location.href = "betaal.html?plan=" + plan; }
+  document.getElementById("email").addEventListener("focus", function (e) {
+    var el = e.target; setTimeout(function () { el.scrollIntoView({ block: "center", behavior: "smooth" }); }, 300);
+  });
 </script>
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js");</script>
 </body></html>

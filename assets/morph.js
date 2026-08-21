@@ -58,11 +58,16 @@
         '<div class="orow"><span>' + trial + '</span><b>€ 0,01 eenmalig</b></div>' +
         '<div class="orow"><span>WisWiz abonnement na de proefweek</span><b>' + p.price + '</b></div>' +
         '<div class="sep"></div>' +
-        '<label class="f" for="email-' + id + '">Jouw e-mailadres <span class="req">*</span></label>' +
+        '<h3>Naar welk e-mailadres moeten we de activatielink sturen?</h3>' +
         '<input id="email-' + id + '" type="email" inputmode="email" autocomplete="email" placeholder="naam@voorbeeld.nl" />' +
         '<div class="terms"><input id="terms-' + id + '" type="checkbox" /><label for="terms-' + id + '">Ik ga akkoord met de <a href="https://wiswiz.nl/algemene_voorwaarden">algemene voorwaarden</a></label></div>' +
         '<button type="button" class="btn-primary go">Verifieer je betaalmethode</button>';
       card.appendChild(pay);
+      // 21 aug (#32, Philip: 'het inputveld moet perfect werken als het toetsenbord eroverheen schuift'):
+      // op focus het veld naar het midden van het (door het toetsenbord verkleinde) zichtvenster scrollen
+      pay.querySelector('input[type=email]').addEventListener('focus', function (e) {
+        var el = e.target; setTimeout(function () { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, 300);
+      });
       var close = document.createElement('button'); close.type = 'button'; close.className = 'close py';
       close.setAttribute('aria-label', 'Terug naar de pakketten');
       close.innerHTML =
