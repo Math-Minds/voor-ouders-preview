@@ -197,8 +197,7 @@
     fixEl(card, A.card, 30); card.classList.add('morphing');
     others.forEach(function (c, i) { fixEl(c, toPay ? A.others[i] : B.others[i], 20); c.style.display = 'block'; c.style.pointerEvents = 'none'; c.style.opacity = toPay ? 1 : 0; });  // display:block: in de betaallay-out staan ze op display:none, voor de fade moeten ze renderen
     // vraag / kop: de oude vervaagt op zijn plek, de nieuwe verschijnt op zijn eindplek
-    var qOut = toPay ? q : pq, qIn = toPay ? pq : q;
-    qOut.style.visibility = 'visible'; qIn.style.visibility = 'visible'; qOut.style.opacity = 1; qIn.style.opacity = 0;
+    // #32 (Philip 21 aug): het Philip-blok blijft staan door de hele reis — geen vraag/kop-crossfade meer
     // de container houdt tijdens de morph de hoogte van de eindlay-out: de kaarten zijn fixed (uit de flow), en zonder
     // dit zakt het document in en klemt de browser de scroll (terug naar een kaart onderaan landde op scroll 0)
     container.style.height = B.ch + 'px';
@@ -243,8 +242,6 @@
       var oo = toPay ? 1 - FADE(Math.min(1, u / 0.45)) : FADE(Math.max(0, (u - 0.4) / 0.6));
       others.forEach(function (c) { c.style.opacity = oo; c.style.transform = 'scale(' + (0.96 + 0.04 * oo) + ')'; });
       // vraag / kop
-      qOut.style.opacity = 1 - FADE(Math.min(1, u / 0.4));
-      qIn.style.opacity = FADE(Math.max(0, (u - 0.5) / 0.5));
       window.__morphU = u;
     }
     render(0);                                   // startstand synchroon: geen frame zonder transform

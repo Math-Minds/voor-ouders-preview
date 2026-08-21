@@ -147,8 +147,7 @@
   /* #43 r3: het terug-systeem doorgetrokken tot de landing — dezelfde ronde knop als op de kaart, links op de vraagregel;
      in de betaalstand neemt de kaart-knop (×/←) het over en vervaagt deze */
   body.pay-open .page-back { opacity:0; pointer-events:none; }
-  .pay-q { text-align:center; font-size:16px; font-weight:700; color:var(--gray-700); margin:4px 0 0; line-height:1.5; align-self:center; width:100%; }
-  .pay-q, body.pay-open .choice-q { opacity:0; visibility:hidden; } body.pay-open .pay-q { opacity:1; visibility:visible; }
+  .pay-q { display:none; }  /* 21 aug (Philip): 'hetzelfde tekstje met hoi ik ben philip moet blijven staan' — de vraag/kop-wissel is vervallen, het Philip-blok staat door de hele reis */
   /* ===== stap 2 in de kaart: de betaalstap (#43 r2, Philip 20 aug: 'tussen de proefweekknop en dit scherm een
      elegantere transitie die ook leidt tot een systeem waarmee je makkelijk terug kan gaan') — de Verifieer-knop doet
      geen paginasprong meer naar betaal.html: de kaartinhoud glijdt door naar de bankstap (zelfde kaart, zelfde kop),
