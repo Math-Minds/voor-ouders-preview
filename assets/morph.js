@@ -28,9 +28,9 @@
   var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var PLANS = {
-    monthly:  { fact: 'Na de proefweek start het maandabonnement: €11 per maand. Opzeggen kan altijd, ook tijdens de proefweek.', price: '€11,00 /maand' },
-    yearly:   { fact: 'Na de proefweek start het jaarabonnement: €84 per schooljaar. Opzeggen kan altijd, ook tijdens de proefweek.', price: '€84,00 /jaar' },
-    lifetime: { fact: 'Na de proefweek betaal je eenmalig €200 voor toegang tijdens de hele schooltijd. Tijdens de proefweek kun je nog stoppen.', price: '€200 eenmalig' }
+    monthly:  { fact: 'Na de proefweek start een maandelijkse afschrijving van €11,00. Je kunt altijd opzeggen.', price: '€11,00 /maand' },
+    yearly:   { fact: 'Na de proefweek start een jaarlijkse afschrijving van €84,00. Je kunt altijd opzeggen.', price: '€84,00 /jaar' },
+    lifetime: { fact: 'Na de proefweek betaal je eenmalig €200,00. Daarna behoud je toegang.', price: '€200 eenmalig' }
   };
 
   var container, cards, q, pq, busy = false, open = null, savedScroll = 0;

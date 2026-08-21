@@ -49,7 +49,7 @@
   <p class="subtitle">Na het starten ontvang je een uitnodigingslink waarmee je kind toegang krijgt.</p>
   <div class="facts">
     <div class="fact"><span class="dot">✓</span><span>Vandaag betaal je €0,01 om je betaalmethode te verifiëren.</span></div>
-    <div class="fact"><span class="dot">✓</span><span id="fact-plan">Na de proefweek start het jaarabonnement: €84 per schooljaar. Opzeggen kan altijd, ook tijdens de proefweek.</span></div>
+    <div class="fact"><span class="dot">✓</span><span id="fact-plan">Na de proefweek start een jaarlijkse afschrijving van €84,00. Je kunt altijd opzeggen.</span></div>
     <div class="fact"><span class="dot">✓</span><span>Je ontvangt direct een link om je kind aan het abonnement te koppelen.</span></div>
   </div>
   <h2>Hoe wil je betalen?</h2>
@@ -67,9 +67,9 @@
 </main>
 <script>
   const PLANS = {
-    monthly:  { fact:"Na de proefweek start het maandabonnement: €11 per maand. Opzeggen kan altijd, ook tijdens de proefweek.", price:"€11,00 /maand" },
-    yearly:   { fact:"Na de proefweek start het jaarabonnement: €84 per schooljaar. Opzeggen kan altijd, ook tijdens de proefweek.", price:"€84,00 /jaar" },
-    lifetime: { fact:"Na de proefweek betaal je eenmalig €200 voor toegang tijdens de hele schooltijd. Tijdens de proefweek kun je nog stoppen.", price:"€200 eenmalig" }
+    monthly:  { fact:"Na de proefweek start een maandelijkse afschrijving van €11,00. Je kunt altijd opzeggen.", price:"€11,00 /maand" },
+    yearly:   { fact:"Na de proefweek start een jaarlijkse afschrijving van €84,00. Je kunt altijd opzeggen.", price:"€84,00 /jaar" },
+    lifetime: { fact:"Na de proefweek betaal je eenmalig €200,00. Daarna behoud je toegang.", price:"€200 eenmalig" }
   };
   const plan = new URLSearchParams(location.search).get("plan") || "yearly";
   const p = PLANS[plan] || PLANS.yearly;
