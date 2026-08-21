@@ -61,7 +61,11 @@
        pakketkeuze, bar op de betaalstap), dus de dock staat altijd op 12px + safe-area. De opening
        (CTA boven de vouw bij het laden) is ongemoeid — de dock is daar onzichtbaar (originele knop nog in beeld). */
     #ctadock { position: fixed; left: 0; right: 0; z-index: 900; padding: 0 var(--pad); display: flex; justify-content: center;
-      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      /* 21 aug (Philip: 'die groene shit onder de zoekbalk definitief weg'): de knop pint op de KLEINE viewport
+         (100dvh−100svh): klapt Safari's onderbalk in, dan groeit de viewport en bleef de knop op bottom:12px omlaag
+         zakken tot ACHTER de doorschijnende balk — de balk blurde de knop en kleurde groen. Nu blijft de knop op
+         dezelfde schermplek staan (bij laden exact 12px), en achter de balk ligt alleen de paginakleur. */
+      bottom: calc(100dvh - 100svh + 12px + env(safe-area-inset-bottom, 0px));
       opacity: 0; transform: translateY(14px); pointer-events: none;
       transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1), bottom .35s cubic-bezier(.32,.72,0,1); }
     #ctadock.is-on { opacity: 1; transform: none; pointer-events: auto; }

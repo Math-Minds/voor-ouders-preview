@@ -57,16 +57,13 @@
         '<div class="orow"><span>' + trial + '</span><b>€ 0,01 eenmalig</b></div>' +
         '<div class="orow"><span>WisWiz abonnement na de proefweek</span><b>' + p.price + '</b></div>' +
         '<div class="sep"></div>' +
-        '<h3 class="mailkop">Jouw e-mailadres<button type="button" class="hulp" aria-label="Uitleg">?</button><span class="hulptip">Naar welk e-mailadres moeten we de activatielink sturen?</span></h3>' +
+        '<h3>Naar welk e-mailadres moeten we de activatielink sturen?</h3>' +
         '<input id="email-' + id + '" type="email" inputmode="email" autocomplete="email" placeholder="naam@voorbeeld.nl" />' +
         '<div class="terms"><input id="terms-' + id + '" type="checkbox" /><label for="terms-' + id + '">Ik ga akkoord met de <a href="https://wiswiz.nl/algemene_voorwaarden">algemene voorwaarden</a></label></div>' +
         '<button type="button" class="btn-primary go">Verifieer je betaalmethode</button>';
       card.appendChild(pay);
       // 21 aug (#32, Philip: 'het inputveld moet perfect werken als het toetsenbord eroverheen schuift'):
       // op focus het veld naar het midden van het (door het toetsenbord verkleinde) zichtvenster scrollen
-      var hulp = pay.querySelector('.hulp');
-      hulp.addEventListener('click', function (e) { e.stopPropagation(); hulp.parentNode.classList.toggle('tip-open'); });
-      document.addEventListener('click', function () { hulp.parentNode.classList.remove('tip-open'); });
       pay.querySelector('input[type=email]').addEventListener('focus', function (e) {
         var el = e.target; setTimeout(function () { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); }, 300);
       });
