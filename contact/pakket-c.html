@@ -126,6 +126,15 @@
   .pay .facts li { display:flex; gap:10px; font-size:14px; line-height:1.45; color:var(--gray-700); }
   .pay .dot { flex:none; width:20px; height:20px; border-radius:999px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; font-size:11px; box-shadow:0 0 0 1px #d1fae5; margin-top:1px; }
   .pay h3 { margin:22px 0 0; font-size:15px; font-weight:700; }
+  /* 21 aug (Philip): 'Jouw e-mailadres' in de bestelling-kopstijl, met een ?-icoon dat de vraag toont */
+  .pay .mailkop { position:relative; display:flex; align-items:center; gap:6px; }
+  .pay .hulp { width:17px; height:17px; border-radius:999px; border:1.2px solid var(--gray-300); background:#fff; color:var(--gray-500);
+    font:600 11px/1 "Ubuntu",sans-serif; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; padding:0; }
+  .pay .hulp::after { content:""; position:absolute; inset:-8px; }
+  .pay .hulptip { display:none; position:absolute; left:0; top:calc(100% + 7px); z-index:20; max-width:260px; background:#111827; color:#fff;
+    font-size:12px; font-weight:400; line-height:1.45; padding:8px 11px; border-radius:9px; box-shadow:0 6px 18px rgba(15,23,42,.25); text-align:left; }
+  .pay .hulptip::before { content:""; position:absolute; top:-4px; left:16px; width:8px; height:8px; background:#111827; transform:rotate(45deg); }
+  .pay .mailkop.tip-open .hulptip { display:block; }
   .pay .paycard { margin-top:10px; background:#fff; border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:12px; border:2px solid var(--info); }
   .pay .paycard img { height:28px; width:auto; } .pay .paycard span { font-weight:700; font-size:15px; }
   .pay .orow { display:flex; justify-content:space-between; gap:12px; font-size:14px; color:var(--gray-700); padding:6px 0; }
@@ -138,7 +147,7 @@
   .pay .terms { display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--gray-700); margin-top:14px; }
   .pay .terms input { margin:3px 0 0; width:16px; height:16px; flex:none; } .pay .terms a { text-decoration:underline; }
   .pay .go { margin-top:18px; }
-  .plan .close { position:absolute; top:14px; right:14px; width:36px; height:36px; border-radius:999px; border:0; background:transparent; color:#9ca3af;
+  .plan .close { position:absolute; top:17px; right:12px; width:36px; height:36px;   /* 21 aug (Philip: kruisje slecht uitgelijnd): glyph-centrum op het titelcentrum, glyph-rand op de 20px-contentmarge */ border-radius:999px; border:0; background:transparent; color:#9ca3af;
     display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; transition:color .15s ease, transform .15s ease; }
   .plan .close svg { width:20px; height:20px; } .plan .close:hover { color:var(--gray-700); } .plan .close:active { transform:scale(.88); color:var(--gray-950); }
   .plan .close::after { content:""; position:absolute; inset:-8px; border-radius:inherit; }  /* ruimere tapzone */

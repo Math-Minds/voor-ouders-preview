@@ -50,7 +50,6 @@
   <div class="facts">
     <div class="fact"><span class="dot">✓</span><span>Vandaag betaal je €0,01 om je betaalmethode te verifiëren.</span></div>
     <div class="fact"><span class="dot">✓</span><span id="fact-plan">Na de proefweek start een jaarlijkse afschrijving van €84,00. Je kunt altijd opzeggen.</span></div>
-    <div class="fact"><span class="dot">✓</span><span>Je ontvangt direct een link om je kind aan het abonnement te koppelen.</span></div>
   </div>
   <h2>Hoe wil je betalen?</h2>
   <div class="paycard"><img src="assets/ideal.png" alt="iDEAL" /><span>iDEAL</span></div>
@@ -59,7 +58,7 @@
     <div class="orow"><span id="trial-label">Proefweek</span><b>€ 0,01 eenmalig</b></div>
     <div class="orow"><span>WisWiz abonnement na de proefweek</span><b id="plan-price">€84,00 /jaar</b></div>
     <div class="sep"></div>
-    <h3 style="margin:0 0 2px; font-size:15px; font-weight:700;">Naar welk e-mailadres moeten we de activatielink sturen?</h3>
+    <h3 id="mailkop" style="margin:0 0 2px; font-size:16px; font-weight:800; position:relative; display:flex; align-items:center; gap:6px;">Jouw e-mailadres<button type="button" id="hulp" aria-label="Uitleg" style="width:17px;height:17px;border-radius:999px;border:1.2px solid #d1d5db;background:#fff;color:#6b7280;font:600 11px/1 Ubuntu,sans-serif;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;">?</button><span id="hulptip" style="display:none;position:absolute;left:0;top:calc(100% + 7px);z-index:20;max-width:260px;background:#111827;color:#fff;font-size:12px;font-weight:400;line-height:1.45;padding:8px 11px;border-radius:9px;">Naar welk e-mailadres moeten we de activatielink sturen?</span></h3>
     <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="naam@voorbeeld.nl" />
     <div class="terms"><input id="terms" type="checkbox" /><label for="terms">Ik ga akkoord met de <a href="https://wiswiz.nl/algemene_voorwaarden" style="text-decoration:underline">algemene voorwaarden</a></label></div>
     <div class="actions"><button class="btn-primary" onclick="verder()">Verifieer je betaalmethode</button></div>
@@ -78,6 +77,8 @@
   const end = new Date(Date.now() + 7*864e5);
   document.getElementById("trial-label").textContent = "Proefweek tot " + end.toLocaleDateString("nl-NL", {day:"numeric", month:"long"});
   function verder() { location.href = "betaal.html?plan=" + plan; }
+  document.getElementById("hulp").addEventListener("click", function (e) { e.stopPropagation(); var t=document.getElementById("hulptip"); t.style.display = t.style.display==="block" ? "none" : "block"; });
+  document.addEventListener("click", function () { document.getElementById("hulptip").style.display = "none"; });
   document.getElementById("email").addEventListener("focus", function (e) {
     var el = e.target; setTimeout(function () { el.scrollIntoView({ block: "center", behavior: "smooth" }); }, 300);
   });
