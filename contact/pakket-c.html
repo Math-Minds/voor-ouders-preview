@@ -12,10 +12,10 @@
      zichtbaar vanaf het laden, want op de pakketkeuze is contact op het beslismoment het meest waard. */
   :root { --mathyellow:#ecc862; --mathorange:#db9a1f; --info:#3e8ed0; --info-dark:#1f6fb0;
     --achtergrond:#f0f9ff; --gray-950:#030712; --gray-700:#374151; --gray-500:#6b7280;
-    --gray-300:#d1d5db; --gray-100:#f3f4f6; --pad:20px; }
+    --gray-300:#d1d5db; --gray-100:#f3f4f6; --pad:20px; --success:#3ec487; }
   * { box-sizing:border-box; } html,body { margin:0; padding:0; }
   body { font-family:"Ubuntu",system-ui,sans-serif; background:var(--achtergrond); color:var(--gray-950);
-    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; padding-bottom: calc(var(--ws-bar, 100px) + 12px); /* #32: ruimte onder de contact-bar (de bar zet --ws-bar op <html>) */ }
+    -webkit-font-smoothing:antialiased; line-height:1.5; min-height:100dvh; padding-bottom: 28px; /* mobiel: dock-ruimte hieronder */ }
   a { color:inherit; text-decoration:none; } img { max-width:100%; height:auto; }
   main { max-width:480px; margin:0 auto; padding:28px 16px 64px; }
   h1 { margin:0; text-align:center; font-size:24px; font-weight:800; line-height:1.25; }
@@ -30,13 +30,14 @@
   .plan { position:relative; background:#fff; border:1px solid var(--gray-300); border-radius:16px;
     padding:24px 20px 20px; text-align:center; }
   .plan.hl { border-color:var(--mathyellow); padding-top:28px; }
-  .badge { position:absolute; top:-16px; left:50%; transform:translateX(-50%); min-width:160px;
-    background:var(--mathyellow); color:var(--gray-950); font-size:14px; font-weight:700; padding:8px 20px; border-radius:8px; }
+  .badge { position:absolute; top:-16px; left:50%; transform:translateX(-50%); min-width:160px; text-align:center;
+    background:var(--mathyellow); color:var(--gray-950); font-size:13.5px; font-weight:700; padding:8px 16px; border-radius:8px; }
+  @media (max-width: 374px) { .badge { font-size:12.5px; padding:7px 12px; } }
   .plan h2 { margin:0; font-size:22px; font-weight:700; letter-spacing:-0.01em; }
-  .plan .detail { margin:4px 0 0; font-size:14px; color:var(--gray-500); }
-  .plan .visual { margin:16px auto; height:80px; display:flex; align-items:center; justify-content:center; }
-  .plan .price { margin:0; font-size:34px; font-weight:700; line-height:1.1; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; }
-  .plan .price small { font-size:15px; font-weight:400; color:var(--gray-500); }
+  .plan .visual { margin:14px auto; height:auto; display:flex; align-items:center; justify-content:center; }
+  .plan:not(.is-pay) .visual svg { width:140px; height:91px; }   /* 21 aug (Philips gecorrigeerde run): planeet ietsje kleiner (176→140) */
+  .plan .price { margin:0; font-size:24px; font-weight:700; line-height:1.1; letter-spacing:-0.01em; font-variant-numeric:tabular-nums; }   /* 21 aug r2: hoofdprijs nóg een maat kleiner (Philip: 'te dominant') — 27→24 */
+  .plan .price small { font-size:14px; font-weight:400; color:var(--gray-500); }
   .plan .incl { display:flex; align-items:center; justify-content:center; gap:6px; margin-top:16px;
     font-size:14px; font-weight:500; color:var(--gray-700); }
   .plan .incl .chk { display:inline-flex; width:16px; height:16px; border-radius:999px; background:#d1fae5;
@@ -47,22 +48,166 @@
   .incl .chev { display:inline-block; color:#9ca3af; transition:transform .2s; margin-left:2px; }
   .incl-details[open] .chev { transform:rotate(180deg); }
   .incl-list { margin:12px 0 0; padding:12px; list-style:none; text-align:left; border:1px solid var(--gray-100); border-radius:12px; display:flex; flex-direction:column; gap:10px; }
-  .incl-list li { display:flex; flex-direction:column; font-size:13px; line-height:1.4; }
+  .incl-list li { display:flex; flex-direction:row; align-items:flex-start; gap:10px; font-size:13px; line-height:1.4; }
+  /* 20 aug (Philip: 'de icoontjes lijken verdwenen'): ze WAREN verdwenen — bij de kaartjes-herbouw van 19 aug (6953032) zijn de
+     feature-chips uit de lijst geraakt. Terug in het site-systeem: gekleurde chip (de feature-kleuren van de app: schrift rose,
+     hint mathyellow, stappenplan info, bot mathorange, theorie #00328a, begripvraag pink, oefentoets emerald) met wit lijn-icoon. */
+  .incl-list .fico { flex:none; display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:8px; margin-top:1px; }
+  .incl-list .fico svg { width:15px; height:15px; }
+  .incl-list .ftxt { display:flex; flex-direction:column; min-width:0; }
   .incl-list li b { color:var(--gray-950); }
   .incl-list li span { color:var(--gray-500); }
+  .plan[data-plan="yearly"] > .kies { view-transition-name: cta; }
   .plan .kies { display:block; margin-top:16px; width:100%; background:#3ec487; border:0;   /* 19 aug: conversie-CTA in het site-groen, witte tekst */
     border-radius:12px; padding:13px 16px; font-size:15px; font-weight:700; color:#fff;
     box-shadow:0 6px 18px rgba(62,196,135,.32); }
   .plan .kies:hover { background:#35b277; }
 
 
+  /* trust-blokje V1 (rij): foto links, quote + attributie, de twee bar-knoppen rechts (zelfde stijl als de contact-bar) */
+  /* 20 aug tweede ronde (Philip: 'mijn stukje valt heel erg uit de toon'): subtieler en geïntegreerd — foto 40 (was 48),
+     quote 15px in gray-700, en de acties als STILLE knoppen: 32px, neutraal grijs vlak (iOS-fill), alleen de glyphs in
+     kleur; geen tint-vlakken of ringen meer. Gejureerd tegen een wit haarlijn-pilletje om beide knoppen (kaarttaal):
+     dat werd opnieuw een los widgetje. Tapzone blijft 44px (inset -6). */
+  /* 21 aug (combineer-order): het kopblok — avatar boven, kop, Philips zin als ondertitel (paginazetstijl: 14.5/1.5 in
+     gray-500, balanced), twee verfijnde witte knoppen met haarlijn (kaarttaal, 36px, tapzone 46). Geen terugknop meer. */
+  .kopblok { display:flex; flex-direction:column; align-items:center; text-align:center; margin:2px 0 6px; }
+  .kb-foto-mini { width:22px; height:22px; border-radius:9999px; object-fit:cover; display:inline-block; vertical-align:-5px; margin-left:3px; box-shadow:0 0 0 .5px rgba(0,0,0,.08); }
+  .kb-sig { white-space:nowrap; }
+  .kb-foto { width:46px; height:46px; border-radius:9999px; object-fit:cover; box-shadow:0 0 0 .5px rgba(0,0,0,.08); margin-bottom:10px; }
+  .kopblok .qwrap { width:100%; }
+  .kb-zin { margin:2px 0 0; max-width:32ch; font-size:15px; line-height:1.5; font-weight:400; color:var(--gray-700); text-wrap:balance; }   /* 21 aug (Philip): subtekst veel meer verbonden met de kop */
+  /* 21 aug (Philip: 'whatsapp en bel knop ietsje mooier en dominanter'): 44px in de getinte bar-stijl (gejureerd tegen wit-dominant) */
+  .kb-acties { display:flex; gap:12px; margin-top:12px; }
+  .ph-icon { position:relative; display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:9999px;
+    transition:transform .15s ease; -webkit-tap-highlight-color:transparent; }
+  .ph-icon::after { content:""; position:absolute; inset:-3px; border-radius:inherit; }
+  .ph-icon svg { width:20px; height:20px; }
+  .ph-icon.ph-wa { background:#25d366; box-shadow:0 2px 8px rgba(37,211,102,.38); } .ph-icon.ph-wa svg { fill:#fff; }
+  .ph-icon.ph-tel { background:#0a84ff; box-shadow:0 2px 8px rgba(10,132,255,.35); } .ph-icon.ph-tel svg { fill:#fff; width:18px; height:18px; }
+  .ph-icon:active { transform:scale(.92); }
   .badge { white-space:nowrap; }
-  /* #31 ronde 3+4: het startaanbod als stil, omlijnd label BIJ de prijs; één prijsverhaal */
-  .offer-tag { display:inline-block; margin:0 0 8px; font-size:13px; font-weight:600; color:#047857; border:1px solid #6ee7b7; border-radius:999px; padding:4px 12px; }
+  /* 20 aug tweede ronde (Philip): het startaanbod is naar de BADGE verhuisd ('Meest gekozen' is weg); het prijsblok is
+     nu twee regels — €7,00 /maand + €84 per schooljaar. (.offer-kicker verwijderd.) */
   .offer-total { margin:4px 0 0; font-size:14px; color:var(--gray-700); font-variant-numeric:tabular-nums; }
 
+  /* ===== #43 de morph (Philip 19 aug): tik op een kaart → DIE kaart wordt de betaalkaart (de gegevens-stap), de andere
+     twee lossen op. Zelfde DOM-kaart, twee lay-outs: .plan (pakket) en .plan.is-pay (betalen, CSS-grid met de planeet
+     links en titel + prijs rechts — titel/planeet/prijs zijn de shared elementen die door assets/morph.js van de ene
+     lay-out naar de andere glijden). .po = alleen in de pakketlay-out, .py = alleen in de betaallay-out. ===== */
+  .plan { cursor:pointer; -webkit-tap-highlight-color:transparent; transition:border-color .25s ease, transform .18s ease, box-shadow .25s ease; }
+  .plan:hover { border-color:#b9c0cb; } .plan.hl:hover { border-color:#e2b94a; }
+  .plan:active { transform:scale(.992); }
+  .plan:focus-visible { outline:2px solid var(--info); outline-offset:3px; }
+  .plan h2, .plan .price { width:fit-content; margin-left:auto; margin-right:auto; }
+  .plan .price .amt { display:inline-block; }
+  /* shared tekst (titel, bedrag) heeft in beide lay-outs DEZELFDE line-height (1.3 ≥ de letterhoogte), zodat de glyfbox
+     zuiver met de lettergrootte schaalt; de marges compenseren zodat de pakketkaart pixelgelijk blijft */
+  .plan > h2 { line-height:1.3; } .plan:not(.is-pay) > h2 { margin-top:2.2px; margin-bottom:2.2px; }  /* marge, geen padding: de box moet zuiver met de letter schalen */
+  .plan > .price { line-height:1.3; } .plan:not(.is-pay) > .price { margin-top:-3.4px; margin-bottom:-3.4px; }
+  .plan .price { margin-top:0; }
+  .plans.busy .plan, .plan.is-pay, .plan.is-off { transition:none !important; }
+  .plan.is-off { display:none; }
+  .plan.is-pay { display:grid; grid-template-columns:60px minmax(0,1fr); grid-template-areas:"v t" "v p" "pay pay"; column-gap:14px;
+    align-content:start; align-items:start; text-align:left; padding:22px 20px 22px; cursor:default; }  /* de rand houdt zijn kleur (de jaarkaart blijft geel): het is dezelfde kaart */
+  .plan.is-pay:active { transform:none; }
+  .plan.is-pay > .po, .plan:not(.is-pay) > .py { display:none; }  /* child-combinator: de ghost-kloon in de kaart volgt zijn eigen klasse */
+  .plan.is-pay > .visual { grid-area:v; height:auto; margin:0; display:block; }
+  .plan.is-pay > .visual > svg { width:60px; height:39px; display:block; }
+  .plan.is-pay > h2 { grid-area:t; font-size:18px; margin:0 32px 0 0; align-self:end; }
+  @media (max-width:359px) { .plan.is-pay { grid-template-columns:52px minmax(0,1fr); column-gap:12px; } .plan.is-pay > .visual > svg { width:52px; height:34px; } .plan.is-pay > h2 { font-size:17px; } }
+  .plan.is-pay > .price { grid-area:p; font-size:15px; font-weight:500; color:var(--gray-700); margin:2px 0 0; align-self:start; }
+  .plan.is-pay > .price small { font-size:15px; font-weight:500; color:var(--gray-700); }
+  .plan.is-pay > .pay, .plan.is-pay > .pay2 { grid-area:pay; }
+  /* de betaalinhoud (= gegevens.html, in de kaart) */
+  .pay { margin-top:20px; padding-top:18px; border-top:1px solid var(--gray-100); }
+  .pay .facts { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  .pay .facts li { display:flex; gap:10px; font-size:14px; line-height:1.45; color:var(--gray-700); }
+  .pay .dot { flex:none; width:20px; height:20px; border-radius:999px; background:#ecfdf5; color:#059669; display:flex; align-items:center; justify-content:center; font-size:11px; box-shadow:0 0 0 1px #d1fae5; margin-top:1px; }
+  .pay h3 { margin:22px 0 0; font-size:15px; font-weight:700; }
+  .pay .paycard { margin-top:10px; background:#fff; border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:12px; border:2px solid var(--info); }
+  .pay .paycard img { height:28px; width:auto; } .pay .paycard span { font-weight:700; font-size:15px; }
+  .pay .orow { display:flex; justify-content:space-between; gap:12px; font-size:14px; color:var(--gray-700); padding:6px 0; }
+  .pay .orow:first-of-type { margin-top:4px; }
+  .pay .orow b { color:var(--gray-950); font-weight:700; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .pay .sep { border-top:1px solid #e5e7eb; margin:12px 0 14px; }
+  .pay label.f { display:block; font-size:14px; font-weight:500; color:var(--gray-700); } .pay .req { color:#ef4444; }
+  .pay input[type=email] { width:100%; margin-top:6px; padding:11px 12px; font-size:16px; border:1px solid var(--gray-300); border-radius:10px; font-family:inherit; background:#fff; }
+  .pay input[type=email]:focus { outline:2px solid var(--info); outline-offset:-1px; }
+  .pay .terms { display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--gray-700); margin-top:14px; }
+  .pay .terms input { margin:3px 0 0; width:16px; height:16px; flex:none; } .pay .terms a { text-decoration:underline; }
+  .pay .go { margin-top:18px; }
+  .plan .close { position:absolute; top:14px; right:14px; width:36px; height:36px; border-radius:999px; border:0; background:transparent; color:#9ca3af;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; transition:color .15s ease, transform .15s ease; }
+  .plan .close svg { width:20px; height:20px; } .plan .close:hover { color:var(--gray-700); } .plan .close:active { transform:scale(.88); color:var(--gray-950); }
+  .plan .close::after { content:""; position:absolute; inset:-8px; border-radius:inherit; }  /* ruimere tapzone */
+  /* de kop boven de kaart: de vraag wordt 'Start de proefweek voor je kind' */
+  .qwrap { display:grid; position:relative; } .qwrap > * { grid-area:1 / 1; }   /* vraag en kop over elkaar, beide in de flow (geen lay-outsprong bij de wissel) */
+  /* #43 r3: het terug-systeem doorgetrokken tot de landing — dezelfde ronde knop als op de kaart, links op de vraagregel;
+     in de betaalstand neemt de kaart-knop (×/←) het over en vervaagt deze */
+  body.pay-open .page-back { opacity:0; pointer-events:none; }
+  .pay-q { text-align:center; font-size:16px; font-weight:700; color:var(--gray-700); margin:4px 0 0; line-height:1.5; align-self:center; width:100%; }
+  .pay-q, body.pay-open .choice-q { opacity:0; visibility:hidden; } body.pay-open .pay-q { opacity:1; visibility:visible; }
+  /* ===== stap 2 in de kaart: de betaalstap (#43 r2, Philip 20 aug: 'tussen de proefweekknop en dit scherm een
+     elegantere transitie die ook leidt tot een systeem waarmee je makkelijk terug kan gaan') — de Verifieer-knop doet
+     geen paginasprong meer naar betaal.html: de kaartinhoud glijdt door naar de bankstap (zelfde kaart, zelfde kop),
+     en de knop rechtsboven is het ENE terug-systeem: × op de gegevensstap (terug naar de pakketten), ← op de bankstap
+     (terug naar je gegevens); Escape en de telefoon-terugknop doen hetzelfde, altijd één stap terug. */
+  .plan.is-pay:not(.is-betaal) > .pay2 { display:none; }
+  .plan.is-pay.is-betaal > .pay { display:none; }
+  .pay2 { margin-top:20px; padding-top:18px; border-top:1px solid var(--gray-100); text-align:center; }
+  .pay2 .bideal { height:40px; width:auto; margin:6px auto 0; display:block; }
+  .pay2 .amount { font-size:30px; font-weight:800; margin:10px 0 2px; font-variant-numeric:tabular-nums; }
+  .pay2 .bdesc { margin:0; font-size:13px; color:var(--gray-500); }
+  .pay2 .banks { margin-top:18px; text-align:left; }
+  .pay2 .banks label { font-size:14px; font-weight:500; color:var(--gray-700); }
+  .pay2 select { width:100%; margin-top:6px; padding:12px; font-size:16px; border:1px solid var(--gray-300); border-radius:10px; background:#fff; font-family:inherit; }
+  .pay2 select:focus { outline:2px solid var(--info); outline-offset:-1px; }
+  .pay2 .go2 { margin-top:18px; }
+  .pay2 .mock-note { margin:14px 0 0; font-size:12px; color:var(--gray-500); }
+  /* het ene terug-knopje: × (gegevensstap) wordt ← (bankstap), zelfde plek, zachte wissel */
+  .plan .close svg { position:absolute; transition:opacity .18s ease, transform .18s ease; }
+  .plan .close .ic-back { opacity:0; transform:rotate(45deg) scale(.7); }
+  .plan.is-betaal .close .ic-x { opacity:0; transform:rotate(-45deg) scale(.7); }
+  .plan.is-betaal .close .ic-back { opacity:1; transform:none; }
+  /* tijdens de stap-overgang: de kaart knipt de glijdende inhoud, hoogte animeert mee */
+  .plan.stepping { overflow:hidden; }
+  .step-ghost { position:absolute; pointer-events:none; z-index:6; }
+  .step-ghost > .pay, .step-ghost > .pay2 { margin-top:0 !important; display:block !important; }
+  /* tijdens de morph: de kaart knipt overlopende nieuwe inhoud aan de onderrand (rond), maar laat het label erboven vrij */
+  .plan.morphing { clip-path:inset(-32px -2px 0 -2px round 0 0 16px 16px); }
+  .ghost { position:absolute; top:-26px; left:-1px; right:-1px; padding-top:25px; overflow:hidden; pointer-events:none; z-index:5; box-sizing:border-box; }
+  .ghost-card { position:relative; background:transparent !important; border-color:transparent !important; box-shadow:none !important; transition:none !important; margin:0; }
+  .ghost-card.hl .badge { visibility:visible; }
+  @media (prefers-reduced-motion: reduce) { .plan { transition:none; } }
+  /* ===== #43 r3: vloeiende paginawissel (View Transitions, cross-document) — één overgangs-taal met de kaart-morph:
+     zelfde iOS-curve, rustige crossfade, binnenkomende pagina 12px omhoog; bij terug-navigatie geen slide (alleen fade).
+     De groene CTA is het gedeelde element: hij vliegt van /voor-ouders naar de Probeer-knop op de jaarkaart, en terug.
+     Browsers zonder ondersteuning krijgen de nette fade-fallback (scriptje onderaan de pagina). ===== */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: vt-uit var(--vt-dur, .38s) cubic-bezier(.32,.72,0,1) both; }
+  ::view-transition-new(root) { animation: vt-in var(--vt-dur, .38s) cubic-bezier(.32,.72,0,1) both; }
+  html.vt-terug::view-transition-new(root) { animation-name: vt-in-fade; }
+  @keyframes vt-uit { to { opacity:0; } }
+  @keyframes vt-in { from { opacity:0; transform:translateY(12px); } }
+  @keyframes vt-in-fade { from { opacity:0; } }
+  ::view-transition-group(cta) { animation-duration: var(--vt-dur, .38s); animation-timing-function: cubic-bezier(.32,.72,0,1); }
+  ::view-transition-old(cta), ::view-transition-new(cta) { height:100%; width:100%; object-fit:fill; }
+  @media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root), ::view-transition-group(cta) { animation:none !important; } }
+  html.vt-weg body { opacity:0; transition:opacity .2s ease; }
+  html.vt-aan body { animation: vtf-in .28s ease both; }
+  @keyframes vtf-in { from { opacity:0; } }
+
+  /* ================= 21 aug — KOERSWIJZIGING (Philip: 'terug naar dat probeer 7 dagen gratis gewoon in ieder kaartje
+     stond, met het nieuwe tekstje bovenaan direct in de bg-achtergrond'): de pre-sheet-versie is de basis — de knop
+     staat weer per kaart, tik-op-kaart = #43's morph en de kaart-stappen hebben hun eigen knoppen; geen sticky dock,
+     geen bar en geen wit sheet op deze pagina; de kop en Philips tekstje staan direct op de achtergrond. Gebleven uit
+     de tussenrondes (recentste orders, botsen niet): startaanbod-badge, planeet 140, prijs 27, iconen in de lijst. */
+  @media (max-width: 767px) {
+    .choice-q { font-size: 15.5px; font-weight: 500; color: #1f2937; max-width: 34ch; margin-left: auto; margin-right: auto; line-height: 1.55; }
+  }
 </style>
-<link rel="stylesheet" href="../assets/sheet.css" />  
+
 <style>
 
 /* ===== contact-varianten (#32): gedeelde knoppen/blokken in de site-taal ===== */
@@ -141,29 +286,71 @@ body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
 </head><body>
 
 <main>
-  <p class="choice-q">Welk pakket past bij jou?</p>
-  <div class="plans">
-    <div class="plan hl"><span class="badge">Meest gekozen</span>
-      <h2>Jaarabonnement</h2><p class="detail">Jaarlijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="82" cy="67" rx="78" ry="42" transform="rotate(-10 82 67)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="82" cy="67" r="27" fill="#facc15" stroke="#111827" stroke-width="3"/><circle cx="158" cy="52" r="15" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M154 43c4-2 9-1 10 2 1 2-1 4-4 4-3-1-5 1-4 4 1 2-1 4-4 3-4-2-5-7-3-10 1-1 2-2 5-3Z" fill="#86efac"/></svg></div>
-      <span class="offer-tag">Startaanbod schooljaar 2026/2027</span><p class="price offer-price">€7,00 <small>/maand</small></p><p class="offer-total">€84 per schooljaar</p>
-      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
-      <a class="kies" href="../gegevens.html?plan=yearly">Probeer 7 dagen gratis</a>
-    </div>
-    <div class="plan">
-      <h2>Maandabonnement</h2><p class="detail">Maandelijkse afschrijving na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="66" rx="57" ry="37" transform="rotate(-18 100 66)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="100" cy="66" r="24" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M95 47c7-4 16-2 18 4 1 4-3 6-8 6-5-1-8 2-6 6 2 4-2 8-8 6-6-4-8-11-5-16 2-3 5-4 9-6Z" fill="#86efac"/><circle cx="149" cy="39" r="13" fill="#cbd5e1" stroke="#111827" stroke-width="3"/></svg></div>
-      <p class="price">€11,00 <small>/maand</small></p>
-      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
-      <a class="kies" href="../gegevens.html?plan=monthly">Probeer 7 dagen gratis</a>
-    </div>
-    <div class="plan">
-      <h2>De hele schooltijd</h2><p class="detail">Eenmalig betalen na de proefweek</p><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="65" rx="26" ry="17" fill="#facc15" stroke="#111827" stroke-width="3" transform="rotate(-8 100 65)"/><path d="M108 65.6 112.9 74.3 108 82.1 95.7 87.7 78.3 88.1 60.4 81.2 47.7 67.2 45.5 48.4 56.9 29" stroke="#bfdbfe" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/><path d="M92 64.4 87.1 55.7 92 47.9 104.3 42.3 121.7 41.9 139.6 48.8 152.3 62.8 154.5 81.6 143.1 101" stroke="#fed7aa" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/></svg></div>
-      <p class="price">€200 <small>eenmalig</small></p>
-      <details class="incl-details"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></li><li><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></li><li><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></li><li><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></li><li><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></li><li><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></li><li><b>Oefentoets</b><span>Check of je de stof beheerst.</span></li></ul></details>
-      <a class="kies" href="../gegevens.html?plan=lifetime">Probeer 7 dagen gratis</a>
-    </div>
+  <!-- 20 aug (Philip): geen contact-bar op deze pagina; in plaats daarvan zijn korte regel BOVEN de keuze, direct op de
+       achtergrond in de review-quote-stijl. Staat BUITEN #plans, dus de morph (#43) raakt hem niet: hij blijft staan
+       tijdens en na het morphen naar de betaalkaart. -->
+  <!-- 21 aug (Philip: 'combineer mijn stukje met welk pakket past bij jou, zodat het elegant wordt; tekst en knoppen
+       veel mooier en passend; terugknop weg'): ÉÉN kopblok — foto, kop (wisselt in de betaalstappen), zijn zin als
+       ondertitel in de paginazetstijl, en twee verfijnde witte knoppen. V1 gekozen uit vier composities (zie vel). -->
+  <div class="kopblok">
+    <div class="qwrap"><p class="choice-q">Hoi! Ik ben Philip, medeoprichter van WisWiz. Als je nog over iets vragen hebt kan je me altijd bellen of <span class="kb-sig">appen. <img class="kb-foto-mini" src="../assets/philip.png" alt="Philip" width="22" height="22" /></span></p><h1 class="pay-q">Start de proefweek voor je kind</h1></div>
+    <span class="kb-acties"><a class="ph-icon ph-wa" href="https://wa.me/31630231640?text=Hoi%20Philip%2C%20ik%20heb%20een%20vraag%20over%20de%20WisWiz-pakketten." target="_blank" rel="noopener" data-cta="whatsapp-pakket" aria-label="WhatsApp Philip"><svg viewBox="0 0 448 512" aria-hidden="true"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg></a><a class="ph-icon ph-tel" href="tel:+31630231640" data-cta="bel-pakket" aria-label="Bel Philip, 06 30 23 16 40"><svg viewBox="0 0 512 512" aria-hidden="true"><path d="M164.9 24.6c-7.7-18.6-28-28.5-47.4-23.2l-88 24C12.1 30.2 0 46 0 64C0 311.4 200.6 512 448 512c18 0 33.8-12.1 38.6-29.5l24-88c5.3-19.4-4.6-39.7-23.2-47.4l-96-40c-16.3-6.8-35.2-2.1-46.3 11.6L304.7 368C234.3 334.7 177.3 277.7 144 207.3L193.3 167c13.7-11.2 18.4-30 11.6-46.3l-40-96z"/></svg></a></span>
+  </div>
+  <div class="plans" id="plans">
+    <!-- 20 aug (Philip, volledig bericht): 'Meest gekozen' weg; het STARTAANBOD is nu de badge bovenaan de jaarkaart en
+         staat niet meer dubbel in het prijsblok (daar alleen nog €7,00 /maand + €84 per schooljaar). -->
+    <article class="plan hl" data-plan="yearly"><span class="badge po">Meest gekozen</span>
+      <h2>Jaarabonnement</h2><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="82" cy="67" rx="78" ry="42" transform="rotate(-10 82 67)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="82" cy="67" r="27" fill="#facc15" stroke="#111827" stroke-width="3"/><circle cx="158" cy="52" r="15" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M154 43c4-2 9-1 10 2 1 2-1 4-4 4-3-1-5 1-4 4 1 2-1 4-4 3-4-2-5-7-3-10 1-1 2-2 5-3Z" fill="#86efac"/></svg></div>
+      <p class="price"><span class="amt">€7,00</span> <small>/maand</small></p><p class="offer-total po">€84 per schooljaar</p>
+      <details class="incl-details po"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><span class="fico" style="background:#f43f5e"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 0 1 2.652 2.652L9.75 16.902 5 18l1.098-4.75L16.862 4.487ZM4 21h16"/></svg></span><span class="ftxt"><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></span></li><li><span class="fico" style="background:#ecc862"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></span><span class="ftxt"><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></span></li><li><span class="fico" style="background:#3e8ed0"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></span></li><li><span class="fico" style="background:#db9a1f"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h8m-8 4h5m8-2a8 8 0 0 1-8 8H7l-4 2 1.6-4.2A8 8 0 1 1 21 12Z"/></svg></span><span class="ftxt"><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></span></li><li><span class="fico" style="background:#00328a"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span><span class="ftxt"><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></span></li><li><span class="fico" style="background:#db2777"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.1 9a3 3 0 1 1 5.34 1.86c-.9.75-1.44 1.24-1.44 2.14v.25M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></span><span class="ftxt"><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></span></li><li><span class="fico" style="background:#10b981"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Oefentoets</b><span>Check of je de stof beheerst.</span></span></li></ul></details>
+      <a class="kies po" href="../gegevens.html?plan=yearly">Probeer 7 dagen gratis</a>
+    </article>
+    <article class="plan" data-plan="monthly">
+      <h2>Maandabonnement</h2><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="66" rx="57" ry="37" transform="rotate(-18 100 66)" stroke="#cbd5e1" stroke-dasharray="5 6" stroke-width="2"/><circle cx="100" cy="66" r="24" fill="#3b82f6" stroke="#111827" stroke-width="3"/><path d="M95 47c7-4 16-2 18 4 1 4-3 6-8 6-5-1-8 2-6 6 2 4-2 8-8 6-6-4-8-11-5-16 2-3 5-4 9-6Z" fill="#86efac"/><circle cx="149" cy="39" r="13" fill="#cbd5e1" stroke="#111827" stroke-width="3"/></svg></div>
+      <p class="price"><span class="amt">€11,00</span> <small>/maand</small></p>
+      <details class="incl-details po"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><span class="fico" style="background:#f43f5e"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 0 1 2.652 2.652L9.75 16.902 5 18l1.098-4.75L16.862 4.487ZM4 21h16"/></svg></span><span class="ftxt"><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></span></li><li><span class="fico" style="background:#ecc862"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></span><span class="ftxt"><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></span></li><li><span class="fico" style="background:#3e8ed0"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></span></li><li><span class="fico" style="background:#db9a1f"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h8m-8 4h5m8-2a8 8 0 0 1-8 8H7l-4 2 1.6-4.2A8 8 0 1 1 21 12Z"/></svg></span><span class="ftxt"><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></span></li><li><span class="fico" style="background:#00328a"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span><span class="ftxt"><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></span></li><li><span class="fico" style="background:#db2777"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.1 9a3 3 0 1 1 5.34 1.86c-.9.75-1.44 1.24-1.44 2.14v.25M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></span><span class="ftxt"><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></span></li><li><span class="fico" style="background:#10b981"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Oefentoets</b><span>Check of je de stof beheerst.</span></span></li></ul></details>
+      <a class="kies po" href="../gegevens.html?plan=monthly">Probeer 7 dagen gratis</a>
+    </article>
+    <article class="plan" data-plan="lifetime">
+      <h2>De hele schooltijd</h2><div class="visual"><svg viewBox="0 0 200 130" width="176" height="114" fill="none"><ellipse cx="100" cy="65" rx="26" ry="17" fill="#facc15" stroke="#111827" stroke-width="3" transform="rotate(-8 100 65)"/><path d="M108 65.6 112.9 74.3 108 82.1 95.7 87.7 78.3 88.1 60.4 81.2 47.7 67.2 45.5 48.4 56.9 29" stroke="#bfdbfe" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/><path d="M92 64.4 87.1 55.7 92 47.9 104.3 42.3 121.7 41.9 139.6 48.8 152.3 62.8 154.5 81.6 143.1 101" stroke="#fed7aa" stroke-linecap="round" stroke-width="13" fill="none" opacity=".85"/></svg></div>
+      <p class="price"><span class="amt">€200</span> <small>eenmalig</small></p>
+      <details class="incl-details po"><summary class="incl"><span class="chk">✓</span> Alles van WisWiz inbegrepen <span class="chev">⌄</span></summary><ul class="incl-list"><li><span class="fico" style="background:#f43f5e"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 0 1 2.652 2.652L9.75 16.902 5 18l1.098-4.75L16.862 4.487ZM4 21h16"/></svg></span><span class="ftxt"><b>Feedback op je schrift</b><span>Maak een foto van je uitwerking en krijg feedback op je stappen.</span></span></li><li><span class="fico" style="background:#ecc862"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></span><span class="ftxt"><b>Hint</b><span>Krijg een duwtje in de juiste richting.</span></span></li><li><span class="fico" style="background:#3e8ed0"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Stappenplan</b><span>Zie niet alleen hoe, maar ook waarom.</span></span></li><li><span class="fico" style="background:#db9a1f"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10h8m-8 4h5m8-2a8 8 0 0 1-8 8H7l-4 2 1.6-4.2A8 8 0 1 1 21 12Z"/></svg></span><span class="ftxt"><b>BijlesBot</b><span>Vraag door tot je het snapt.</span></span></li><li><span class="fico" style="background:#00328a"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span><span class="ftxt"><b>Theorie</b><span>Krijg theorie precies wanneer je die nodig hebt.</span></span></li><li><span class="fico" style="background:#db2777"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.1 9a3 3 0 1 1 5.34 1.86c-.9.75-1.44 1.24-1.44 2.14v.25M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg></span><span class="ftxt"><b>Begripvraag</b><span>Controleer of je snapt waarom een stap klopt.</span></span></li><li><span class="fico" style="background:#10b981"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 2 2 4-5M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg></span><span class="ftxt"><b>Oefentoets</b><span>Check of je de stof beheerst.</span></span></li></ul></details>
+      <a class="kies po" href="../gegevens.html?plan=lifetime">Probeer 7 dagen gratis</a>
+    </article>
   </div>
 </main>
-<script src="../assets/sheet.js" data-trigger="direct"></script>
+<script src="../assets/morph.js"></script>
+<script>
+/* #43 r3: terug-richting herkennen (fade i.p.v. slide) + fallback voor browsers zonder View Transitions. */
+addEventListener('pageswap', function (e) { if (e.viewTransition) { e.viewTransition.finished.catch(function () {}); e.viewTransition.ready.catch(function () {}); } });   /* teardown/skip-rejects van de oude pagina stil */
+addEventListener('pagereveal', function () {
+  try { if (navigation.activation && navigation.activation.navigationType === 'traverse') document.documentElement.classList.add('vt-terug'); else document.documentElement.classList.remove('vt-terug'); } catch (_) {}
+});
+(function () {
+  var vt = !!document.startViewTransition;
+  var rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* de ←-knop: één stap terug — kwam je van /voor-ouders, dan echte history-terug (scrollstand blijft); anders er naartoe */
+  var back = document.getElementById('page-back');
+  if (back) back.addEventListener('click', function (e) {
+    var vanIndex = false;
+    try { vanIndex = document.referrer && new URL(document.referrer).origin === location.origin && !/pakket|gegevens|betaal|gelukt/.test(new URL(document.referrer).pathname); } catch (_) {}
+    if (vanIndex && history.length > 1) { e.preventDefault(); e.stopPropagation(); history.back(); return; }
+    if (vt || rm) { location.href = back.getAttribute('data-pagenav-href'); }
+    /* zonder VT laat de fallback-clickhandler hieronder de fade doen */
+  });
+  if (vt) return;
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('[data-pagenav]');
+    if (!a || rm || e.defaultPrevented) return;
+    var href = a.getAttribute('data-pagenav-href') || a.href;
+    e.preventDefault();
+    document.documentElement.classList.add('vt-weg');
+    setTimeout(function () { location.href = href; }, 190);
+  });
+  if (!rm) document.documentElement.classList.add('vt-aan');
+  addEventListener('pageshow', function (ev) { if (ev.persisted) document.documentElement.classList.remove('vt-weg'); });
+})();
+</script>
 <a class="cv-chip" id="cv-chip" href="index.html" aria-label="Terug naar het overzicht van de varianten"><b>C</b> balk na de hero · ‹ overzicht</a>
 
   <nav class="cv-bar" id="cv-bar" aria-label="Contact met Philip">

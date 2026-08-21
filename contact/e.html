@@ -44,25 +44,37 @@
     a { color: inherit; text-decoration: none; }
     img { max-width: 100%; height: auto; display: block; }
 
-    body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+    body { padding-bottom: calc(94px + env(safe-area-inset-bottom, 0px)); }   /* 21 aug (Philips gecorrigeerde run: 'die bottombar niet meer op de aankomstpagina, wel in de pakketpagina's') — hier alleen de dock-zone */
     /* r9 (Philip 18 aug: "hij moet gewoon op zn plek sliden en dan daar blijven"): geen inschuif-animatie meer.
        De knop is nu ECHT position:sticky — hij scrolt gewoon mee met de pagina, en zodra hij de bovenrand raakt (8px +
        safe-area) blijft hij daar staan; scroll je terug, dan gaat hij op dezelfde rand weer mee naar beneden. Eén beweging
        heen, één terug, door de browser zelf gepositioneerd (geen JS-vertraging, geen sprong, geen dubbele beweging).
-       Techniek: de zichtbare knop is een sticky kopie (#stickycta, 0px hoog, eerste kind van body) met de knop absoluut op
-       de plek van de originele knop (JS meet --cta-top/--cta-left/--cta-w bij load/resize/fonts); de originele knop in de
-       hero blijft als onzichtbare plaatshouder staan (ruimte, geen sprong). De bar-achtergrond (#stickybar) is los en
+       Techniek (sinds 20 aug bottom-dock): #ctadock is een fixed kopie onderin; de originele knop in de hero blijft
+       gewoon staan (geen plaatshouder-trucs meer nodig — de dock verschijnt pas als de originele boven de viewport
+       uit is). De oude top-sticky (#stickycta/#stickybar) is verwijderd en
        fadet alleen zacht in/uit als de knop gedokt staat. */
-    .stickycta { display: none; position: sticky; top: calc(8px + env(safe-area-inset-top, 0px) - var(--cta-top, 0px)); height: 0; z-index: 900; }
-    body.js-dock .stickycta { display: block; }
-    body.js-dock .cta-group .btn-primary[data-cta="checkout"] { visibility: hidden; }   /* plaatshouder: de sticky kopie ligt er exact op */
-    .stickycta .btn-primary { position: absolute; top: var(--cta-top, 0px); left: var(--cta-left, 0px); width: var(--cta-w, 100%); margin: 0; }
-    .stickybar { position: fixed; top: 0; left: 0; right: 0; z-index: 899; padding: calc(8px + env(safe-area-inset-top, 0px)) 0 8px; pointer-events: none;
-      background: rgba(240,249,255,.92); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid #dbeafe;
-      opacity: 0; transition: opacity .2s ease; }
-    .stickybar::after { content: ""; display: block; height: var(--cta-h, 57.5px); }
-    .stickybar.is-on { opacity: 1; }
-    @media (prefers-reduced-motion: reduce) { .stickybar { transition: none; } }
+    /* 20 aug (Philip: 'keer de sticky-richting om — de CTA blijft ONDERAAN sticky, de bovenkant wordt vrij voor een
+       later contact-element'): de top-sticky (kopie die aan de bovenrand vastklikte + stickybar-achtergrond) is WEG.
+       Ervoor in de plaats: #ctadock — een vaste knop onderin (alleen <768px) die verschijnt zodra de originele knop
+       (20 aug avond: staat er op telefoon vanaf laden). Geen contact-bar meer op deze pagina (Philip: 'de philip bar
+       pas als op start een proefweek is gedrukt' — Philip-contact leeft in het checkoutpad: trust-blokje op de
+       pakketkeuze, bar op de betaalstap), dus de dock staat altijd op 12px + safe-area. De opening
+       (CTA boven de vouw bij het laden) is ongemoeid — de dock is daar onzichtbaar (originele knop nog in beeld). */
+    #ctadock { position: fixed; left: 0; right: 0; z-index: 900; padding: 0 var(--pad); display: flex; justify-content: center;
+      bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      opacity: 0; transform: translateY(14px); pointer-events: none;
+      transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1), bottom .35s cubic-bezier(.32,.72,0,1); }
+    #ctadock.is-on { opacity: 1; transform: none; pointer-events: auto; }
+    /* 20 aug nacht (Philip: 'de onderkant van de safari-pagina moet see-through blijven'): geen gekleurde gloed meer
+       de onderrand/safe-area in — neutrale, korte schaduw; onder de knop is de onderrand puur de paginakleur, zodat
+       Safari's balk gewoon doorschijnend over de achtergrond blurt. */
+    #ctadock .btn-primary { width: 100%; max-width: 384px; margin: 0; box-shadow: 0 2px 10px rgba(15,23,42,.16); }
+    @media (min-width: 768px) { #ctadock { display: none; } }   /* desktop: bovenkant vrij, geen sticky (bar staat daar rechtsonder) */
+    @media (prefers-reduced-motion: reduce) { #ctadock { transition: none; } }
+    /* #43 r3: precies ÉÉN element draagt de gedeelde-element-naam van de vliegende CTA (twee tegelijk = transitie
+       afgebroken): staat de bottom-dock aan, dan de dock-knop; anders de originele hero-CTA. */
+    body:not(:has(#ctadock.is-on)) .hero .cta-group .btn-primary { view-transition-name: cta; }
+    #ctadock.is-on .btn-primary { view-transition-name: cta; }
     /* --- r11 (Philip 19 aug, tweede versie: GEEN logo-header — "de kop bovenaan, dan de video-knop eronder, dan de
        hero-opstelling en daaronder de Start-proefweek-button — als opening/viewport voor alle devices"): de opening is
        één gecentreerde verticale stapel op ALLE formaten (de desktop-twee-kolommen-rij is weg). Volgorde: kop →
@@ -71,6 +83,8 @@
     @media (min-width: 1024px) { main { padding-top: 36px; } }
 
     .hero { display: flex; flex-direction: column; align-items: center; }
+    .hero-logo { display: none; }   /* desktop: geen logo in de hero (r11); op telefoon wel, zie ≤1023 + ≤767 */
+    @media (min-width: 768px) { .hero-logo { display: none !important; } }
     .hero-visual { width: 100%; max-width: 576px; flex-shrink: 0; }
     @media (min-width: 1024px) { .hero-visual { max-width: 640px; } }
     /* --- r12 (Philip 19 aug: "op IEDERE telefoon perfecte spacing waarbij de CTA-knop als onderste (met bottom bar)
@@ -84,9 +98,11 @@
     @media (max-width: 1023px) {
       :root { --opening-top: clamp(18px, 3.5svh, 34px); }   /* bovenmarge groeit licht mee met de schermhoogte */
       main { padding-top: var(--opening-top); }
-      .hero { min-height: calc(100svh - 24px - var(--opening-top) - env(safe-area-inset-bottom, 0px));  /* #32 Apple-bar: geen bar in de opening meer (64px → 24px lucht onder de CTA) */
+      .hero { min-height: calc(100svh - 88px - var(--opening-top) - env(safe-area-inset-bottom, 0px));  /* 20 aug: onderaan 88px dock-zone (58 knop + 12 rand + lucht) — de dock staat er vanaf laden */
         /* nacht r13: grid i.p.v. flex, zodat de beeldrij (1fr) een DEFINIETE hoogte heeft en het beeldvenster erop kan meten (cqh) */
-        display: grid; grid-template-rows: auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }
+        display: grid; grid-template-rows: auto auto minmax(96px, 1fr) auto; grid-template-columns: 100%; justify-items: center; align-content: stretch; }   /* 4 rijen: logo (telefoon), kop, beeldblok (startelement + beeld), CTA (<768 verborgen, telt dan niet als grid-item) */
+      /* Philip 19 aug: het WisWiz-logo op telefoon duidelijk prominenter bovenaan de hero (alleen ≤767px; elegant, niet overdreven): 48px hoog, gecentreerd, 14px lucht onder */
+      .hero-logo { display: block; height: 58px; width: auto; margin: 0 auto 14px; }   /* 20 aug nacht (Philip): logo bovenaan nóg wat groter (48→58) */
       /* het beeld krijgt alle restruimte en staat daarin een fractie BOVEN het midden (optisch centrum);
          op telefoon loopt het beeld van rand tot rand (de edgefade laat het in de achtergrond overlopen) */
       /* nacht r13 (Philip 19 aug: 'de layout van de hero met alle elementen voor verschillende telefoonmaten' — supernice op ELKE
@@ -100,8 +116,8 @@
          uit het venster groeit. */
       .hero-visual { min-height: 0; align-self: stretch; container-type: size; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-bottom: 4svh;
         width: calc(100% + var(--pad) * 2); max-width: none; }
-      .hero-visual .blend { --cap: var(--hero-cap, 0.8); flex: 0 0 auto;
-        width: min(100cqw, calc(100cqh * 16 / 9)); height: min(100cqh, calc(100cqw * var(--cap))); margin: 0 auto; overflow: hidden; }
+      .hero-visual .blend { --cap: var(--hero-cap, 0.8); flex: 0 0 auto; --vrij: calc(100cqh - 62px);   /* 62px = startelement + marge in hetzelfde venster */
+        width: min(100cqw, calc(var(--vrij) * 16 / 9)); height: min(var(--vrij), calc(100cqw * var(--cap))); margin: 0 auto; overflow: hidden; }
       .hero-visual .blend img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
       .actions { padding-bottom: 12px; }
     }
@@ -115,14 +131,15 @@
     /* r11: op smalle telefoons (<390px) net kleiner, zodat de kop twee regels blijft en de opening in één viewport past.
        nacht r13: de kop schaalt vloeiend met de telefoonbreedte en blijft op ELKE breedte precies twee regels (gemeten: 'Betaalbare
        wiskundebijles' is de maatregel — 21.8px op 320, 24.7 op 360, 25.8 op 375, 26.9 op 390, 29.8 op 430), gebalanceerd. */
-    @media (max-width: 767px) { h1 { font-size: clamp(21px, calc(7.2vw - 1.2px), 30px); } }
+    @media (max-width: 767px) { h1 { font-size: clamp(19px, calc(6.6vw - 1.2px), 27px); } }   /* 20 aug nacht (Philip): de kop juist een maat kleiner */
     @media (min-width: 768px) { h1 { font-size: 36px; } }
     h1 .line2 { display: block; margin-top: 8px; }
     .wis { color: var(--mathorange); } .wiz { color: var(--mathyellow); }
     .lead {
-      margin: 16px 0 0; max-width: 36rem; font-size: 16px; font-weight: 500;
-      color: var(--gray-700); line-height: 1.6;
+      margin: 12px 0 0; max-width: 36rem; font-size: 16px; font-weight: 500;
+      color: var(--gray-700); line-height: 1.55; text-align: center; text-wrap: balance;
     }
+    @media (max-width: 389px) { .lead { font-size: 15px; } }
     @media (min-width: 768px) { .lead { font-size: 18px; } }
 
     .actions {
@@ -161,6 +178,10 @@
     .btn-call svg { width: 16px; height: 16px; fill: var(--info); }
     .subline { margin: 6px 0 0; text-align: center; font-size: 12px; color: var(--gray-500); }
     .cta-group { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+    /* 20 aug avond (Philip: 'start een proefweek moet vanaf het begin af aan al onderaan sticky zijn'): op telefoon is de
+       DOCK de enige CTA en staat hij er vanaf paginalading; de originele knop in de opening is daar verborgen (anders
+       twee knoppen boven elkaar aan de onderrand). Desktop onveranderd (dock bestaat daar niet). */
+    @media (max-width: 767px) { .hero .actions { display: none; } }
 
     .videolink {
       display: flex; align-items: center; justify-content: flex-start; gap: 12px;
@@ -233,17 +254,16 @@
     .vstart.vd::after { content: ""; position: absolute; left: 6px; right: 14px; bottom: 2px; height: 2px; border-radius: 1px; background: rgba(31,111,176,.45); transition: background .15s ease; }
     .vstart.vd:hover .vstart-text { color: #17578c; }
     .vstart.vd:hover::after { background: var(--info-dark); }
-    /* r-geel (Philip 19 aug: 'het startelement (play-icoon en underline) in de GELE LOGOKLEUR (mathyellow) i.p.v. bg-info-blauw —
-       ik mis het merkgeel op de pagina; elegant en leesbaar, één teksthierarchie, geen knop'): het play-blokje wordt DONKER
-       (gray-950) met een GEEL speelteken (#ecc862) — een geel vlak met wit teken is onleesbaar op de lichtblauwe bg; de onderlijn
-       wordt geel (iets dieper, #e5bd3e, zodat hij op het lichtblauw leesbaar blijft); de regel zelf in gray-950 (één stijl). */
-    .vstart.vy .vstart-mark { background: var(--gray-950); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
-    .vstart.vy .vstart-mark svg { fill: var(--mathyellow); }
-    .vstart.vy:hover .vstart-mark, .vstart.vy:active .vstart-mark { background: #111827; box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(3,7,18,.4); }
-    .vstart.vy .vstart-text { color: var(--gray-950); }
-    .vstart.vy:hover .vstart-text { color: var(--gray-950); }
-    .vstart.vy::after { background: #e5bd3e; }
-    .vstart.vy:hover::after { background: #d9ac26; }
+    /* 20 aug avond (Philip via #38: 'maak de wiswiz in 30 seconden en de icon en de underline weer info color'; de kop
+       blijft zwart per zijn keuze van 11:03): het startelement terug in de klassieke info-look — blokje --info met wit
+       speelteken, tekst --info-dark, underline zacht blauw. */
+    .vstart.vink .vstart-mark { background: var(--info); box-shadow: 0 1px 1.5px rgba(15,23,42,.18), inset 0 0 0 1px rgba(31,111,176,.28); }
+    .vstart.vink .vstart-mark svg { fill: #fff; }
+    .vstart.vink:hover .vstart-mark, .vstart.vink:active .vstart-mark { background: var(--info-dark); }
+    .vstart.vink .vstart-text { color: var(--info-dark); }
+    .vstart.vink:hover .vstart-text { color: #17578c; }
+    .vstart.vink::after { background: rgba(31,111,176,.45); }
+    .vstart.vink:hover::after { background: var(--info-dark); }
     /* Videospeler: de hero 'komt tot leven' — het hero-beeld (= frame 0 van de video) vliegt
        met een FLIP-animatie (alleen transform/opacity, GPU) naar de speler; daar start de video. */
     :root { --fly: .68s; --flycurve: cubic-bezier(.45,.02,.18,1); }   /* één beweging: frame, dim en randvervaging lopen exact samen */
@@ -308,18 +328,27 @@
        op 43px begint (kaart-padding); (2) op desktop 42rem = 672px breed, breder dan de reviews (32rem) en de knopkolom (24rem);
        Fix (Philips verduidelijking: LINKS uitgelijnd BLIJFT, alleen marge/breedte): dezelfde kolom als de reviews (32rem) en
        dezelfde tekst-inzet (22px = de review-tekstrand) — de site-marge, één ritme; h2 gecentreerd, tekst links zoals het was. */
-    .about { margin: 80px auto 0; max-width: 32rem; padding: 0 22px; text-align: left; }
+    /* 20 aug (Philip: "geef Onze missie/About VOLLEDIG dezelfde typografie EN layout als de reviews — font, groottes/
+       hierarchie, kleuren, regelafstand, uitlijning en opmaak identiek"): de sectie staat nu in het review-systeem —
+       zelfde kolom (34rem), GECENTREERD zoals de quotes (de eerdere links-uitlijning van r13 vervalt op zijn woord),
+       lopende tekst exact de quote-zetstijl (17px/1.65 → 18px vanaf 640px, regular, gray-950) en de kopjes in de
+       attributie-stijl van de reviews (13px/500, gray-500 — zoals 'Moeder van een brugklasleerling'). */
+    /* 20 aug (Philip, voice: 'about us heeft andere marge dan de reviews, dat moet helemaal consistent zijn'): de eigen
+       22px-padding is eruit — de sectie staat nu exact in de review-kolom (34rem, alleen de paginamarge), gemeten:
+       tekst-x en -breedte gelijk aan de review-alinea's (20/350 op 390px). */
+    .about { margin: 80px auto 0; max-width: 34rem; padding: 0; text-align: center; }
     .about h2 { text-align: center; margin-bottom: 20px; }
     /* r13 (Philip 19 aug: "Geef de About-us-tekst hetzelfde font als de reviews, maar houd het left aligned."): de lopende
        tekst staat nu in EXACT de zetstijl van de moeder-/Mattia-review (.proof .layer.review.lang: Ubuntu 400, 17px/1.65 op
        telefoon, 18px vanaf 640px, gray-950) — was 15px medium. Alleen de typografie; LINKS uitgelijnd blijft (zijn eis 18 aug),
        kolom 32rem + tekst-inzet 22px (r7c) blijven. h3 een maat mee omhoog (19/20px) zodat de kop boven de grotere body blijft
        staan; de link niet meer vet (500) — vet sprong eruit in de lichte review-letter. */
-    .about h3 { margin: 26px 0 8px; font-size: 19px; font-weight: 700; line-height: 1.3; }
+    .about h3 { margin: 40px 0 10px; font-size: 15px; font-weight: 700; line-height: 1.4; letter-spacing: -0.005em; color: var(--gray-950); }   /* volgt de review-attributie-stijl (20 aug: headers dominanter) */
+    @media (min-width: 640px) { .about h3 { font-size: 16px; } }
     .about p { margin: 0; font-size: 17px; line-height: 1.65; font-weight: 400; color: var(--gray-950); text-wrap: pretty; }
     .about p + p { margin-top: 14px; }
     .about p a { color: var(--info); font-weight: 500; }
-    @media (min-width: 640px) { .about h3 { font-size: 20px; } .about p { font-size: 18px; } }
+    @media (min-width: 640px) { .about p { font-size: 18px; } }
     .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: calc(100% + 44px); margin: 28px -22px 0; }
     .team a { display: flex; flex-direction: column; align-items: center; gap: 6px; background: #fff; border-radius: 12px; padding: 12px 6px; border: 1px solid var(--gray-100); }
     .team img { width: 56px; height: 56px; border-radius: 9999px; object-fit: cover; box-shadow: 0 0 0 2px var(--info); }
@@ -367,10 +396,36 @@
        font-size en stijl"): was moeder 17px/1.65 (lang) naast Mattia 18px/1.6 — nu BEIDE reviews in precies dezelfde zetstijl:
        17px/1.65 op telefoon, 18px vanaf 640px, zelfde kolombreedte (34rem). */
     .proof .layer.review { max-width: 34rem; }
+    /* 20 aug (Philip, tweede ronde op de headers): de attributie is de PROMINENTSTE regel — steviger en donkerder dan de
+       quote (15px/700, inkt), de quote eronder net ondergeschikt (gray-800). Eerst de naam, dan lees je de quote. */
+    .proof .layer.review figcaption { margin: 0 0 10px; font-size: 15px; font-weight: 700; letter-spacing: -0.005em; color: var(--gray-950); }
+    @media (min-width: 640px) { .proof .layer.review figcaption { font-size: 16px; } }
+    .proof .layer.review blockquote p { color: #1f2937; }
     .proof .layer.review blockquote p { font-size: 17px; line-height: 1.65; }
     @media (min-width: 640px) { .proof .layer.review blockquote p { font-size: 18px; } }
+
+  /* ===== #43 r3: vloeiende paginawissel (View Transitions, cross-document) — één overgangs-taal met de kaart-morph:
+     zelfde iOS-curve, rustige crossfade, binnenkomende pagina 12px omhoog; bij terug-navigatie geen slide (alleen fade).
+     De groene CTA is het gedeelde element: hij vliegt van /voor-ouders naar de Probeer-knop op de jaarkaart, en terug.
+     Browsers zonder ondersteuning krijgen de nette fade-fallback (scriptje onderaan de pagina). ===== */
+  /* het team-blok (width:100%+44px) maakte de pagina 2px breder dan de viewport: de mobiele layout-viewport rekte mee
+     (392 vs 390 op pakket) en een paginawissel met twee verschillende snapshot-maten wordt door de browser AFGEBROKEN.
+     clip op de root voorkomt de horizontale overflow (en de 2px zijwaartse pan die de pagina stiekem had). */
+  html, body { overflow-x: clip; }
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: vt-uit var(--vt-dur, .38s) cubic-bezier(.32,.72,0,1) both; }
+  ::view-transition-new(root) { animation: vt-in var(--vt-dur, .38s) cubic-bezier(.32,.72,0,1) both; }
+  html.vt-terug::view-transition-new(root) { animation-name: vt-in-fade; }
+  @keyframes vt-uit { to { opacity:0; } }
+  @keyframes vt-in { from { opacity:0; transform:translateY(12px); } }
+  @keyframes vt-in-fade { from { opacity:0; } }
+  ::view-transition-group(cta) { animation-duration: var(--vt-dur, .38s); animation-timing-function: cubic-bezier(.32,.72,0,1); }
+  ::view-transition-old(cta), ::view-transition-new(cta) { height:100%; width:100%; object-fit:fill; }
+  @media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root), ::view-transition-group(cta) { animation:none !important; } }
+  html.vt-weg body { opacity:0; transition:opacity .2s ease; }
+  html.vt-aan body { animation: vtf-in .28s ease both; }
+  @keyframes vtf-in { from { opacity:0; } }
   </style>
-  <link rel="stylesheet" href="../assets/sheet.css" />
   <link rel="stylesheet" href="../assets/stapel.css" />
   <link rel="preload" as="image" href="../assets/hero-t2.webp" />
   
@@ -496,18 +551,19 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 </head>
 <body>
   <!-- r11 (Philip 19 aug, tweede versie): de opening is één verticale stapel — kop, video-knop, hero-beeld, CTA.
-       Conversie bij scrollen blijft de sticky CTA; contact is de Apple-slide contact-sheet (#32, assets/sheet.js, data-trigger=hero):
-       WEG zolang de opening in beeld is, glijdt in zodra je voorbij de hero bent. -->
-  <div class="stickybar" id="stickybar" aria-hidden="true"></div>
-  <div class="stickycta" id="stickycta">
-    <a class="btn btn-primary" href="../pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
+       Conversie = de bottom-dock-CTA (vanaf laden). Philip-contact staat sinds 20 aug avond NIET meer op de landing. -->
+  <div id="ctadock">
+    <a class="btn btn-primary" href="../pakket.html" data-cta="checkout-sticky" data-pagenav>Start een proefweek voor jouw kind</a>
   </div>
 
   <main>
     <section class="hero">
+      <img class="hero-logo" src="../assets/wiswizlogo.png" alt="WisWiz" width="300" height="150" />
       <h1>Betaalbare wiskundebijles die altijd klaarstaat.</h1>
-      <a class="vstart v1 vd vy" href="../assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
       <div class="hero-visual">
+        <!-- 20 aug (Philip): het startelement staat nu NET BOVEN de hero-image (in het beeldblok, dus kop → element → beeld → CTA);
+             het beeldvenster rekent zijn hoogte nu met de element-ruimte mee (100cqh − 62px). -->
+        <a class="vstart v1 vd vink" href="../assets/opening.mp4" id="videocard2" data-cta="video"><span class="vstart-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span><span class="vstart-text">WisWiz in 30 seconden</span></a>
         <a class="herolink" id="videocard" href="../assets/opening.mp4" data-cta="video" aria-label="WisWiz in 30 seconden (video)">
         <div class="blend" id="herovisual">
         <img src="../assets/hero-t2.webp" alt="Een wiskundeboek, een telefoon met WisWiz en een schrift met een vastgelopen uitwerking" width="3200" height="1800" />
@@ -518,7 +574,7 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
       <div class="actions">
         <div class="cta-stack">
           <div class="cta-group">
-            <a class="btn btn-primary" href="../pakket.html" data-cta="checkout">Start een proefweek voor jouw kind</a>
+            <a class="btn btn-primary" href="../pakket.html" data-cta="checkout" data-pagenav>Start een proefweek voor jouw kind</a>
           </div>
         </div>
         <!-- Philip-tekst + belknop: verhuisd naar de social-proof-sectie (wrk-34), Philips order 17 aug -->
@@ -527,14 +583,15 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 
     <section class="proof" id="proof">
       <!-- r7 (Philip 18 aug): het Philip-blok is uit de sectie — de bottom bar is voortaan het Philip/contact-element -->
+      <!-- 20 aug (Philip): de attributie staat nu als HEADER BOVEN elke review, de quote eronder (was bijschrift onder) -->
       <figure class="layer review lang">
+        <figcaption>Moeder van een brugklasleerling</figcaption>
         <!-- r8 (Philip 18 aug): de VOLLEDIGE originele review, verbatim (was ingekort) — in dezelfde losse quote-stijl, met lucht -->
         <blockquote><p>&#8220;Mijn dochter is dit jaar voor het eerst naar de middelbare gegaan en al snel had ze wat hulp nodig bij wiskunde dus toen ik hoorde van WisWiz was ik heel enthousiast. Je krijgt bij elke opgave een goeie uitleg en kan zelfs vragen stellen. We gebruiken het meestal samen. Ik lees het en leg het aan haar uit. Op die manier kan ik haar veel beter helpen. Maar ze kan het ook in haar eentje gebruiken als ze wil. Als we deze app niet hadden gehad had ze waarschijnlijk wel op bijles gezeten. Echt een aanrader voor ouders en kinderen.&#8221;</p></blockquote>
-        <figcaption>Moeder van een brugklasleerling</figcaption>
       </figure>
       <figure class="layer review">
+        <figcaption>Mattia, 6 VWO</figcaption>
         <blockquote><p>&#8220;Ik zit zelf in de 6e klas en vroeg me af wanneer jullie H15 zullen vrijgeven, ik heb namelijk echt heel veel aan WisWiz gehad voor hoofdstuk 14.&#8221;</p></blockquote>
-        <figcaption>Mattia, 6 vwo, Vossius Gymnasium</figcaption>
       </figure>
       <!-- Institutionele waardering (#32 r7, Philips woord 18 aug): VIJF kaarten in de originele kranten-stijl (dunne rand, label vast op de bovenrand) — Het Parool, het FD, het Vossius Gymnasium,
            Stichting Wijs Bijles en Stichting Wiskunde Actief — op één elegante stapel, met vijf identieke labels. Domein #34. -->
@@ -543,7 +600,7 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
           <div class="stapel-canvas">
             <figure class="knip" data-knip="parool">
               <span class="knip-label"><img class="mark-p" src="../assets/parool.png" alt="" /><span>Het Parool</span></span>
-              <span class="binnen"><img class="foto" src="../assets/knipsel-parool.webp" alt="Artikel over WisWiz in Het Parool" width="427" height="555" loading="lazy" /></span>
+              <span class="binnen"><img class="foto" src="../assets/knipsel-parool-2pag.webp" alt="Artikel over WisWiz in Het Parool, de volledige twee pagina's" width="1400" height="939" loading="lazy" /></span>
             </figure>
             <figure class="knip" data-knip="fd">
               <span class="knip-label"><img class="mark-fd" src="../assets/fd-woordmerk.png" alt="Het Financieele Dagblad" /></span>
@@ -575,11 +632,11 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
              ref.w × ref.h; per kaart x, y, w, rot (graden), z (stapelvolgorde) en de plek van het label (a: l/c/r, x, y; y=-36.2 = tabje op de
              bovenrand). De stand hieronder = Philips goedgekeurde compositie (r8, 18 aug), ongewijzigd overgezet. -->
         <script type="application/json" id="stapel-spec">{"ref":{"w":548,"h":618},"items":[
-  {"id":"parool","x":12,"y":47,"w":265,"rot":-4,"z":1,"label":{"a":"l","x":5.8,"y":-36.2}},
-  {"id":"fd","x":245,"y":42,"w":291,"rot":3,"z":2,"label":{"a":"l","x":6.4,"y":-36.2}},
-  {"id":"vos","x":2,"y":300,"w":255,"rot":-3,"z":3,"label":{"a":"l","x":5.6,"y":-36.2}},
-  {"id":"wijs","x":251,"y":317,"w":257,"rot":4,"z":4,"label":{"a":"l","x":5.7,"y":-36.2}},
-  {"id":"wa","x":88,"y":425,"w":379,"rot":-2,"z":5,"label":{"a":"l","x":8.3,"y":-36.2}}
+  {"id":"parool","x":4,"y":50,"w":348,"rot":-4,"z":1,"label":{"a":"l","x":5.8,"y":-36.2}},
+  {"id":"fd","x":274,"y":46,"w":270,"rot":3,"z":2,"label":{"a":"l","x":6.4,"y":-36.2}},
+  {"id":"vos","x":2,"y":302,"w":255,"rot":-3,"z":3,"label":{"a":"l","x":5.6,"y":-36.2}},
+  {"id":"wijs","x":256,"y":312,"w":257,"rot":4,"z":4,"label":{"a":"l","x":5.7,"y":-36.2}},
+  {"id":"wa","x":84,"y":426,"w":379,"rot":-2,"z":5,"label":{"a":"l","x":8.3,"y":-36.2}}
 ]}</script>
         <script src="../assets/stapel.js"></script>
         <script>Stapel.apply(document.querySelector('.stapel'), Stapel.readSpec());</script>
@@ -587,8 +644,8 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
     </section>
 
     <section class="about" id="about">
-      <h2>Onze missie</h2>
-      <h3>Persoonlijke begeleiding voor iedereen, overal ter wereld</h3>
+      <!-- 20 aug (Philip, voice): 'Persoonlijke begeleiding voor iedereen, overal ter wereld' is de kop, 'Onze missie' is weg -->
+      <h2>Persoonlijke begeleiding voor iedereen, overal ter wereld</h2>
       <p>Talent komt tot bloei onder persoonlijke begeleiding. Zo had Alexander de Grote les van Aristoteles, die op zijn beurt leerling was van Plato. In de klas is daar helaas te weinig ruimte voor. Met innovatieve technologie willen we daarom deze persoonlijke begeleiding mogelijk maken voor iedereen ter wereld. We beginnen met wiskunde: het vak waar leerlingen het vaakst vastlopen; een toren van opbouwende kennis die omvalt zodra een stevig fundament ontbreekt.</p>
       <h3>Over ons</h3>
       <p>WisWiz is opgericht door Philip en Louis, wiskundestudenten aan de TU Delft met jarenlange bijleservaring. We liepen steeds meer tegen de limiet aan dat we met individuele bijlessen te weinig mensen konden helpen. Samen met Hendrik, afgestudeerd statisticus en software ontwikkelaar, zijn we daarom de WisWiz app gaan bouwen. Met deze groep werken we iedere dag om zoveel mogelijk leerlingen te helpen.</p>
@@ -693,29 +750,37 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
     window.addEventListener("resize", function(){ if(isOpen&&!busy){ frame.style.transition="none"; void frame.offsetWidth; frame.style.transition=""; } });
   })();
 </script>
-<script src="../assets/sheet.js" data-trigger="hero"></script>
 <script>
 (function(){
-  // r9: echte sticky knop. JS meet alleen WAAR de originele knop staat (documentcoördinaten) en legt de sticky kopie
-  // daar exact op; het vastklikken aan de bovenrand doet de browser zelf (position:sticky, top = 8px+safe-area - --cta-top).
-  // Op scroll checkt JS enkel of de knop gedokt staat, voor de bar-achtergrond (fade) en het data-cta-label.
-  var cta=document.querySelector('.cta-group .btn-primary[data-cta="checkout"]'), box=document.getElementById('stickycta'), bar=document.getElementById('stickybar');
-  if(!cta||!box||!bar) return;
-  var sbtn=box.querySelector('a'), on=false, raf=0;
-  function dockTop(){ return parseFloat(getComputedStyle(bar).paddingTop)||8; }
-  function check(){ raf=0; var d=sbtn.getBoundingClientRect().top<=dockTop()+0.5; if(d===on) return; on=d;
-    bar.classList.toggle('is-on',d); sbtn.setAttribute('data-cta',d?'checkout-sticky':'checkout'); }
-  function ask(){ if(!raf) raf=requestAnimationFrame(check); }
-  function measure(){ // meet in één stelsel (viewport): originele knop t.o.v. de NATUURLIJKE plek van de sticky doos (even static, geen paint ertussen)
-    document.body.classList.add('js-dock'); box.style.position='static'; var bt=box.getBoundingClientRect(); box.style.position='';
-    var r=cta.getBoundingClientRect();
-    box.style.setProperty('--cta-top',(r.top-bt.top)+'px'); box.style.setProperty('--cta-left',(r.left-bt.left)+'px');
-    box.style.setProperty('--cta-w',r.width+'px'); bar.style.setProperty('--cta-h',r.height+'px'); ask(); }
-  measure();
-  document.addEventListener('scroll',ask,{passive:true,capture:true});
-  window.addEventListener('resize',measure); window.addEventListener('orientationchange',measure); window.addEventListener('load',measure);
-  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(measure);
-  if('ResizeObserver' in window){ new ResizeObserver(function(){ measure(); }).observe(document.body); }
+  // 20 aug avond (Philip): de dock staat er vanaf paginalading — geen scroll-toggle meer. Alleen op telefoon (<768px);
+  // op desktop bestaat de dock niet en draagt de originele hero-CTA de view-transition-naam (#43-regel op :has(.is-on)).
+  var dock=document.getElementById('ctadock');
+  if(!dock) return;
+  var mq=window.matchMedia('(max-width: 767px)');
+  function zet(){ if(mq.matches){ requestAnimationFrame(function(){ dock.classList.add('is-on'); }); } else { dock.classList.remove('is-on'); } }
+  if(mq.addEventListener) mq.addEventListener('change',zet); else mq.addListener(zet);
+  zet();
+})();
+</script>
+<script>
+/* #43 r3: terug-richting herkennen (fade i.p.v. slide) + fallback voor browsers zonder View Transitions. */
+addEventListener('pageswap', function (e) { if (e.viewTransition) { e.viewTransition.finished.catch(function () {}); e.viewTransition.ready.catch(function () {}); } });   /* teardown/skip-rejects van de oude pagina stil */
+addEventListener('pagereveal', function () {
+  try { if (navigation.activation && navigation.activation.navigationType === 'traverse') document.documentElement.classList.add('vt-terug'); else document.documentElement.classList.remove('vt-terug'); } catch (_) {}
+});
+(function () {
+  if (document.startViewTransition) return;   // echte View Transitions: niets te doen
+  var rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('[data-pagenav]');
+    if (!a || rm) return;
+    var href = a.getAttribute('data-pagenav-href') || a.href;
+    e.preventDefault();
+    document.documentElement.classList.add('vt-weg');
+    setTimeout(function () { location.href = href; }, 190);
+  });
+  if (!rm) document.documentElement.classList.add('vt-aan');
+  addEventListener('pageshow', function (ev) { if (ev.persisted) document.documentElement.classList.remove('vt-weg'); });
 })();
 </script>
 <a class="cv-chip" id="cv-chip" href="index.html" aria-label="Terug naar het overzicht van de varianten"><b>E</b> Apple slide-bar · ‹ overzicht</a>

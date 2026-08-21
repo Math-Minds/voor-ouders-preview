@@ -368,7 +368,7 @@ def pakket_inject(html, css, top="", bottom="", bar_html="", js="", pad_bottom=N
     css_all = "<style>\n" + COMMON_CSS + css + (f"body {{ padding-bottom: {pad_bottom}; }}\n" if pad_bottom is not None else "") + "</style>\n"
     html = html.replace('</head>', css_all + '</head>', 1)
     if top:
-        html = html.replace('<p class="choice-q">Welk pakket past bij jou?</p>\n', '<p class="choice-q">Welk pakket past bij jou?</p>\n' + top, 1)
+        html = html.replace('<div class="kopblok">\n', '<div class="kopblok">\n' + top, 1)
         assert top in html
     if bottom:
         html = html.replace('  </div>\n</main>', '  </div>\n' + bottom + '</main>', 1)
