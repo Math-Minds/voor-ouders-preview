@@ -66,9 +66,9 @@
          zakken tot ACHTER de doorschijnende balk — de balk blurde de knop en kleurde groen. Nu blijft de knop op
          dezelfde schermplek staan (bij laden exact 12px), en achter de balk ligt alleen de paginakleur. */
       bottom: calc(100dvh - 100svh + 12px + env(safe-area-inset-bottom, 0px));
-      opacity: 0; transform: translateY(14px); pointer-events: none;
+      opacity: 0; pointer-events: none;
       transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1), bottom .35s cubic-bezier(.32,.72,0,1); }
-    #ctadock.is-on { opacity: 1; transform: none; pointer-events: auto; }
+    #ctadock.is-on { opacity: 1; pointer-events: auto; }
     /* 20 aug nacht (Philip: 'de onderkant van de safari-pagina moet see-through blijven'): geen gekleurde gloed meer
        de onderrand/safe-area in — neutrale, korte schaduw; onder de knop is de onderrand puur de paginakleur, zodat
        Safari's balk gewoon doorschijnend over de achtergrond blurt. */
@@ -81,10 +81,13 @@
     @media (min-width: 768px) { #ctadock { display: none; } }
     /* 21 aug SPOED (Philip): de knop eindigt boven het balk-gebied (>=72px vrij), zodat Safari's balk alleen
        achtergrond blurt — zie de site-branch voor de meting */
-    /* 22 aug r2 (Philip: 'niet zo fluent als eerst'): exact de oude vloeiende entree/glij (incl. bottom-glij), maar
-       op de CONSTANTE basis — geen dvh/svh-herberekening, dus geen 64px-flikker */
+    /* 22 aug r3 (Philip: 'de Meta-balk verneukt het met de knop — vloeiend meeschuiven'): de dock volgt de
+       visualViewport-onderrand via JS+transform (zie het script onderaan) met een 220ms-glij; entree zit op de knop */
     #ctadock { bottom: calc(12px + max(env(safe-area-inset-bottom, 0px), 72px));
-      transition: opacity .3s ease, transform .35s cubic-bezier(.32,.72,0,1), bottom .35s cubic-bezier(.32,.72,0,1); }
+      transition: opacity .3s ease, transform .22s ease; }
+    #ctadock a { transform: translateY(14px); transition: transform .35s cubic-bezier(.32,.72,0,1); }
+    #ctadock.is-on a { transform: none; }
+    #ctadock[data-vv] { top: 0; bottom: auto; will-change: transform; }
     .wa-dock { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .wa-ic-wit { fill: #fff !important; }
     @media (prefers-reduced-motion: reduce) { #ctadock { transition: none; } }
@@ -693,9 +696,30 @@ addEventListener('pagereveal', function () {
 <script>
   (function () {
     var dock = document.getElementById("ctadock");
+    var vv = window.visualViewport;
+    if (dock && vv) {
+      var AFSTAND = 84;
+      dock.style.transition = "none";
+      dock.dataset.vv = "1";
+      dock.style.transform = "translateY(" + Math.round(vv.offsetTop + vv.height - AFSTAND) + "px) translateY(-100%)";
+      void dock.offsetWidth;
+      dock.style.transition = "";
+      var raf = 0;
+      var zet = function () {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(function () {
+          dock.style.transform = "translateY(" + Math.round(vv.offsetTop + vv.height - AFSTAND) + "px) translateY(-100%)";
+        });
+      };
+      vv.addEventListener("resize", zet); vv.addEventListener("scroll", zet);
+      addEventListener("resize", zet); addEventListener("orientationchange", zet);
+    }
+  })();
+  (function () {
+    var dock2 = document.getElementById("ctadock");
     var doel = document.querySelector(".hero .cta-group .wa-vraag");
-    if (dock && doel && "IntersectionObserver" in window) {
-      new IntersectionObserver(function (es) { dock.classList.toggle("is-on", !es[0].isIntersecting); }, { threshold: 0 }).observe(doel);
+    if (dock2 && doel && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) { dock2.classList.toggle("is-on", !es[0].isIntersecting); }, { threshold: 0 }).observe(doel);
     }
   })();
   (function () { var b = innerWidth;
