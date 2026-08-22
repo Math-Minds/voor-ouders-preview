@@ -710,7 +710,9 @@ body { padding-bottom: 0px; }
     function open(e){
       e.preventDefault(); if(busy||isOpen) return; busy=true; isOpen=true;
       lb.hidden=false; document.body.classList.add("lb-open");
-      v.controls=false; v.currentTime=0;
+      v.controls=false;
+      /* 22 aug (#32): currentTime zetten vóór metadata gooit op iOS InvalidStateError (PostHog-exceptie echte ouder) */
+      if (v.readyState >= 1) { try { v.currentTime = 0; } catch (e) {} }
       var p=v.play(); if(p&&p.catch) p.catch(function(){});   // in the user gesture; frame 0 == hero, so nothing visibly changes yet
       if(reduce){ lb.classList.add("is-open"); hero.classList.add("is-lifted"); v.controls=true; busy=false; return; }
       frame.style.transition="none"; frame.classList.add("is-flying");
